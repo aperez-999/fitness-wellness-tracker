@@ -1,6 +1,6 @@
 # MVP Scope & Feature Prioritization
 
-Sprint 2 deliverable (User Story #13). Defines what is in the MVP and what is deferred.
+Sprint 2 (User Story #13) and Sprint 3 (User Story #20). Defines what is in the MVP and what is deferred.
 
 ## MVP Goal
 
@@ -10,15 +10,17 @@ A web app where users can create an account, log in securely, and navigate a das
 
 | Priority | Feature | Sprint target | Status |
 |----------|---------|---------------|--------|
-| P0 | Project repo, docs, diagrams | Sprint 1–2 | In progress |
-| P0 | Tech stack: React, Express, MongoDB, Tailwind | Sprint 1 | Decided |
-| P0 | Authentication (signup, login, logout, session) | Sprint 3 | Documented |
-| P0 | Dashboard + navigation shell | Sprint 3 | Wireframed |
-| P1 | Workout logging (CRUD) | Sprint 3–4 | Schema planned |
-| P1 | Nutrition logging (CRUD) | Sprint 3–4 | Schema planned |
-| P1 | Goals (create, view, basic progress) | Sprint 4 | Schema planned |
+| P0 | Project repo, docs, diagrams | Sprint 1–3 | Complete |
+| P0 | Tech stack: React, Express, MongoDB, Tailwind | Sprint 1 | Done |
+| P0 | Starter template (API health, models, UI shell) | Sprint 3 | Done |
+| P0 | Architecture, component, and journey docs | Sprint 3 | In progress |
+| P0 | Authentication (signup, login, logout, session) | Sprint 4 | Documented |
+| P0 | Dashboard + navigation shell | Sprint 3 | Done (shell) |
+| P1 | Workout logging (CRUD) | Sprint 4–5 | Schema + wireframes ready |
+| P1 | Nutrition logging (CRUD) | Sprint 4–5 | Schema + wireframes ready |
+| P1 | Goals (create, view, basic progress) | Sprint 5 | Schema planned |
 | P2 | Profile view (email, display name) | Sprint 4 | Wireframed |
-| P2 | Basic dashboard summaries | Sprint 4–5 | Planned |
+| P2 | Basic dashboard summaries | Sprint 5 | Planned |
 
 ## Out of Scope (Future Sprints)
 
@@ -45,11 +47,12 @@ gantt
     dateFormat YYYY-MM
     section Planning
     Sprint 1 repo and requirements     :done, 2026-01, 2026-02
-    Sprint 2 diagrams and docs         :active, 2026-02, 2026-03
+    Sprint 2 diagrams and docs         :done, 2026-02, 2026-03
+    Sprint 3 docs and starter template :active, 2026-03, 2026-04
     section Implementation
-    Sprint 3 auth and app shell        :2026-03, 2026-04
-    Sprint 4 workout and nutrition     :2026-04, 2026-05
-    Sprint 5 goals and dashboard stats :2026-05, 2026-06
+    Sprint 4 authentication          :2026-04, 2026-05
+    Sprint 5 workout and nutrition     :2026-05, 2026-06
+    Sprint 6 goals and dashboard stats :2026-06, 2026-07
 ```
 
 ## Definition of Done (implementation stories)
@@ -67,3 +70,4 @@ A feature is done when:
 - Keep MVP scope manageable for a four-person capstone team.
 - Prefer working vertical slices (e.g. login end-to-end) over horizontal-only work.
 - Document decisions in `docs/` before expanding scope.
+- Follow phased delivery in [implementation-roadmap.md](./implementation-roadmap.md).

@@ -1,6 +1,6 @@
 # User Stories
 
-Backlog items from Sprint 1 and Sprint 2 planning and grooming meetings.
+Backlog items from Sprint 1–3 planning and grooming meetings.
 
 ## Sprint 1 (Completed — planning & design)
 
@@ -14,23 +14,6 @@ Backlog items from Sprint 1 and Sprint 2 planning and grooming meetings.
 | 6 | Set up project board and organize sprint tasks | Accepted |
 | 7 | Create initial system architecture and workflow planning documentation | Accepted |
 
-### Sprint 1 — Groomed stories (backlog refinement)
-
-**User Story #1 — Authentication**  
-As a new user, I want to create an account and securely log into the application so that my personal fitness and wellness information remains private.
-
-**User Story #2 — Dashboard**  
-As a user, I want a clean and organized dashboard so that I can easily navigate the application and track my fitness progress.
-
-**User Story #3 — Database structure**  
-As a developer, I want to organize the database structure early so that future application features can scale properly.
-
-**User Story #4 — Architecture diagrams**  
-As a developer, I want to create architecture diagrams so that the team understands how the frontend, backend, and database will interact.
-
-**User Story #5 — Analytics research**  
-As a user, I want to track my progress over time so that I can monitor improvements in my fitness and wellness goals. *(Lower priority — future sprint)*
-
 ## Sprint 2 (Completed — documentation & diagrams)
 
 | ID | Story | Status |
@@ -43,29 +26,45 @@ As a user, I want to track my progress over time so that I can monitor improveme
 | 13 | Refine MVP requirements and feature prioritization | Accepted |
 | 14 | Continue project documentation and GitHub project organization | Accepted |
 
-## Sprint 3 (Planned — implementation)
+## Sprint 3 (In progress — refinement & starter template)
+
+| ID | Story | Owner (planning) | Status |
+|----|-------|------------------|--------|
+| 15 | Refine and finalize system architecture documentation | Alejandro, Allen | In progress |
+| 16 | Expand workflow diagrams and user journey documentation | Josue | In progress |
+| 17 | Refine dashboard, workout tracking, and nutrition tracking wireframes | Josue | In progress |
+| 18 | Finalize database planning and entity relationships | Ahanaf | In progress |
+| 19 | Create component and module planning documentation | Ahanaf, Allen | In progress |
+| 20 | Refine MVP requirements and implementation roadmap | Alejandro | In progress |
+| 21 | Continue project documentation and GitHub project organization | Alejandro, Allen | In progress |
+
+### Sprint 3 — Starter implementation (supporting work)
+
+| Item | Status |
+|------|--------|
+| Backend Express + Mongoose models | Done |
+| Frontend React + Tailwind navigation shell | Done |
+| Auth API and live forms | Planned Sprint 4 |
+
+## Sprint 4+ (Backlog — grooming preview)
 
 | ID | Story | Priority |
 |----|-------|----------|
-| 15 | Scaffold backend and frontend starter template | P0 |
-| 16 | Implement user signup and login | P0 |
-| 17 | Build dashboard and navigation shell | P0 |
-| 18 | Add protected routes and session handling | P0 |
-
-## Sprint 4+ (Backlog — not yet assigned)
-
-| ID | Story | Priority |
-|----|-------|----------|
-| 19 | Log and view workouts | P1 |
-| 20 | Log and view nutrition entries | P1 |
-| 21 | Create and track goals | P1 |
-| 22 | Dashboard activity summaries | P2 |
-| 23 | Progress charts and analytics | P3 |
+| 22 | Implement signup, login, logout, and protected routes | P0 |
+| 23 | Workout list and create (API + UI) | P1 |
+| 24 | Nutrition list and create (API + UI) | P1 |
+| 25 | Goals create and view with basic progress | P1 |
+| 26 | Dashboard activity summaries | P2 |
+| 27 | Progress charts and analytics | P3 |
 
 ## Related Documentation
 
 | Topic | Location |
 |-------|----------|
+| Implementation roadmap | [implementation-roadmap.md](./implementation-roadmap.md) |
+| Component planning | [component-planning.md](./component-planning.md) |
+| User journeys | [user-journeys.md](./user-journeys.md) |
+| Project organization | [project-organization.md](./project-organization.md) |
 | Authentication acceptance criteria | [authentication.md](./authentication.md) |
 | Database schema | [database-schema.md](./database-schema.md) |
 | Wireframes | [wireframes.md](./wireframes.md) |
