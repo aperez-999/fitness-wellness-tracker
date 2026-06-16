@@ -1,6 +1,6 @@
 # Database Schema
 
-Companion to [diagrams/database-erd.md](../diagrams/database-erd.md). Sprint 1 User Story #4 and Sprint 2 User Story #11.
+Companion to [diagrams/database-erd.md](../diagrams/database-erd.md). Sprint 1 (User Story #4), Sprint 2 (User Story #11), and Sprint 3 (User Story #18).
 
 ## Technology
 
@@ -66,6 +66,29 @@ Companion to [diagrams/database-erd.md](../diagrams/database-erd.md). Sprint 1 U
 | `updatedAt` | Date | Auto-updated |
 
 **Indexes:** `{ userId: 1, createdAt: -1 }`
+
+## Progress Tracking Strategy (Sprint 3)
+
+Progress is **derived from existing collections** — no separate `progress` collection in the MVP.
+
+| Metric | Source | Query approach |
+|--------|--------|----------------|
+| Workouts this week | `workouts` | Count where `userId` + `date` in range |
+| Calories today | `nutrition_logs` | Sum `calories` where `userId` + `date` is today |
+| Goal completion | `goals` | Compare `currentValue` to `targetValue` |
+| Recent activity | `workouts`, `nutrition_logs` | Merge last N by `createdAt` |
+
+Future analytics (charts) will aggregate these same collections. See [implementation-roadmap.md](./implementation-roadmap.md) Phase 5.
+
+## Entity Relationship Summary
+
+```
+User 1 ── * Workout
+User 1 ── * NutritionLog
+User 1 ── * Goal
+```
+
+Goals do not foreign-key to workouts or nutrition logs in MVP; users may update `currentValue` manually or via future automation hooks.
 
 ## Data Access Rules
 

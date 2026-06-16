@@ -39,6 +39,9 @@ The Fitness & Wellness Tracker is a web application that helps users track worko
 - [Database schema](./docs/database-schema.md)
 - [Wireframes](./docs/wireframes.md)
 - [MVP scope](./docs/mvp-scope.md)
+- [Implementation roadmap](./docs/implementation-roadmap.md)
+- [Component planning](./docs/component-planning.md)
+- [Project organization](./docs/project-organization.md)
 - [Diagrams](./diagrams/README.md)
 
 ## Sprint Progress
@@ -47,7 +50,8 @@ The Fitness & Wellness Tracker is a web application that helps users track worko
 |--------|-------|--------|
 | Sprint 1 | Repo setup, tech stack, wireframes, database planning, auth research | Complete (planning) |
 | Sprint 2 | Architecture diagrams, workflows, ERD, refined wireframes, MVP scope | Complete (documentation) |
-| Sprint 3 | App starter template, authentication, dashboard shell | In progress |
+| Sprint 3 | Documentation refinement, implementation roadmap, starter template | In progress |
+| Sprint 4 | Authentication and feature CRUD | Planned |
 
 ## Getting Started
 

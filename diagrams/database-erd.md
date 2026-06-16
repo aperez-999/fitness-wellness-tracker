@@ -1,6 +1,6 @@
 # Database Entity Relationship Diagram
 
-Sprint 1 (User Story #4) and Sprint 2 (User Story #11) deliverable.
+Sprint 1 (User Story #4), Sprint 2 (User Story #11), and Sprint 3 (User Story #18).
 
 ## ERD (MVP)
 
@@ -67,6 +67,21 @@ erDiagram
 - Every `workout`, `nutrition_log`, and `goal` document belongs to exactly one `user` via `userId`.
 - Deleting a user should eventually cascade or block if dependent records exist (future decision).
 - Indexes planned: unique index on `users.email`; compound index on `(userId, date)` for workouts and nutrition logs.
+
+## Progress & Analytics (derived — no extra collection)
+
+```mermaid
+flowchart LR
+    U[User] --> W[Workouts by date]
+    U --> N[Nutrition logs by date]
+    U --> G[Goals current vs target]
+    W --> D[Dashboard summaries]
+    N --> D
+    G --> D
+    D --> A[Future charts]
+```
+
+Sprint 3 agreed to avoid a separate progress table until core logging is implemented. Aggregations run at read time or via a thin `/api/dashboard/summary` endpoint in Sprint 5.
 
 ## Design Principles (from sprint grooming)
 
