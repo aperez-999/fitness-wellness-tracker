@@ -1,6 +1,8 @@
 # User Workflow Diagrams
 
-Sprint 2 deliverable (User Story #9). Major MVP user journeys aligned with wireframes and backlog grooming.
+Sprint 2 (User Story #9) and Sprint 3 (User Story #16). Major MVP user journeys aligned with wireframes and backlog grooming.
+
+Narrative journey tables: [../docs/user-journeys.md](../docs/user-journeys.md).
 
 ## 1. New User Registration
 
@@ -97,13 +99,39 @@ flowchart TD
     E --> F[Dashboard shows goal status]
 ```
 
+## 8. View progress on dashboard (planned)
+
+```mermaid
+flowchart TD
+    A[User opens Dashboard] --> B[Load summary for workouts, nutrition, goals]
+    B --> C{Has any data?}
+    C -->|No| D[Show empty state with links to add data]
+    C -->|Yes| E[Show counts and recent activity]
+    E --> F[User clicks section card to drill down]
+```
+
+## 9. Edit or delete workout entry (optional MVP)
+
+```mermaid
+flowchart TD
+    A[Workouts list] --> B[Select entry]
+    B --> C{Action?}
+    C -->|Edit| D[Update form]
+    C -->|Delete| E[Confirm delete]
+    D --> F[Save changes]
+    E --> G[Remove from list]
+    F --> A
+    G --> A
+```
+
 ## Workflow Alignment
 
 | Workflow | Sprint status | Wireframe section |
 |----------|---------------|-------------------|
-| Signup / Login / Logout | Documented; starter template next | Auth pages |
-| Dashboard navigation | Documented; shell in starter | Dashboard, nav bar |
-| Workout logging | Planned Sprint 3+ | Workouts |
-| Nutrition tracking | Planned Sprint 3+ | Nutrition |
-| Goal tracking | Planned Sprint 3+ | Goals |
-| Profile | MVP: view only first | Profile |
+| Signup / Login / Logout | Documented; Sprint 4 implementation | Auth pages |
+| Dashboard navigation | Shell done | Dashboard, nav bar |
+| Workout logging | Wireframed; Sprint 4–5 | Workouts |
+| Nutrition tracking | Wireframed; Sprint 4–5 | Nutrition |
+| Goal tracking | Wireframed; Sprint 5 | Goals |
+| Dashboard progress view | Documented; Sprint 5+ | Dashboard |
+| Profile | MVP: view first | Profile |
