@@ -1,6 +1,6 @@
 # Wireframes & Page Layout
 
-Sprint 1 (User Story #3) and Sprint 2 (User Story #10). Text wireframes for dashboard, navigation, and profile until visual assets are added.
+Sprint 1 (User Story #3), Sprint 2 (User Story #10), and Sprint 3 (User Story #17). Text wireframes for all MVP pages.
 
 ## Global Navigation (authenticated)
 
@@ -70,7 +70,107 @@ Sprint 1 (User Story #3) and Sprint 2 (User Story #10). Text wireframes for dash
 
 **MVP sections:** quick links to Workouts, Nutrition, Goals; placeholder stats until data exists.
 
-## Workouts Page (placeholder in starter)
+## Workouts Page
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Workouts                              [ + Add Workout ]    │
+├─────────────────────────────────────────────────────────────┤
+│  Filter: [ This week ▼ ]                                    │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Morning Run          Mar 10, 2026      30 min       │   │
+│  │ Notes: Easy pace                                    │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Upper Body           Mar 8, 2026       45 min       │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  (Empty state: "No workouts yet. Add your first session.")  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Add Workout form (modal or inline panel)
+
+```
+┌──────────────────────────────┐
+│  Add Workout                 │
+│  Name      [______________]  │
+│  Date      [____/____/____]  │
+│  Duration  [___] minutes     │
+│  Notes     [______________]  │
+│            [______________]  │
+│  [ Cancel ]  [ Save ]        │
+└──────────────────────────────┘
+```
+
+**Fields:** name (required), date (required), durationMinutes (optional), notes (optional).
+
+## Nutrition Page
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Nutrition                             [ + Add Entry ]      │
+├─────────────────────────────────────────────────────────────┤
+│  Today’s calories: 1,240 / —                                │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Oatmeal + banana     Breakfast    320 cal           │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Chicken salad        Lunch        520 cal           │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  (Empty state: "No entries for this day.")                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Add Nutrition Entry form
+
+```
+┌──────────────────────────────┐
+│  Add Food Entry              │
+│  Food      [______________]  │
+│  Calories  [___]             │
+│  Meal      [ Breakfast ▼ ]   │
+│  Date      [____/____/____]  │
+│  [ Cancel ]  [ Save ]        │
+└──────────────────────────────┘
+```
+
+**Fields:** foodName (required), calories (optional), mealType (enum), date (required).
+
+## Goals Page
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Goals                                 [ + New Goal ]       │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Work out 3x per week          Wellness              │   │
+│  │ ████████░░░░  2 / 3                                   │   │
+│  └─────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Stay under 2,000 cal daily    Nutrition             │   │
+│  │ ██████░░░░░░  1,240 / 2,000 cal                     │   │
+│  └─────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### New Goal form
+
+```
+┌──────────────────────────────┐
+│  New Goal                    │
+│  Title     [______________]  │
+│  Category  [ Workout ▼ ]     │
+│  Target    [___]  [ lbs ▼ ]  │
+│  By date   [____/____/____]  │
+│  [ Cancel ]  [ Save ]        │
+└──────────────────────────────┘
+```
+
+## Workouts Page (starter placeholder — pre-implementation)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -81,7 +181,7 @@ Sprint 1 (User Story #3) and Sprint 2 (User Story #10). Text wireframes for dash
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Nutrition Page (placeholder in starter)
+## Nutrition Page (starter placeholder — pre-implementation)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -92,7 +192,7 @@ Sprint 1 (User Story #3) and Sprint 2 (User Story #10). Text wireframes for dash
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## Goals Page (placeholder in starter)
+## Goals Page (starter placeholder — pre-implementation)
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
