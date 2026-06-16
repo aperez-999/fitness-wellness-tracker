@@ -1,6 +1,8 @@
 # System Architecture Diagram
 
-Sprint 2 deliverable (User Story #8). Describes the MVP three-tier layout agreed in Sprint 1.
+Sprint 2 (User Story #8) and Sprint 3 (User Story #15). MVP three-tier layout and module context.
+
+Module details: [../docs/component-planning.md](../docs/component-planning.md).
 
 ## High-Level Architecture
 
@@ -73,6 +75,17 @@ sequenceDiagram
     Express-->>React: JSON response
     React-->>User: Updated UI
 ```
+
+## Current Implementation Status (Sprint 3)
+
+| Component | Status |
+|-----------|--------|
+| `GET /api/health` | Implemented |
+| Mongoose models (User, Workout, NutritionLog, Goal) | Implemented |
+| Auth routes + JWT middleware | Planned Sprint 4 |
+| Feature CRUD routes | Planned Sprint 4–5 |
+| React pages + navigation shell | Implemented |
+| Auth context + protected routes | Planned Sprint 4 |
 
 ## Design Notes
 
