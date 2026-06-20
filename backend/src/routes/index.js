@@ -1,11 +1,11 @@
 import { Router } from "express";
 
+import authRoutes from "./auth.js";
 import healthRoutes from "./health.js";
 
 const router = Router();
 
 router.use("/health", healthRoutes);
-
-// Sprint 3: mount auth, workouts, nutrition, and goals routes here.
+router.use("/auth", authRoutes);
 
 export default router;
