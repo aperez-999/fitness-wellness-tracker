@@ -23,8 +23,8 @@ App runs at `http://localhost:5173`.
 | Route | Purpose |
 |-------|---------|
 | `/` | Landing + API health check |
-| `/login` | Login wireframe (auth Sprint 3) |
-| `/signup` | Signup wireframe (auth Sprint 3) |
+| `/login` | Login (live) |
+| `/signup` | Signup (live) |
 | `/dashboard` | Dashboard shell with summary cards |
 | `/workouts` | Workout section placeholder |
 | `/nutrition` | Nutrition section placeholder |

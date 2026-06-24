@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 
 import PageCard from "../components/PageCard.jsx";
 import PlaceholderPanel from "../components/PlaceholderPanel.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const summaryCards = [
   { title: "Workouts", to: "/workouts", text: "Log exercise sessions" },
@@ -10,11 +11,14 @@ const summaryCards = [
 ];
 
 export default function DashboardPage() {
+  const { user } = useAuth();
+  const name = user?.displayName || user?.email?.split("@")[0] || "there";
+
   return (
     <div className="space-y-6">
       <PageCard
-        title="Welcome back"
-        description="Dashboard shell from Sprint 2 wireframes. Summary data will appear after logging features ship."
+        title={`Welcome back, ${name}`}
+        description="Use the sections below to track workouts, nutrition, and goals."
       >
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {summaryCards.map((card) => (

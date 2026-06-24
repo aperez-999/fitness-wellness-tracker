@@ -1,9 +1,11 @@
+import { Link, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 
+import { useAuth } from "../context/AuthContext.jsx";
 import { checkHealth } from "../lib/api.js";
 
 export default function HomePage() {
+  const { isAuthenticated, loading } = useAuth();
   const [apiStatus, setApiStatus] = useState("checking");
 
   useEffect(() => {
@@ -11,6 +13,10 @@ export default function HomePage() {
       .then(() => setApiStatus("ok"))
       .catch(() => setApiStatus("offline"));
   }, []);
+
+  if (!loading && isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-4 py-12">
@@ -22,8 +28,8 @@ export default function HomePage() {
           Fitness & Wellness Tracker
         </h1>
         <p className="mt-4 text-slate-600">
-          Starter template with planned navigation, documentation, and API
-          health check. Authentication and data features arrive in Sprint 3.
+          Track workouts, nutrition, and wellness goals in one place. Create an
+          account or log in to get started.
         </p>
         <p className="mt-4 text-sm text-slate-500">
           API status:{" "}
@@ -55,12 +61,6 @@ export default function HomePage() {
             className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             Sign up
-          </Link>
-          <Link
-            to="/dashboard"
-            className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
-          >
-            View dashboard shell
           </Link>
         </div>
       </div>
