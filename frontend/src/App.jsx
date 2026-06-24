@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import AppLayout from "./components/AppLayout.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import GoalsPage from "./pages/GoalsPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
@@ -16,12 +17,14 @@ export default function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
-      <Route element={<AppLayout />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/workouts" element={<WorkoutsPage />} />
-        <Route path="/nutrition" element={<NutritionPage />} />
-        <Route path="/goals" element={<GoalsPage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+      <Route element={<ProtectedRoute />}>
+        <Route element={<AppLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/workouts" element={<WorkoutsPage />} />
+          <Route path="/nutrition" element={<NutritionPage />} />
+          <Route path="/goals" element={<GoalsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
