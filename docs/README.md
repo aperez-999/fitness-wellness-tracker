@@ -14,6 +14,9 @@ Central index for Fitness & Wellness Tracker capstone documentation.
 | [component-planning.md](./component-planning.md) | Frontend/backend module map (Sprint 3) |
 | [user-journeys.md](./user-journeys.md) | Narrative user journeys (Sprint 3) |
 | [project-organization.md](./project-organization.md) | Repo layout, GitHub board, DoR/DoD |
+| [planning-artifacts-map.md](./planning-artifacts-map.md) | How docs and code connect (Sprint 3) |
+| [api.md](./api.md) | REST API contracts |
+| [sprint-4-backlog.md](./sprint-4-backlog.md) | Groomed Sprint 4 stories |
 | [authentication.md](./authentication.md) | Auth rules and acceptance criteria |
 | [database-schema.md](./database-schema.md) | Collection definitions and indexes |
 | [wireframes.md](./wireframes.md) | Page layout wireframes (text) |

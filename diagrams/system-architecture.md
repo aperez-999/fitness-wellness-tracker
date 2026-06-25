@@ -82,10 +82,10 @@ sequenceDiagram
 |-----------|--------|
 | `GET /api/health` | Implemented |
 | Mongoose models (User, Workout, NutritionLog, Goal) | Implemented |
-| Auth routes + JWT middleware | Planned Sprint 4 |
+| Auth routes + JWT middleware | Implemented |
 | Feature CRUD routes | Planned Sprint 4–5 |
 | React pages + navigation shell | Implemented |
-| Auth context + protected routes | Planned Sprint 4 |
+| Auth context + protected routes | Implemented |
 
 ## Design Notes
 

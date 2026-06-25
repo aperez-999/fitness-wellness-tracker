@@ -30,21 +30,22 @@ Backlog items from Sprint 1–3 planning and grooming meetings.
 
 | ID | Story | Owner (planning) | Status |
 |----|-------|------------------|--------|
-| 15 | Refine and finalize system architecture documentation | Alejandro, Allen | In progress |
-| 16 | Expand workflow diagrams and user journey documentation | Josue | In progress |
-| 17 | Refine dashboard, workout tracking, and nutrition tracking wireframes | Josue | In progress |
-| 18 | Finalize database planning and entity relationships | Ahanaf | In progress |
-| 19 | Create component and module planning documentation | Ahanaf, Allen | In progress |
-| 20 | Refine MVP requirements and implementation roadmap | Alejandro | In progress |
-| 21 | Continue project documentation and GitHub project organization | Alejandro, Allen | In progress |
+| 15 | Refine and finalize system architecture documentation | Alejandro, Allen | Complete |
+| 16 | Expand workflow diagrams and user journey documentation | Josue | Complete |
+| 17 | Refine dashboard, workout tracking, and nutrition tracking wireframes | Josue | Complete |
+| 18 | Finalize database planning and entity relationships | Ahanaf | Complete |
+| 19 | Create component and module planning documentation | Ahanaf, Allen | Complete |
+| 20 | Refine MVP requirements and implementation roadmap | Alejandro | Complete |
+| 21 | Continue project documentation and GitHub project organization | Alejandro, Allen | Complete |
 
-### Sprint 3 — Starter implementation (supporting work)
+### Sprint 3 — Implementation bridge (Sprint 4 prep)
 
 | Item | Status |
 |------|--------|
-| Backend Express + Mongoose models | Done |
-| Frontend React + Tailwind navigation shell | Done |
-| Auth API and live forms | Planned Sprint 4 |
+| Auth API (`/api/auth/*`) | Staged |
+| Auth UI + protected routes | Staged |
+| Sprint 4 groomed backlog | Documented |
+| Planning artifacts map | Documented |
 
 ## Sprint 4+ (Backlog — grooming preview)
 
@@ -68,7 +69,9 @@ Backlog items from Sprint 1–3 planning and grooming meetings.
 | Authentication acceptance criteria | [authentication.md](./authentication.md) |
 | Database schema | [database-schema.md](./database-schema.md) |
 | Wireframes | [wireframes.md](./wireframes.md) |
-| MVP scope | [mvp-scope.md](./mvp-scope.md) |
+| Planning artifacts map | [planning-artifacts-map.md](./planning-artifacts-map.md) |
+| REST API reference | [api.md](./api.md) |
+| Sprint 4 backlog | [sprint-4-backlog.md](./sprint-4-backlog.md) |
 | System architecture diagram | [../diagrams/system-architecture.md](../diagrams/system-architecture.md) |
 | User workflows | [../diagrams/user-workflows.md](../diagrams/user-workflows.md) |
 | ERD | [../diagrams/database-erd.md](../diagrams/database-erd.md) |

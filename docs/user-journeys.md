@@ -85,16 +85,17 @@ flowchart TD
 
 | Journey | Documented | UI shell | API + data |
 |---------|------------|----------|------------|
-| Onboarding | ✓ | ✓ | Sprint 4 |
+| Onboarding | ✓ | ✓ | Implemented |
 | Workout logging | ✓ | Placeholder | Sprint 4–5 |
 | Nutrition tracking | ✓ | Placeholder | Sprint 4–5 |
 | Goal management | ✓ | Placeholder | Sprint 5 |
-| Profile / logout | ✓ | Placeholder | Sprint 4 |
+| Profile / logout | ✓ | ✓ | Implemented |
 
 ## Design consistency checklist (Sprint 3 refinement)
 
 - [x] All authenticated pages share `AppLayout` navigation
 - [x] Primary actions use emerald accent (Tailwind `emerald-600`)
 - [x] Empty states explain what will appear and link to relevant section
-- [ ] Forms use consistent label + input spacing (apply during Sprint 4 auth)
-- [ ] Mobile nav collapses without hiding logout (Sprint 4)
+- [x] Forms use consistent label + input spacing (`FormField` component)
+- [x] Logout reachable from authenticated header
+- [ ] Mobile nav collapses without hiding logout (future polish)

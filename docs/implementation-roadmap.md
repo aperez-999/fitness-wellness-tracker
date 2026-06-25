@@ -11,7 +11,7 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 | Auth requirements and acceptance criteria | Documented |
 | Mongoose models (User, Workout, NutritionLog, Goal) | Scaffolded |
 | React + Tailwind starter with navigation shell | Scaffolded |
-| Auth API and protected routes | Planned — Sprint 4 |
+| Auth API and protected routes | Implemented (staged for Sprint 4) |
 | Feature CRUD (workouts, nutrition, goals) | Planned — Sprint 4–5 |
 
 ## Implementation Phases
@@ -36,13 +36,13 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 
 **Goal:** Users can sign up, log in, log out, and access protected pages.
 
-| Task | API | UI |
-|------|-----|-----|
-| Password validation utility | `POST /api/auth/signup` | Signup form (live) |
-| Login + JWT issuance | `POST /api/auth/login` | Login form (live) |
-| Session check | `GET /api/auth/me` | Auth context provider |
-| Logout | `POST /api/auth/logout` | Header logout button |
-| Route guards | Auth middleware | `ProtectedRoute` wrapper |
+| Task | API | UI | Status |
+|------|-----|-----|--------|
+| Password validation utility | `POST /api/auth/signup` | Signup form (live) | Done |
+| Login + JWT issuance | `POST /api/auth/login` | Login form (live) | Done |
+| Session check | `GET /api/auth/me` | Auth context provider | Done |
+| Logout | `POST /api/auth/logout` | Header logout button | Done |
+| Route guards | Auth middleware | `ProtectedRoute` wrapper | Done |
 
 **Depends on:** [authentication.md](./authentication.md) acceptance criteria.
 

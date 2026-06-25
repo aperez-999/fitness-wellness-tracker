@@ -35,8 +35,12 @@ src/
 | Method | Path | Description |
 |--------|------|-------------|
 | GET | `/api/health` | Health check |
+| POST | `/api/auth/signup` | Register |
+| POST | `/api/auth/login` | Login |
+| POST | `/api/auth/logout` | Logout (auth required) |
+| GET | `/api/auth/me` | Current user (auth required) |
 
-Auth and feature routes will be added in Sprint 3. See [../docs/authentication.md](../docs/authentication.md).
+See [../docs/api.md](../docs/api.md) for full contracts.
 
 ## Models
 

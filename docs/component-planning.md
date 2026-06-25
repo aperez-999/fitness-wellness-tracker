@@ -35,9 +35,10 @@ flowchart LR
 | **Layout** | `components/AppLayout.jsx` | Header, nav, outlet for child pages | 3 ✓ |
 | **Shared UI** | `components/PageCard.jsx`, `PlaceholderPanel.jsx` | Reusable cards and empty states | 3 ✓ |
 | **API client** | `lib/api.js` | Base URL, health check, future auth helpers | 3 ✓ |
-| **Auth context** | `context/AuthContext.jsx` *(planned)* | Token storage, user state, login/logout | 4 |
-| **Protected route** | `components/ProtectedRoute.jsx` *(planned)* | Redirect unauthenticated users | 4 |
-| **Pages — auth** | `pages/LoginPage.jsx`, `SignupPage.jsx` | Auth forms | 3 shell / 4 live |
+| **Auth context** | `context/AuthContext.jsx` | Token storage, user state, login/logout | 4 ✓ |
+| **Protected route** | `components/ProtectedRoute.jsx` | Redirect unauthenticated users | 4 ✓ |
+| **Form field** | `components/FormField.jsx` | Shared labeled inputs | 4 ✓ |
+| **Pages — auth** | `pages/LoginPage.jsx`, `SignupPage.jsx` | Auth forms | 4 ✓ |
 | **Pages — app** | `DashboardPage`, `WorkoutsPage`, etc. | Feature screens | 3 shell / 4–5 data |
 
 ### Page-to-Route Map
@@ -60,8 +61,8 @@ flowchart LR
 | **App entry** | `index.js` | Express setup, CORS, middleware, listen | 3 ✓ |
 | **Database** | `config/db.js` | MongoDB connection | 3 ✓ |
 | **Health** | `routes/health.js` | `GET /api/health` | 3 ✓ |
-| **Auth routes** | `routes/auth.js` *(planned)* | Signup, login, logout, me | 4 |
-| **Auth middleware** | `middleware/auth.js` *(planned)* | JWT verification | 4 |
+| **Auth routes** | `routes/auth.js` | Signup, login, logout, me | 4 ✓ |
+| **Auth middleware** | `middleware/auth.js` | JWT verification | 4 ✓ |
 | **Validation** | `middleware/validate.js` *(planned)* | Request body checks | 4 |
 | **Error handler** | `middleware/errorHandler.js` | Consistent JSON errors | 3 ✓ |
 | **User model** | `models/User.js` | Account storage | 3 ✓ |
