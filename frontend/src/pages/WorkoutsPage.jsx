@@ -8,8 +8,8 @@ export default function WorkoutsPage() {
       description="Your workout log will appear here."
     >
       <PlaceholderPanel
-        title="Coming in Sprint 3+"
-        body="Add workout form and list views will connect to the Workout model in MongoDB."
+        title="Planned for Capstone 2"
+        body="Workout list and add form will connect to GET/POST /api/workouts per docs/api.md and docs/wireframes.md."
       />
     </PageCard>
   );

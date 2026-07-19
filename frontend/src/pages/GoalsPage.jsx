@@ -5,8 +5,8 @@ export default function GoalsPage() {
   return (
     <PageCard title="Goals" description="Set and monitor wellness goals.">
       <PlaceholderPanel
-        title="Coming in Sprint 3+"
-        body="Goal creation and progress tracking will align with the Goal schema in docs/database-schema.md."
+        title="Planned for Capstone 2"
+        body="Goal creation and progress tracking will use /api/goals per docs/wireframes.md."
       />
     </PageCard>
   );

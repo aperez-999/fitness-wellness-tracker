@@ -8,8 +8,8 @@ export default function NutritionPage() {
       description="Track meals and calories here."
     >
       <PlaceholderPanel
-        title="Coming in Sprint 3+"
-        body="Nutrition entries will use the NutritionLog collection defined in the ERD."
+        title="Planned for Capstone 2"
+        body="Nutrition list and add form will use GET/POST /api/nutrition per docs/api.md."
       />
     </PageCard>
   );
