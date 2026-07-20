@@ -2,17 +2,19 @@
 
 Sprint 3 deliverable (User Story #20). Sequences development work after planning sprints so the team can implement features in organized vertical slices.
 
-## Current State
+## Current State (Sprint 5 — through daily scrum 5)
 
-| Area | Status |
-|------|--------|
-| Repository and folder structure | Done |
-| Architecture, workflow, and ERD diagrams | Done |
-| Auth requirements and acceptance criteria | Documented |
-| Mongoose models (User, Workout, NutritionLog, Goal) | Scaffolded |
-| React + Tailwind starter with navigation shell | Scaffolded |
-| Auth API and protected routes | Implemented (staged for Sprint 4) |
-| Feature CRUD (workouts, nutrition, goals) | Planned — Sprint 4–5 |
+| Area | Capstone | Status |
+|------|----------|--------|
+| Repository and folder structure | 1 | Done |
+| Architecture, workflow, and ERD diagrams | 1 | Done |
+| Wireframes, journeys, API/DB planning docs | 1 | Done (final review in Sprint 5) |
+| Scrum minutes + submission folder | 1 | Through Sprint 5 daily 5 |
+| Mongoose models (User, Workout, NutritionLog, Goal) | 1 starter | Scaffolded |
+| React + Tailwind starter with navigation shell | 1 starter | Done |
+| Auth API and protected routes | 1 practice | Done |
+| Feature CRUD (workouts, nutrition, goals) | 2 | Planned |
+| Dashboard summaries | 2 | Planned |
 
 ## Implementation Phases
 
@@ -32,7 +34,7 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 
 **Exit criteria:** All Sprint 3 user stories (#15–#21) documented; `npm run dev` works for both apps.
 
-### Phase 2 — Authentication (Sprint 4)
+### Phase 2 — Authentication (Capstone 1 starter / Capstone 2 polish)
 
 **Goal:** Users can sign up, log in, log out, and access protected pages.
 
@@ -48,7 +50,7 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 
 **Exit criteria:** New user can register, land on dashboard, refresh page and stay logged in, log out.
 
-### Phase 3 — Workout & Nutrition Logging (Sprint 4–5)
+### Phase 3 — Workout & Nutrition Logging (Capstone 2)
 
 **Goal:** Users can create and view their own workout and nutrition entries.
 
@@ -62,7 +64,7 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 
 **Exit criteria:** Entries persist in MongoDB and appear only for the owning user.
 
-### Phase 4 — Goals & Dashboard Summaries (Sprint 5)
+### Phase 4 — Goals & Dashboard Summaries (Capstone 2)
 
 **Goal:** Users set goals and see high-level progress on the dashboard.
 
@@ -114,9 +116,15 @@ flowchart TD
 | 25 | Workout list and create API + UI | 5 |
 | 26 | Nutrition list and create API + UI | 5 |
 
+## Sprint 5 documentation tasks (#29–#35)
+
+Final review of all planning artifacts before Capstone 1 submission. Progress tracked in [sprint-5-backlog.md](./sprint-5-backlog.md).
+
 ## Related Documents
 
 - [mvp-scope.md](./mvp-scope.md) — in/out of scope
+- [capstone-2-handoff.md](./capstone-2-handoff.md) — Capstone 2 build order
+- [sprint-5-backlog.md](./sprint-5-backlog.md) — current sprint stories
 - [component-planning.md](./component-planning.md) — module ownership
 - [user-stories.md](./user-stories.md) — sprint story index
 - [authentication.md](./authentication.md) — auth acceptance criteria

@@ -22,22 +22,23 @@ App runs at `http://localhost:5173`.
 
 | Route | Purpose |
 |-------|---------|
-| `/` | Landing + API health check |
-| `/login` | Login (live) |
-| `/signup` | Signup (live) |
-| `/dashboard` | Dashboard shell with summary cards |
-| `/workouts` | Workout section placeholder |
-| `/nutrition` | Nutrition section placeholder |
-| `/goals` | Goals section placeholder |
-| `/profile` | Profile placeholder |
+| `/` | Landing page + API health check |
+| `/login` | Login |
+| `/signup` | Sign up |
+| `/dashboard` | Dashboard shell (summary cards) |
+| `/workouts` | Placeholder — Capstone 2 |
+| `/nutrition` | Placeholder — Capstone 2 |
+| `/goals` | Placeholder — Capstone 2 |
+| `/profile` | Signed-in user info |
 
-Layouts match [../docs/wireframes.md](../docs/wireframes.md).
+Auth uses `AuthContext`, `ProtectedRoute`, and `lib/api.js`. Layouts follow [../docs/wireframes.md](../docs/wireframes.md).
 
 ## Structure
 
 ```
 src/
-├── components/   # Layout, cards, shared UI
+├── components/   # Layout, cards, ProtectedRoute, FormField
+├── context/      # AuthContext (login session)
 ├── pages/        # Route pages
 ├── lib/api.js    # API helpers
 ├── App.jsx       # Routes

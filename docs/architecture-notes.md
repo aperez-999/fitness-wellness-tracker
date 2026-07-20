@@ -21,7 +21,7 @@ fitness-wellness-tracker/
 ├── frontend/         # React app
 ├── docs/             # Requirements, stories, auth, schema, wireframes
 ├── diagrams/         # Mermaid architecture, workflow, ERD
-└── meeting-minutes/  # Sprint ceremony PDFs
+└── meeting-minutes/  # Sprint ceremony PDFs (by sprint folder)
 ```
 
 ## Request Lifecycle
@@ -48,7 +48,8 @@ See [diagrams/system-architecture.md](../diagrams/system-architecture.md) for di
 |----------|---------|
 | `PORT` | Server port (default 5000) |
 | `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | Token signing secret |
+| `JWT_SECRET` | Token signing secret (required) |
+| `JWT_EXPIRES_IN` | Token lifetime (default `7d`) |
 | `CLIENT_URL` | Frontend origin for CORS (default `http://localhost:5173`) |
 
 **Frontend (`frontend/.env`):**

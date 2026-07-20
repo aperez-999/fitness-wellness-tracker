@@ -1,6 +1,8 @@
-# Sprint 4 Backlog (Groomed)
+# Sprint 4 Implementation Backlog
 
-From [Backlog Grooming Meeting #3](../meeting-minutes/sprint-3/Backlog%20Grooming%20Meeting%20Minutes%20%233%20(Sprint%203).pdf) and Sprint 3 daily scrums 6–7. Stories are definition-of-ready for Sprint 4 planning.
+**Note:** Mingle user stories #22–#28 in Sprint 4 meeting minutes are **planning stories** (architecture, wireframes, API docs). This file tracks the **implementation backlog** used for starter development. See [story-id-reference.md](./story-id-reference.md).
+
+From [Backlog Grooming Meeting #3](../meeting-minutes/sprint-3/Backlog%20Grooming%20Meeting%20Minutes%20%233%20(Sprint%203).pdf) and Sprint 3 daily scrums 6–7.
 
 ## User Story #22 — Implement authentication API
 

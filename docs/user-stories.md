@@ -1,8 +1,8 @@
 # User Stories
 
-Backlog items from Sprint 1–3 planning and grooming meetings.
+Backlog items from Sprint 1–5 planning and grooming meetings (Mingle IDs). Implementation work for Capstone 2 is tracked separately — see [story-id-reference.md](./story-id-reference.md).
 
-## Sprint 1 (Completed — planning & design)
+## Sprint 1 (Accepted — planning & design)
 
 | ID | Story | Status |
 |----|-------|--------|
@@ -14,7 +14,7 @@ Backlog items from Sprint 1–3 planning and grooming meetings.
 | 6 | Set up project board and organize sprint tasks | Accepted |
 | 7 | Create initial system architecture and workflow planning documentation | Accepted |
 
-## Sprint 2 (Completed — documentation & diagrams)
+## Sprint 2 (Accepted — documentation & diagrams)
 
 | ID | Story | Status |
 |----|-------|--------|
@@ -26,52 +26,63 @@ Backlog items from Sprint 1–3 planning and grooming meetings.
 | 13 | Refine MVP requirements and feature prioritization | Accepted |
 | 14 | Continue project documentation and GitHub project organization | Accepted |
 
-## Sprint 3 (In progress — refinement & starter template)
+## Sprint 3 (Accepted — refinement & starter template)
 
 | ID | Story | Owner (planning) | Status |
 |----|-------|------------------|--------|
-| 15 | Refine and finalize system architecture documentation | Alejandro, Allen | Complete |
-| 16 | Expand workflow diagrams and user journey documentation | Josue | Complete |
-| 17 | Refine dashboard, workout tracking, and nutrition tracking wireframes | Josue | Complete |
-| 18 | Finalize database planning and entity relationships | Ahanaf | Complete |
-| 19 | Create component and module planning documentation | Ahanaf, Allen | Complete |
-| 20 | Refine MVP requirements and implementation roadmap | Alejandro | Complete |
-| 21 | Continue project documentation and GitHub project organization | Alejandro, Allen | Complete |
+| 15 | Refine and finalize system architecture documentation | Alejandro, Allen | Accepted |
+| 16 | Expand workflow diagrams and user journey documentation | Josue | Accepted |
+| 17 | Refine dashboard, workout tracking, and nutrition tracking wireframes | Josue | Accepted |
+| 18 | Finalize database planning and entity relationships | Ahanaf | Accepted |
+| 19 | Create component and module planning documentation | Ahanaf, Allen | Accepted |
+| 20 | Refine MVP requirements and implementation roadmap | Alejandro | Accepted |
+| 21 | Continue project documentation and GitHub project organization | Alejandro, Allen | Accepted |
 
-### Sprint 3 — Implementation bridge (Sprint 4 prep)
+## Sprint 4 (Accepted — planning & design finalization)
+
+| ID | Story | Owner | Status |
+|----|-------|-------|--------|
+| 22 | Finalize system architecture and component documentation | Alejandro, Allen | Accepted |
+| 23 | Refine application workflow and user journey diagrams | Josue | Accepted |
+| 24 | Finalize high-fidelity wireframes for core application pages | Josue | Accepted |
+| 25 | Refine API planning and frontend/backend interaction documentation | Ahanaf | Accepted |
+| 26 | Finalize MVP implementation roadmap and project milestones | Alejandro | Accepted |
+| 27 | Prepare project documentation for final deliverables | Allen | Accepted |
+| 28 | Continue GitHub project organization and backlog refinement | Alejandro, Allen | Accepted |
+
+## Sprint 5 (In progress — through daily scrum 5)
+
+| ID | Story | Owner | Status |
+|----|-------|-------|--------|
+| 29 | Final review of system architecture and project documentation | Alejandro, Allen | In progress |
+| 30 | Final review of workflow diagrams and user experience documentation | Josue | In progress |
+| 31 | Finalize high-fidelity wireframes and design consistency | Josue | In progress |
+| 32 | Final review of API planning and database documentation | Ahanaf | In progress |
+| 33 | Finalize implementation roadmap and MVP documentation | Alejandro, Ahanaf | In progress |
+| 34 | Prepare final project documentation and presentation materials | Allen | In progress |
+| 35 | Final GitHub repository cleanup and project organization | Alejandro, Allen | In progress |
+
+Daily scrums 6–10, sprint review, and retrospective will close Sprint 5. See [sprint-5-backlog.md](./sprint-5-backlog.md).
+
+## Starter template (optional practice — not Mingle stories)
 
 | Item | Status |
 |------|--------|
-| Auth API (`/api/auth/*`) | Staged |
-| Auth UI + protected routes | Staged |
-| Sprint 4 groomed backlog | Documented |
-| Planning artifacts map | Documented |
-
-## Sprint 4+ (Backlog — grooming preview)
-
-| ID | Story | Priority |
-|----|-------|----------|
-| 22 | Implement signup, login, logout, and protected routes | P0 |
-| 23 | Workout list and create (API + UI) | P1 |
-| 24 | Nutrition list and create (API + UI) | P1 |
-| 25 | Goals create and view with basic progress | P1 |
-| 26 | Dashboard activity summaries | P2 |
-| 27 | Progress charts and analytics | P3 |
+| Auth API (`/api/auth/*`) | Done |
+| Auth UI + protected routes | Done |
+| Mongoose models + UI shells for workouts, nutrition, goals | Scaffolded |
+| Feature CRUD APIs | Capstone 2 — see [capstone-2-handoff.md](./capstone-2-handoff.md) |
 
 ## Related Documentation
 
 | Topic | Location |
 |-------|----------|
+| Sprint 5 backlog | [sprint-5-backlog.md](./sprint-5-backlog.md) |
+| Capstone 2 handoff | [capstone-2-handoff.md](./capstone-2-handoff.md) |
+| Story ID reference | [story-id-reference.md](./story-id-reference.md) |
+| Capstone 1 submission | [capstone-1-submission.md](./capstone-1-submission.md) |
+| Installation guide | [installation-guide.md](./installation-guide.md) |
 | Implementation roadmap | [implementation-roadmap.md](./implementation-roadmap.md) |
+| Implementation backlog (auth/features) | [sprint-4-backlog.md](./sprint-4-backlog.md) |
 | Component planning | [component-planning.md](./component-planning.md) |
-| User journeys | [user-journeys.md](./user-journeys.md) |
-| Project organization | [project-organization.md](./project-organization.md) |
-| Authentication acceptance criteria | [authentication.md](./authentication.md) |
-| Database schema | [database-schema.md](./database-schema.md) |
-| Wireframes | [wireframes.md](./wireframes.md) |
 | Planning artifacts map | [planning-artifacts-map.md](./planning-artifacts-map.md) |
-| REST API reference | [api.md](./api.md) |
-| Sprint 4 backlog | [sprint-4-backlog.md](./sprint-4-backlog.md) |
-| System architecture diagram | [../diagrams/system-architecture.md](../diagrams/system-architecture.md) |
-| User workflows | [../diagrams/user-workflows.md](../diagrams/user-workflows.md) |
-| ERD | [../diagrams/database-erd.md](../diagrams/database-erd.md) |

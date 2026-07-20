@@ -16,7 +16,8 @@ npm run dev
 |----------|-------------|
 | `PORT` | API port (default `5000`) |
 | `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret for signing JWTs (Sprint 3 auth) |
+| `JWT_SECRET` | Secret for signing JWTs (change in `.env`) |
+| `JWT_EXPIRES_IN` | Token lifetime (default `7d`) |
 | `CLIENT_URL` | Frontend URL for CORS |
 
 ## Structure

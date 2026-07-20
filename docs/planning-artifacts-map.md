@@ -33,11 +33,14 @@ flowchart TB
     subgraph Execution
         ROADMAP[implementation-roadmap.md]
         S4[sprint-4-backlog.md]
+        S5[sprint-5-backlog.md]
+        C2[capstone-2-handoff.md]
         ORG[project-organization.md]
     end
 
     REQ --> MVP
     MVP --> ROADMAP
+    STORIES --> S5
     STORIES --> S4
     WF --> JOURNEYS
     JOURNEYS --> FLOW
@@ -46,6 +49,7 @@ flowchart TB
     COMP --> API
     SCHEMA --> ERD
     ERD --> API
+    ROADMAP --> C2
     ROADMAP --> S4
     API --> COMP
     ORG --> STORIES
@@ -63,7 +67,8 @@ flowchart TB
 | Which file owns which feature? | [component-planning.md](./component-planning.md) |
 | What fields are in the database? | [database-schema.md](./database-schema.md), [database-erd.md](../diagrams/database-erd.md) |
 | What endpoints exist? | [api.md](./api.md) |
-| What do we build next? | [sprint-4-backlog.md](./sprint-4-backlog.md), [implementation-roadmap.md](./implementation-roadmap.md) |
+| What do we build next? | [capstone-2-handoff.md](./capstone-2-handoff.md), [sprint-5-backlog.md](./sprint-5-backlog.md) |
+| Capstone 1 submission? | [capstone-1-submission.md](./capstone-1-submission.md) |
 | How does the team organize work? | [project-organization.md](./project-organization.md) |
 | Auth rules and acceptance tests | [authentication.md](./authentication.md) |
 
@@ -85,16 +90,16 @@ When you change any of the following, update the linked artifacts in the same PR
 2. **New page or route** → `wireframes.md`, `component-planning.md`, `App.jsx`
 3. **Schema field** → `database-schema.md`, `database-erd.md`, Mongoose model
 4. **New user flow** → `user-journeys.md`, `user-workflows.md`
-5. **Sprint scope change** → `user-stories.md`, `mvp-scope.md`, `sprint-4-backlog.md`
+5. **Sprint scope change** → `user-stories.md`, `mvp-scope.md`, `sprint-5-backlog.md`
 
-## Sprint 3 exit checklist
+## Sprint 5 progress (through daily scrum 5)
 
 | Story | Artifact | Status |
 |-------|----------|--------|
-| #15 Architecture | `system-architecture.md`, this map | Complete |
-| #16 Workflows | `user-workflows.md`, `user-journeys.md` | Complete |
-| #17 Wireframes | `wireframes.md` | Complete |
-| #18 Database | `database-schema.md`, `database-erd.md` | Complete |
-| #19 Components | `component-planning.md` | Complete |
-| #20 Roadmap | `implementation-roadmap.md`, `sprint-4-backlog.md` | Complete |
-| #21 Organization | `project-organization.md`, this map | Complete |
+| #29 Architecture review | `system-architecture.md`, `component-planning.md` | In progress |
+| #30 Workflows / UX | `user-workflows.md`, `user-journeys.md` | In progress |
+| #31 Wireframes | `wireframes.md` | In progress |
+| #32 API / DB | `api.md`, `database-schema.md` | In progress |
+| #33 Roadmap / MVP | `implementation-roadmap.md`, `mvp-scope.md` | In progress |
+| #34 Presentation | `installation-guide.md`, README | In progress |
+| #35 Repo cleanup | `meeting-minutes/`, repo layout | In progress |
