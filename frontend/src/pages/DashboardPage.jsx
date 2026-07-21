@@ -35,7 +35,7 @@ export default function DashboardPage() {
       </PageCard>
       <PlaceholderPanel
         title="Recent activity"
-        body="No entries yet. Workout and nutrition logging will populate this section in a future sprint."
+        body="No entries yet. Workout and nutrition logging will be added in Capstone 2."
       />
     </div>
   );
