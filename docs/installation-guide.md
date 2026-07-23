@@ -1,6 +1,6 @@
 # Installation guide
 
-How to run our starter project locally. Capstone 1 does not require this to work for a grade, but we want it ready for Capstone 2.
+How to run the starter project locally.
 
 ## You need
 
@@ -23,6 +23,8 @@ Edit `.env` — the example file has comments for each variable. At minimum:
 
 Check: open `http://localhost:5000/api/health` — should return `"status": "ok"`.
 
+On some Macs AirPlay uses port 5000. If the backend fails with `EADDRINUSE`, set `PORT=5001` in `backend/.env` and use `http://localhost:5001/api/health`.
+
 ## Frontend
 
 New terminal:
@@ -36,7 +38,9 @@ npm run dev
 
 Default `VITE_API_URL` in `.env.example` is `http://localhost:5000/api`.
 
-Check: open `http://localhost:5173` — home page should show API status.
+If you set backend `PORT=5001`, set `VITE_API_URL=http://localhost:5001/api` in `frontend/.env` too.
+
+Open `http://localhost:5173` — home page should show API status.
 
 ## Quick test
 
@@ -59,6 +63,6 @@ cd frontend && npm run build
 - **MongoDB error** — make sure MongoDB is running or fix `MONGODB_URI`
 - **CORS error** — `CLIENT_URL` in backend `.env` should be `http://localhost:5173`
 
-## Before submission
+## Secrets
 
-Do not commit `.env` files. Only `.env.example` belongs in Git.
+Do not commit `.env` files. Only `.env.example` belongs in the project.

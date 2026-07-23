@@ -1,6 +1,6 @@
 # User Stories
 
-Backlog items from Sprint 1–5 planning and grooming meetings (Mingle IDs). Implementation work for Capstone 2 is tracked separately — see [story-id-reference.md](./story-id-reference.md).
+Backlog items from Sprint 1–5 planning and grooming meetings (Mingle IDs). Feature implementation continues in Capstone 2.
 
 ## Sprint 1 (Accepted — planning & design)
 
@@ -62,27 +62,20 @@ Backlog items from Sprint 1–5 planning and grooming meetings (Mingle IDs). Imp
 | 34 | Prepare final project documentation and presentation materials | Allen | In progress |
 | 35 | Final GitHub repository cleanup and project organization | Alejandro, Allen | In progress |
 
-Daily scrums 6–10, sprint review, and retrospective will close Sprint 5. See [sprint-5-backlog.md](./sprint-5-backlog.md).
-
-## Starter template (optional practice — not Mingle stories)
+## Starter template (not Mingle stories)
 
 | Item | Status |
 |------|--------|
 | Auth API (`/api/auth/*`) | Done |
 | Auth UI + protected routes | Done |
 | Mongoose models + UI shells for workouts, nutrition, goals | Scaffolded |
-| Feature CRUD APIs | Capstone 2 — see [capstone-2-handoff.md](./capstone-2-handoff.md) |
+| Feature CRUD APIs | Capstone 2 |
 
 ## Related Documentation
 
 | Topic | Location |
 |-------|----------|
-| Sprint 5 backlog | [sprint-5-backlog.md](./sprint-5-backlog.md) |
-| Capstone 2 handoff | [capstone-2-handoff.md](./capstone-2-handoff.md) |
-| Story ID reference | [story-id-reference.md](./story-id-reference.md) |
-| Capstone 1 submission | [capstone-1-submission.md](./capstone-1-submission.md) |
 | Installation guide | [installation-guide.md](./installation-guide.md) |
 | Implementation roadmap | [implementation-roadmap.md](./implementation-roadmap.md) |
-| Implementation backlog (auth/features) | [sprint-4-backlog.md](./sprint-4-backlog.md) |
 | Component planning | [component-planning.md](./component-planning.md) |
-| Planning artifacts map | [planning-artifacts-map.md](./planning-artifacts-map.md) |
+| MVP scope | [mvp-scope.md](./mvp-scope.md) |

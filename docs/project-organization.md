@@ -8,7 +8,7 @@ Sprint 3 deliverable (User Story #21). How the team organizes repo artifacts, Gi
 |------|---------|-------------|
 | `docs/` | Requirements, planning, acceptance criteria | Any story refinement or new feature spec |
 | `diagrams/` | Mermaid architecture, workflows, ERD | Schema or system design changes |
-| `meeting-minutes/` | Sprint ceremony PDFs | After each scrum, planning, review, retro |
+| `Documents/Scrum_Minutes/` | Dated ceremony and daily-scrum PDFs | After each scrum, planning, review, retro |
 | `backend/` | Express API and Mongoose models | New endpoints or schema fields |
 | `frontend/` | React UI | New pages, components, or routes |
 | `README.md` | Project entry point | Stack or setup changes |
@@ -74,11 +74,11 @@ A story is ready for sprint planning when it has:
 
 | Ceremony | Output location |
 |----------|-----------------|
-| Sprint planning | `meeting-minutes/sprint-N/Sprint Planning...pdf` |
-| Daily scrum | `meeting-minutes/sprint-N/Daily Scrum...pdf` |
-| Sprint review | `meeting-minutes/sprint-N/Sprint Review...pdf` |
-| Retrospective | `meeting-minutes/sprint-N/Sprint Retrospective...pdf` |
-| Backlog grooming | Notes reflected in `docs/user-stories.md` and story AC |
+| Sprint planning | `Documents/Scrum_Minutes/YYYY-MM-DD_Sprint-N-Sprint-Planning.pdf` |
+| Daily scrum | `Documents/Scrum_Minutes/YYYY-MM-DD_Sprint-N-Daily-Scrum-K.pdf` |
+| Sprint review | `Documents/Scrum_Minutes/YYYY-MM-DD_Sprint-N-Sprint-Review.pdf` |
+| Retrospective | `Documents/Scrum_Minutes/YYYY-MM-DD_Sprint-N-Sprint-Retrospective.pdf` |
+| Backlog grooming | `Documents/Scrum_Minutes/YYYY-MM-DD_Sprint-N-Backlog-Grooming.pdf` |
 
 ## Communication
 

@@ -2,14 +2,14 @@
 
 Sprint 3 deliverable (User Story #20). Sequences development work after planning sprints so the team can implement features in organized vertical slices.
 
-## Current State (Sprint 5 — through daily scrum 5)
+## Current State (end of Capstone 1)
 
 | Area | Capstone | Status |
 |------|----------|--------|
 | Repository and folder structure | 1 | Done |
 | Architecture, workflow, and ERD diagrams | 1 | Done |
-| Wireframes, journeys, API/DB planning docs | 1 | Done (final review in Sprint 5) |
-| Scrum minutes + submission folder | 1 | Through Sprint 5 daily 5 |
+| Wireframes, journeys, API/DB planning docs | 1 | Done |
+| Scrum minutes (`Documents/Scrum_Minutes/`) | 1 | Done (add final Sprint 5 review/retro when ready) |
 | Mongoose models (User, Workout, NutritionLog, Goal) | 1 starter | Scaffolded |
 | React + Tailwind starter with navigation shell | 1 starter | Done |
 | Auth API and protected routes | 1 practice | Done |
@@ -118,13 +118,11 @@ flowchart TD
 
 ## Sprint 5 documentation tasks (#29–#35)
 
-Final review of all planning artifacts before Capstone 1 submission. Progress tracked in [sprint-5-backlog.md](./sprint-5-backlog.md).
+Final review of planning artifacts and Capstone 1 submission prep (see [user-stories.md](./user-stories.md)).
 
 ## Related Documents
 
 - [mvp-scope.md](./mvp-scope.md) — in/out of scope
-- [capstone-2-handoff.md](./capstone-2-handoff.md) — Capstone 2 build order
-- [sprint-5-backlog.md](./sprint-5-backlog.md) — current sprint stories
 - [component-planning.md](./component-planning.md) — module ownership
 - [user-stories.md](./user-stories.md) — sprint story index
 - [authentication.md](./authentication.md) — auth acceptance criteria

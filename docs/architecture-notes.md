@@ -17,11 +17,11 @@ Living document for system design decisions. Expanded during Sprint 1–2.
 
 ```
 fitness-wellness-tracker/
-├── backend/          # Express API
-├── frontend/         # React app
-├── docs/             # Requirements, stories, auth, schema, wireframes
-├── diagrams/         # Mermaid architecture, workflow, ERD
-└── meeting-minutes/  # Sprint ceremony PDFs (by sprint folder)
+├── Documents/Scrum_Minutes/  # Dated ceremony + daily-scrum PDFs
+├── backend/                  # Express API
+├── frontend/                 # React app
+├── docs/                     # Requirements, stories, auth, schema, wireframes
+└── diagrams/                 # Mermaid architecture, workflow, ERD
 ```
 
 ## Request Lifecycle

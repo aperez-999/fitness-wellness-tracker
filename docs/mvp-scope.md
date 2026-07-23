@@ -75,4 +75,4 @@ gantt
 
 - Capstone 1: document decisions in `docs/`; keep MVP scope realistic.
 - Capstone 2: prefer vertical slices (API + UI per feature).
-- Follow [implementation-roadmap.md](./implementation-roadmap.md) and [capstone-2-handoff.md](./capstone-2-handoff.md).
+- Follow [implementation-roadmap.md](./implementation-roadmap.md).

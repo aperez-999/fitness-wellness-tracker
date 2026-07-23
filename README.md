@@ -1,66 +1,67 @@
 # Fitness & Wellness Tracker
 
-CIS 3950 capstone project — Alejandro Perez, Ahanaf Akif, Josue Gamon Fortes, Allen Cruz.
+CIS 3950 Capstone I — Alejandro Perez, Ahanaf Akif, Josue Gamon Fortes, Allen Cruz.
 
-We are building a web app where users can track workouts, nutrition, and wellness goals. Capstone 1 was mostly planning and documentation. We also set up a starter React/Express/MongoDB project so we are ready to code features in Capstone 2.
+Web app for tracking workouts, nutrition, and wellness goals. Capstone 1 focused on planning, documentation, and a React / Express / MongoDB starter with working login. Feature CRUD is planned for Capstone 2.
+
+## Capstone 1 submission
+
+Graded lite ZIP includes dated scrum minutes here:
+
+```
+Documents/Scrum_Minutes/
+```
+
+**ZIP name:** `fitness-wellness-tracker.zip` (Team Leader submits on Canvas).
 
 ## What we did each sprint
 
-**Sprint 1** — Set up the GitHub repo, picked our stack (React, Express, MongoDB), wrote initial requirements, wireframe ideas, and auth research. See `meeting-minutes/sprint-1/`.
+**Sprint 1** — Repo, stack, wireframes, auth research.
 
-**Sprint 2** — Added architecture and workflow diagrams, refined wireframes, planned the database (ERD), and wrote up MVP scope. See `meeting-minutes/sprint-2/`.
+**Sprint 2** — Architecture, workflows, ERD, MVP scope.
 
-**Sprint 3** — Finalized architecture docs, user journeys, wireframes for dashboard/workouts/nutrition, database schema, component planning, and the implementation roadmap. We also scaffolded the backend and frontend starter. See `meeting-minutes/sprint-3/`.
+**Sprint 3** — Final planning docs + starter template.
 
-**Sprint 4** — Polished all of the above: architecture, workflows, wireframes, API planning, and roadmap. Accepted stories #22–#28 in our sprint review. See `meeting-minutes/sprint-4/`.
+**Sprint 4** — Polished architecture, API docs, roadmap.
 
-**Sprint 5 (in progress)** — Final pass on documentation before submission. Through daily scrum 5 we have been reviewing architecture, API docs, wireframes, and repo organization. Stories #29–#35. Daily scrums 6–10 and review/retro still to come. See `meeting-minutes/sprint-5/`.
+**Sprint 5** — Final doc review and Capstone 1 submission prep.
 
 ## Tech stack
 
 - Frontend: React, Vite, Tailwind, React Router
 - Backend: Node.js, Express
-- Database: MongoDB with Mongoose
+- Database: MongoDB + Mongoose
 
 ## Repo layout
 
 ```
-backend/            Express API + Mongoose models
-frontend/           React UI
-docs/               Planning docs we wrote during sprints
-diagrams/           Architecture, workflows, ERD
-meeting-minutes/    Scrum ceremony PDFs by sprint folder
+Documents/Scrum_Minutes/   Capstone 1 minutes (named by date)
+backend/                   Express API
+frontend/                  React UI
+docs/                      Planning docs
+diagrams/                  Architecture, workflows, ERD
 ```
 
-## Docs worth reading
-
-- [docs/README.md](./docs/README.md) — index of everything we wrote
-- [docs/user-stories.md](./docs/user-stories.md) — Mingle story list
-- [docs/mvp-scope.md](./docs/mvp-scope.md) — what is in the MVP
-- [docs/installation-guide.md](./docs/installation-guide.md) — how to run the starter locally
-
-## Running the starter (optional)
-
-Capstone 1 only requires scrum minutes in the ZIP. The code here is practice for our team — not graded for Capstone 1.
+## Running the starter
 
 ```bash
+# Backend — copy .env.example to .env first (needs MongoDB Atlas or local MongoDB)
 cd backend && cp .env.example .env && npm install && npm run dev
+
+# Frontend — new terminal
 cd frontend && cp .env.example .env && npm install && npm run dev
 ```
 
-Backend: `http://localhost:5000` — Frontend: `http://localhost:5173`
+On some Macs, port 5000 is used by AirPlay — set `PORT=5001` in `backend/.env` and `VITE_API_URL=http://localhost:5001/api` in `frontend/.env`.
 
-Right now signup/login works and the dashboard pages are placeholders for workouts, nutrition, and goals. We will build those in Capstone 2.
+Full steps: [docs/installation-guide.md](./docs/installation-guide.md)
 
-## Capstone 1 submission
+## Docs
 
-The Team Leader (Alejandro) submits `fitness-wellness-tracker.zip` on Canvas.
-
-**Required:** `Documents/Scrum_Minutes/` with all ceremony minutes named by date. Our PDFs live in `meeting-minutes/` for now, organized by sprint. After Sprint 5 ends we will copy them into `Documents/Scrum_Minutes/` with one file per date for the ZIP.
-
-Everything else in this repo (code, docs, diagrams) is optional practice per the syllabus.
-
-See [docs/capstone-1-submission.md](./docs/capstone-1-submission.md) for the checklist.
+- [docs/README.md](./docs/README.md) — index of planning documents
+- [docs/user-stories.md](./docs/user-stories.md)
+- [docs/mvp-scope.md](./docs/mvp-scope.md)
+- [docs/installation-guide.md](./docs/installation-guide.md)
 
 ## License
 
