@@ -46,7 +46,7 @@ Sprint 3 deliverable (User Story #20). Sequences development work after planning
 | Logout | `POST /api/auth/logout` | Header logout button | Done |
 | Route guards | Auth middleware | `ProtectedRoute` wrapper | Done |
 
-**Depends on:** [authentication.md](./authentication.md) acceptance criteria.
+**Depends on:** [../architecture/authentication.md](../architecture/authentication.md) acceptance criteria.
 
 **Exit criteria:** New user can register, land on dashboard, refresh page and stay logged in, log out.
 
@@ -125,4 +125,4 @@ Final review of planning artifacts and Capstone 1 submission prep (see [user-sto
 - [mvp-scope.md](./mvp-scope.md) — in/out of scope
 - [component-planning.md](./component-planning.md) — module ownership
 - [user-stories.md](./user-stories.md) — sprint story index
-- [authentication.md](./authentication.md) — auth acceptance criteria
+- [../architecture/authentication.md](../architecture/authentication.md) — auth acceptance criteria

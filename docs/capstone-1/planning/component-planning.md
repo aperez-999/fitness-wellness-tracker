@@ -98,10 +98,10 @@ flowchart LR
 
 Each module should reference:
 
-- API contracts → [authentication.md](./authentication.md), future `docs/api.md`
-- Data shape → [database-schema.md](./database-schema.md)
+- API contracts → [../architecture/authentication.md](../architecture/authentication.md), future `docs/api.md`
+- Data shape → [../architecture/database-schema.md](../architecture/database-schema.md)
 - UI layout → [wireframes.md](./wireframes.md)
-- System context → [../diagrams/system-architecture.md](../diagrams/system-architecture.md)
+- System context → [../architecture/system-architecture.md](../architecture/system-architecture.md)
 
 ## Maintenance Rules
 

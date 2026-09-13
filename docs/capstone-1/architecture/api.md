@@ -1,6 +1,6 @@
 # REST API Reference
 
-Bridges [architecture-notes.md](./architecture-notes.md), [component-planning.md](./component-planning.md), and [authentication.md](./authentication.md). Updated during Sprint 3 daily scrums 6–7 to connect planning artifacts with implementation.
+Bridges [architecture-notes.md](./architecture-notes.md), [../planning/component-planning.md](../planning/component-planning.md), and [authentication.md](./authentication.md). Updated during Sprint 3 daily scrums 6–7 to connect planning artifacts with implementation.
 
 **Base URL (development):** `http://localhost:5000/api`
 

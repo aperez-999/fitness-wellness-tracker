@@ -31,7 +31,7 @@ fitness-wellness-tracker/
 3. Mongoose model reads/writes MongoDB.
 4. JSON response returned; React updates UI.
 
-See [diagrams/system-architecture.md](../diagrams/system-architecture.md) for diagrams.
+See [system-architecture.md](./system-architecture.md) for diagrams.
 
 ## API Conventions
 

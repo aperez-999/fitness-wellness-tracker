@@ -2,7 +2,7 @@
 
 Sprint 2 (User Story #9) and Sprint 3 (User Story #16). Major MVP user journeys aligned with wireframes and backlog grooming.
 
-Narrative journey tables: [../docs/user-journeys.md](../docs/user-journeys.md).
+Narrative journey tables: [../planning/user-journeys.md](../planning/user-journeys.md).
 
 ## 1. New User Registration
 

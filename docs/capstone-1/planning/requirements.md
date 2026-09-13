@@ -2,7 +2,7 @@
 
 ## Functional Requirements
 
-- Users should be able to create accounts (see [authentication.md](./authentication.md))
+- Users should be able to create accounts (see [../architecture/authentication.md](../architecture/authentication.md))
 - Users should be able to log in and log out securely
 - Users should be able to log workouts
 - Users should be able to track nutrition entries and goals
@@ -17,5 +17,5 @@
 ## Related Documents
 
 - [MVP scope](./mvp-scope.md) — feature prioritization
-- [Database schema](./database-schema.md) — data requirements
+- [Database schema](../architecture/database-schema.md) — data requirements
 - [User stories](./user-stories.md) — sprint backlog

@@ -1,6 +1,6 @@
 # Database Schema
 
-Companion to [diagrams/database-erd.md](../diagrams/database-erd.md). Sprint 1 (User Story #4), Sprint 2 (User Story #11), and Sprint 3 (User Story #18).
+Companion to [../diagrams/database-erd.md](../diagrams/database-erd.md). Sprint 1 (User Story #4), Sprint 2 (User Story #11), and Sprint 3 (User Story #18).
 
 ## Technology
 
@@ -78,7 +78,7 @@ Progress is **derived from existing collections** — no separate `progress` col
 | Goal completion | `goals` | Compare `currentValue` to `targetValue` |
 | Recent activity | `workouts`, `nutrition_logs` | Merge last N by `createdAt` |
 
-Future analytics (charts) will aggregate these same collections. See [implementation-roadmap.md](./implementation-roadmap.md) Phase 5.
+Future analytics (charts) will aggregate these same collections. See [../planning/implementation-roadmap.md](../planning/implementation-roadmap.md) Phase 5.
 
 ## Entity Relationship Summary
 

@@ -6,16 +6,16 @@ Sprint 1–2 planning deliverables. All diagrams use [Mermaid](https://mermaid.j
 
 | File | Sprint story | Description |
 |------|--------------|-------------|
-| [system-architecture.md](./system-architecture.md) | US #8 | Three-tier architecture, components, API surface, sequence diagram |
+| [system-architecture.md](../architecture/system-architecture.md) | US #8 | Three-tier architecture, components, API surface, sequence diagram |
 | [user-workflows.md](./user-workflows.md) | US #9, #16 | Auth, navigation, logging, progress flows |
 | [database-erd.md](./database-erd.md) | US #11, #18 | ERD + derived progress model |
 
 ## Related Documentation
 
-- Text wireframes: [../docs/wireframes.md](../docs/wireframes.md)
-- Database field reference: [../docs/database-schema.md](../docs/database-schema.md)
-- User journeys: [../docs/user-journeys.md](../docs/user-journeys.md)
-- Module map: [../docs/component-planning.md](../docs/component-planning.md)
+- Text wireframes: [../planning/wireframes.md](../planning/wireframes.md)
+- Database field reference: [../architecture/database-schema.md](../architecture/database-schema.md)
+- User journeys: [../planning/user-journeys.md](../planning/user-journeys.md)
+- Module map: [../planning/component-planning.md](../planning/component-planning.md)
 
 ## Viewing Diagrams
 

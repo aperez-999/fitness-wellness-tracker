@@ -75,7 +75,7 @@ Backlog items from Sprint 1–5 planning and grooming meetings (Mingle IDs). Fea
 
 | Topic | Location |
 |-------|----------|
-| Installation guide | [installation-guide.md](./installation-guide.md) |
+| Installation guide | [../user-guides/local-setup-guide.md](../user-guides/local-setup-guide.md) |
 | Implementation roadmap | [implementation-roadmap.md](./implementation-roadmap.md) |
 | Component planning | [component-planning.md](./component-planning.md) |
 | MVP scope | [mvp-scope.md](./mvp-scope.md) |

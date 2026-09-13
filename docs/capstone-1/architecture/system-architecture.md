@@ -2,7 +2,7 @@
 
 Sprint 2 (User Story #8) and Sprint 3 (User Story #15). MVP three-tier layout and module context.
 
-Module details: [../docs/component-planning.md](../docs/component-planning.md).
+Module details: [../planning/component-planning.md](../planning/component-planning.md).
 
 ## High-Level Architecture
 
