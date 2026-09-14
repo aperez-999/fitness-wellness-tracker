@@ -70,4 +70,15 @@ export function getMe() {
   return apiFetch("/auth/me");
 }
 
+export function getWorkouts() {
+  return apiFetch("/workouts")
+}
+
+export function createWorkout(workout) {
+  return apiFetch("/workouts", {
+    method: "POST",
+    body: JSON.stringify(workout),
+  });
+}
+
 export { API_URL };
