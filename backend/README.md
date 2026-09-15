@@ -41,8 +41,8 @@ src/
 | POST | `/api/auth/logout` | Logout (auth required) |
 | GET | `/api/auth/me` | Current user (auth required) |
 
-See [../docs/api.md](../docs/api.md) for full contracts.
+See [../docs/capstone-1/architecture/api.md](../docs/capstone-1/architecture/api.md) for full contracts.
 
 ## Models
 
-Schemas match [../docs/database-schema.md](../docs/database-schema.md) and [../diagrams/database-erd.md](../diagrams/database-erd.md).
+Schemas match [../docs/capstone-1/architecture/database-schema.md](../docs/capstone-1/architecture/database-schema.md) and [../docs/capstone-1/diagrams/database-erd.md](../docs/capstone-1/diagrams/database-erd.md).

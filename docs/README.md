@@ -1,36 +1,24 @@
-# Project docs
+# Documentation
 
-Planning and design documents from Capstone 1 (sprint planning, backlog grooming, and daily scrums).
+This folder holds Capstone course documentation. Application source code lives in `frontend/` and `backend/` at the repository root and is shared across Capstone 1 and Capstone 2.
 
-## Backlog
+## Capstone 1 (`capstone-1/`)
 
-- [user-stories.md](./user-stories.md) — Mingle stories #1–#35
-- [mvp-scope.md](./mvp-scope.md) — Capstone 1 vs Capstone 2 scope
-- [implementation-roadmap.md](./implementation-roadmap.md) — build order
+Archived planning and design artifacts from Capstone 1:
 
-## Planning
+- **architecture/** — system architecture, API contracts, authentication design, database schema
+- **diagrams/** — Mermaid ERD, workflows, and related diagram notes
+- **planning/** — requirements, user stories, MVP scope, wireframes, roadmap, project organization
+- **meeting-minutes/** — dated scrum, planning, review, and retrospective PDFs
+- **user-guides/** — installation and user-manual materials from Capstone 1
 
-- [requirements.md](./requirements.md)
-- [architecture-notes.md](./architecture-notes.md)
-- [component-planning.md](./component-planning.md)
-- [user-journeys.md](./user-journeys.md)
-- [wireframes.md](./wireframes.md)
-- [project-organization.md](./project-organization.md)
+## Capstone 2 (`capstone-2/`)
 
-## Technical
+Sprint-specific implementation, verification, and development documentation:
 
-- [api.md](./api.md) — REST endpoints (auth implemented in the starter)
-- [authentication.md](./authentication.md)
-- [database-schema.md](./database-schema.md)
+- **sprint-1/** — problem validation and project specification
+- **sprint-2/** through **sprint-5/** — reserved for upcoming sprint docs
 
-## Setup
+## Application code
 
-- [installation-guide.md](./installation-guide.md)
-
-## Diagrams
-
-In [../diagrams/](../diagrams/) — system architecture, user workflows, database ERD.
-
-## Meeting minutes
-
-Dated PDFs for Capstone 1: [../Documents/Scrum_Minutes/](../Documents/Scrum_Minutes/).
+`frontend/` and `backend/` contain the continuous application used across both courses. Capstone 1 established the starter (auth + models). Capstone 2 continues feature implementation on that same codebase.

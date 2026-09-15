@@ -1,67 +1,110 @@
 # Fitness & Wellness Tracker
 
-CIS 3950 Capstone I — Alejandro Perez, Ahanaf Akif, Josue Gamon Fortes, Allen Cruz.
+Web app for logging workouts and understanding fitness progress in one place. The project began in **FIU Capstone 1** with planning, architecture, and a working React / Express / MongoDB starter (including authentication). It continues in **Capstone 2** with implementation, testing, and deployment of core features.
 
-Web app for tracking workouts, nutrition, and wellness goals. Capstone 1 focused on planning, documentation, and a React / Express / MongoDB starter with working login. Feature CRUD is planned for Capstone 2.
+## Core problem
 
-## Capstone 1 submission
+A college student wants to log workouts and understand weekly fitness progress without switching between multiple applications.
 
-Graded lite ZIP includes dated scrum minutes here:
+## Current implemented features
 
-```
-Documents/Scrum_Minutes/
-```
+- Authentication (signup, login, logout, session via JWT)
+- Workout logging
+- Workout persistence (MongoDB)
+- Recent workout display / end-to-end walking skeleton
 
-**ZIP name:** `fitness-wellness-tracker.zip` (Team Leader submits on Canvas).
+## Planned features
 
-## What we did each sprint
-
-**Sprint 1** — Repo, stack, wireframes, auth research.
-
-**Sprint 2** — Architecture, workflows, ERD, MVP scope.
-
-**Sprint 3** — Final planning docs + starter template.
-
-**Sprint 4** — Polished architecture, API docs, roadmap.
-
-**Sprint 5** — Final doc review and Capstone 1 submission prep.
+- Progress dashboard
+- Nutrition logging
+- Wellness goals
+- Charts and analytics
+- AI recommendations
+- Notifications
 
 ## Tech stack
 
-- Frontend: React, Vite, Tailwind, React Router
-- Backend: Node.js, Express
-- Database: MongoDB + Mongoose
+- **Frontend:** React, Vite, Tailwind CSS, React Router
+- **Backend:** Node.js, Express
+- **Database:** MongoDB Atlas (or local MongoDB) with Mongoose
+- **Auth:** JWT
 
-## Repo layout
+## Project structure
 
 ```
-Documents/Scrum_Minutes/   Capstone 1 minutes (named by date)
-backend/                   Express API
-frontend/                  React UI
-docs/                      Planning docs
-diagrams/                  Architecture, workflows, ERD
+fitness-wellness-tracker/
+├── backend/                 # Express API
+├── frontend/                # React + Vite UI
+├── docs/
+│   ├── capstone-1/          # Archived Capstone 1 planning & artifacts
+│   └── capstone-2/          # Sprint docs (active Capstone 2 work)
+├── Capstone-Poster-Template-CS.pdf
+├── CHANGELOG.md
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
-## Running the starter
+See [docs/README.md](./docs/README.md) for how Capstone 1 vs Capstone 2 documentation is organized.
+
+## Local development
+
+You need Node.js 20+ and a MongoDB connection (Atlas or local).
+
+### Backend
 
 ```bash
-# Backend — copy .env.example to .env first (needs MongoDB Atlas or local MongoDB)
-cd backend && cp .env.example .env && npm install && npm run dev
-
-# Frontend — new terminal
-cd frontend && cp .env.example .env && npm install && npm run dev
+cd backend
+cp .env.example .env   # if you do not already have .env
+npm install
+npm run dev
 ```
 
-On some Macs, port 5000 is used by AirPlay — set `PORT=5001` in `backend/.env` and `VITE_API_URL=http://localhost:5001/api` in `frontend/.env`.
+Scripts (from `backend/package.json`):
 
-Full steps: [docs/installation-guide.md](./docs/installation-guide.md)
+- `npm run dev` — start API with file watch (`node --watch src/index.js`)
+- `npm start` — start API once (`node src/index.js`)
 
-## Docs
+Configure `backend/.env` from `.env.example` (`MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, optional `PORT`).
 
-- [docs/README.md](./docs/README.md) — index of planning documents
-- [docs/user-stories.md](./docs/user-stories.md)
-- [docs/mvp-scope.md](./docs/mvp-scope.md)
-- [docs/installation-guide.md](./docs/installation-guide.md)
+On some Macs, AirPlay uses port **5000**. If the API fails with `EADDRINUSE`, set `PORT=5001` in `backend/.env`.
+
+Health check: `http://localhost:5000/api/health` (or `:5001` if you changed the port).
+
+### Frontend
+
+```bash
+cd frontend
+cp .env.example .env   # if you do not already have .env
+npm install
+npm run dev
+```
+
+Scripts (from `frontend/package.json`):
+
+- `npm run dev` — Vite development server
+- `npm run build` — production build
+- `npm run preview` — preview the production build
+
+Set `VITE_API_URL` in `frontend/.env` to match the backend (for example `http://localhost:5001/api` if the API uses port 5001).
+
+App: `http://localhost:5173`
+
+Full Capstone 1 setup notes: [docs/capstone-1/user-guides/local-setup-guide.md](./docs/capstone-1/user-guides/local-setup-guide.md)
+
+## Capstone 1 vs Capstone 2 docs
+
+| Area | Location | Purpose |
+|------|----------|---------|
+| Capstone 1 archive | `docs/capstone-1/` | Requirements, architecture, diagrams, planning, meeting minutes, original guides |
+| Capstone 2 sprints | `docs/capstone-2/sprint-N/` | Sprint problem validation, specs, and ongoing development docs |
+| Application | `frontend/`, `backend/` | Continuous codebase across both courses |
+
+Sprint status is tracked on the Capstone website board (not in a repo status file).
+
+## Changelog
+
+See [CHANGELOG.md](./CHANGELOG.md).
 
 ## License
 

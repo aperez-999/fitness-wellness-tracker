@@ -26,12 +26,12 @@ App runs at `http://localhost:5173`.
 | `/login` | Login |
 | `/signup` | Sign up |
 | `/dashboard` | Dashboard shell (summary cards) |
-| `/workouts` | Placeholder — Capstone 2 |
+| `/workouts` | Workout logging (list + create) |
 | `/nutrition` | Placeholder — Capstone 2 |
 | `/goals` | Placeholder — Capstone 2 |
 | `/profile` | Signed-in user info |
 
-Auth uses `AuthContext`, `ProtectedRoute`, and `lib/api.js`. Layouts follow [../docs/wireframes.md](../docs/wireframes.md).
+Auth uses `AuthContext`, `ProtectedRoute`, and `lib/api.js`. Layouts follow [../docs/capstone-1/planning/wireframes.md](../docs/capstone-1/planning/wireframes.md).
 
 ## Structure
 
