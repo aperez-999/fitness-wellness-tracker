@@ -1,0 +1,98 @@
+.workout-history .session-row.has-action {
+  display: block;
+  overflow: clip;
+}
+.workout-row-action {
+  --muted: #695960;
+  padding: 18px;
+  border-radius: 16px;
+  background: var(--linen);
+}
+.workout-row-action.is-removing {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: #f4e8e5;
+}
+.row-action-question,
+.workout-row-action legend {
+  font-size: 15px;
+  font-weight: 750;
+}
+.row-action-caption {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.row-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.workout-row-action.is-removing > div:first-child {
+  min-width: 0;
+  flex: 1 1 150px;
+}
+.row-action-question {
+  overflow-wrap: anywhere;
+}
+.row-action-buttons :is(.progress-button, .secondary-button) {
+  min-height: 38px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  font-size: 12px;
+}
+.row-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 100px;
+  gap: 12px;
+  margin-top: 14px;
+}
+.row-edit-grid .row-edit-field:first-child {
+  grid-column: 1 / -1;
+}
+.row-edit-field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.row-edit-field label {
+  font-size: 12px;
+  font-weight: 650;
+}
+.row-edit-field :is(input, textarea) {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #cdbfbb;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+}
+.row-edit-field [aria-invalid="true"] {
+  border-color: #973d56;
+}
+.row-action-error {
+  flex-basis: 100%;
+  margin-bottom: 10px;
+  color: #973d56;
+  font-size: 12px;
+}
+.workout-row-action fieldset {
+  min-width: 0;
+}
+@media (max-width: 480px) {
+  .workout-row-action {
+    padding: 14px;
+  }
+  .row-edit-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .row-edit-grid .row-edit-field:first-child {
+    grid-column: 1;
+  }
+}

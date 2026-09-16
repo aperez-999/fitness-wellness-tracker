@@ -1,0 +1,253 @@
+.session-row {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 0;
+}
+
+.session-row + .session-row {
+  border-top: 1px solid var(--line);
+}
+
+.session-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-details :is(h3, h4) {
+  font-size: 14px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+
+.session-notes {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+.session-notes summary {
+  width: fit-content;
+  min-height: 32px;
+  padding-block: 5px;
+  color: var(--plum);
+  cursor: pointer;
+}
+
+.session-notes p {
+  padding: 8px 0;
+  color: var(--muted);
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.session-duration {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 7px;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.session-message {
+  padding: 24px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.journal-list .session-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 28px;
+  padding: 16px 18px;
+}
+
+.journal-group + .journal-group {
+  margin-top: 22px;
+}
+.journal-date-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  padding: 16px 0 10px;
+}
+.journal-date {
+  font-size: 13px;
+  font-weight: 750;
+}
+.journal-date-heading > span {
+  display: flex;
+  gap: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.journal-group .journal-list {
+  padding-inline: 0;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: clip;
+}
+.session-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px 14px;
+}
+.session-remove {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  color: var(--muted);
+}
+.session-remove:hover {
+  color: #973d56;
+  background: #f5e7e5;
+}
+
+.session-saved-reveal {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--plum);
+  color: var(--paper);
+  font-size: 20px;
+  font-weight: 750;
+  text-align: center;
+  pointer-events: none;
+  animation: saved-row-reveal 1500ms var(--ease-soft) both;
+}
+@keyframes saved-row-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  14%,
+  66% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .session-saved-reveal {
+    display: none;
+  }
+}
+.session-remove:disabled {
+  opacity: 0.5;
+}
+.journal-group-minutes {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.journal-list .session-details :is(h3, h4) {
+  font-size: 16px;
+}
+.journal-list .session-duration {
+  grid-column: 2;
+  justify-content: flex-end;
+  margin-top: 1px;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.journal-list .session-notes {
+  margin-top: 7px;
+}
+.journal-list .session-notes summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: fit-content;
+  max-width: 100%;
+  min-height: 32px;
+  color: var(--muted);
+}
+.journal-list .session-notes summary::-webkit-details-marker {
+  display: none;
+}
+.note-preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.note-open,
+.note-close {
+  flex-shrink: 0;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.note-close {
+  display: none;
+}
+.session-notes[open] :is(.note-preview, .note-open) {
+  display: none;
+}
+.session-notes[open] .note-close {
+  display: inline;
+}
+
+@media (max-width: 1100px) {
+  .journal-list .session-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 16px;
+  }
+  .journal-list .session-details {
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+  .journal-list .session-duration {
+    grid-column: 2;
+    grid-row: 1;
+    max-width: 10ch;
+  }
+  .journal-list .session-actions {
+    grid-column: 2;
+    grid-row: 2;
+  }
+}
+
+@media (max-width: 380px) {
+  .journal-list .session-row {
+    column-gap: 12px;
+    padding: 14px;
+  }
+  .journal-list .session-details :is(h3, h4),
+  .journal-list .session-duration {
+    font-size: 14px;
+  }
+  .journal-list .session-notes summary {
+    flex-wrap: wrap;
+    gap: 3px 10px;
+  }
+  .note-preview {
+    flex-basis: 100%;
+  }
+  .journal-date-heading > span {
+    gap: 10px;
+    font-size: 11px;
+  }
+}

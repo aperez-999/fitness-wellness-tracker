@@ -1,0 +1,64 @@
+/* Motion responds to interaction; unchanged background refreshes do not replay it. */
+@media (prefers-reduced-motion: no-preference) {
+  .dayform-theme
+    :is(.progress-button, .secondary-button, .refresh-button, .logout-button) {
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      transform 150ms var(--ease-soft);
+  }
+
+  .dayform-theme
+    :is(
+      .progress-button,
+      .secondary-button,
+      .refresh-button,
+      .logout-button
+    ):active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .app-nav-link {
+    transition:
+      background-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .day-fill {
+    transition: height 300ms var(--ease-soft);
+  }
+
+  .day-track {
+    transition:
+      outline-width 180ms ease,
+      outline-color 180ms ease,
+      background-color 180ms ease;
+  }
+
+  .session-content :is(.session-list, .day-empty) {
+    animation: session-reveal 180ms ease-out;
+  }
+
+  @keyframes session-reveal {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+.day-button:hover:not(:disabled) .day-track {
+  background-color: #806073;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dayform-theme *,
+  .dayform-theme *::before,
+  .dayform-theme *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

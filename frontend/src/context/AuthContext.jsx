@@ -1,6 +1,21 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import { getMe, getToken, login as apiLogin, logout as apiLogout, setToken, signup as apiSignup } from "../lib/api.js";
+import {
+  getMe,
+  getToken,
+  TOKEN_KEY,
+  login as apiLogin,
+  logout as apiLogout,
+  setToken,
+  signup as apiSignup,
+} from "../lib/api.js";
 
 const AuthContext = createContext(null);
 
@@ -18,17 +33,32 @@ export function AuthProvider({ children }) {
 
     try {
       const { user: currentUser } = await getMe();
-      setUser(currentUser);
+      if (getToken() === token) setUser(currentUser);
     } catch {
-      setToken(null);
-      setUser(null);
+      if (getToken() === token) {
+        setToken(null);
+        setUser(null);
+        setLoading(false);
+      }
     } finally {
-      setLoading(false);
+      if (getToken() === token) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
     loadUser();
+  }, [loadUser]);
+
+  useEffect(() => {
+    function handleStorage(event) {
+      if (event.key !== TOKEN_KEY && event.key !== null) return;
+      setUser(null);
+      setLoading(true);
+      loadUser();
+    }
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
   }, [loadUser]);
 
   const login = useCallback(async (credentials) => {
@@ -45,14 +75,12 @@ export function AuthProvider({ children }) {
     return newUser;
   }, []);
 
-  const logout = useCallback(async () => {
-    try {
-      await apiLogout();
-    } catch {
-      // Clear local session even if the API call fails
-    }
+  const logout = useCallback(() => {
+    // Start the request with the current token, then clear the session immediately.
+    void apiLogout().catch(() => {});
     setToken(null);
     setUser(null);
+    setLoading(false);
   }, []);
 
   const value = useMemo(

@@ -1,0 +1,172 @@
+.trail-caption {
+  margin: 20px 0 12px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.movement-trail {
+  --muted: #695960;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.movement-trail .session-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px 14px;
+  border: 0;
+  border-radius: 20px;
+  background: #f4eee7;
+}
+.movement-trail .session-row:nth-child(2) {
+  background: #f3e9e6;
+}
+.movement-trail .session-row:nth-child(3) {
+  background: #edf0e8;
+}
+.movement-trail .session-details {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+.movement-trail .session-details h3 {
+  font-size: 17px;
+  letter-spacing: -0.3px;
+}
+.trail-date {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.movement-trail .session-duration {
+  grid-column: 1;
+  grid-row: 3;
+  margin: 0;
+  color: var(--ink);
+  font-size: 18px;
+  font-weight: 750;
+}
+.movement-trail .session-actions {
+  grid-column: 2;
+  grid-row: 3;
+}
+.movement-trail .session-notes {
+  margin-top: 3px;
+}
+.movement-trail .session-notes summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  font-size: 12px;
+}
+.movement-trail .session-notes summary::-webkit-details-marker {
+  display: none;
+}
+.movement-trail .note-preview {
+  display: none;
+}
+.trail-meter {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: 96px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #d8cdc6;
+}
+.trail-bar {
+  position: relative;
+  width: 46px;
+  height: var(--duration-height);
+  min-height: 2px;
+  border-radius: 12px 12px 0 0;
+  background: #cdb5bf;
+}
+.movement-trail .session-row:nth-child(2) .trail-bar {
+  background: #d7ac9b;
+}
+.movement-trail .session-row:nth-child(3) .trail-bar {
+  background: #aab9a5;
+}
+.trail-meter .activity-art {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  width: 68px;
+  height: 50px;
+  transform: translateX(-50%);
+  object-fit: contain;
+}
+@media (max-width: 760px) {
+  .movement-trail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .movement-trail .session-row {
+    grid-template-rows: auto auto;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+    gap: 6px 12px;
+    padding: 16px;
+  }
+  .trail-meter {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    height: 78px;
+    margin: 0;
+    border: 0;
+  }
+  .trail-bar {
+    width: 46px;
+    height: 5px;
+    border-radius: 8px;
+  }
+  .movement-trail .session-row .trail-bar {
+    background: transparent;
+  }
+  .trail-meter .activity-art {
+    width: 68px;
+    height: 50px;
+    bottom: 12px;
+  }
+  .movement-trail .session-details {
+    grid-column: 2;
+    grid-row: 1 / 3;
+  }
+  .movement-trail .session-details h3 {
+    font-size: 15px;
+  }
+  .movement-trail .session-duration {
+    grid-column: 3;
+    grid-row: 1;
+    font-size: 15px;
+  }
+  .movement-trail .session-actions {
+    grid-column: 3;
+    grid-row: 2;
+  }
+  .trail-caption {
+    margin-top: 16px;
+  }
+}
+@media (max-width: 380px) {
+  .movement-trail .session-row {
+    grid-template-columns: 44px minmax(0, 1fr) auto;
+    padding: 14px 12px;
+    gap: 5px 8px;
+  }
+  .trail-meter .activity-art {
+    width: 50px;
+    height: 42px;
+  }
+  .trail-bar {
+    width: 34px;
+  }
+  .movement-trail .session-duration {
+    max-width: 7ch;
+    text-align: right;
+  }
+}

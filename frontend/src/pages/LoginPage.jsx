@@ -1,8 +1,8 @@
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import AuthLayout from "../components/AuthLayout.jsx";
 import FormField from "../components/FormField.jsx";
-import PageCard from "../components/PageCard.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
@@ -13,37 +13,38 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const redirectTo = location.state?.from || "/dashboard";
 
-  if (!loading && isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
-  }
+  if (!loading && isAuthenticated) return <Navigate to={redirectTo} replace />;
 
   async function handleSubmit(event) {
     event.preventDefault();
+    if (submitting) return;
     setError("");
     setSubmitting(true);
-
     try {
       await login({ email, password });
-      const redirectTo = location.state?.from || "/dashboard";
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      setError(err.message || "Invalid email or password");
+      setError(err.message || "Could not sign in. Try again.");
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="mx-auto flex min-h-screen max-w-md items-center px-4 py-12">
-      <PageCard title="Log in" description="Sign in to access your fitness data.">
-        <form className="space-y-4" onSubmit={handleSubmit}>
+    <AuthLayout
+      title="Log in"
+      description="Your workouts, right where you left them."
+    >
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <fieldset disabled={submitting}>
           <FormField
             id="login-email"
             label="Email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
             placeholder="you@example.com"
             autoComplete="email"
           />
@@ -52,29 +53,25 @@ export default function LoginPage() {
             label="Password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
             autoComplete="current-password"
           />
-          {error ? (
-            <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+          {error && (
+            <p className="auth-error" role="alert">
               {error}
             </p>
-          ) : null}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
-          >
-            {submitting ? "Signing in..." : "Log in"}
+          )}
+          <button type="submit" className="progress-button">
+            {submitting ? "Signing in…" : "Log in"}
           </button>
-        </form>
-        <p className="mt-4 text-center text-sm text-slate-600">
-          No account?{" "}
-          <Link to="/signup" className="font-medium text-emerald-700">
-            Sign up
-          </Link>
-        </p>
-      </PageCard>
-    </div>
+        </fieldset>
+      </form>
+      <p className="auth-footer">
+        New to Dayform?{" "}
+        <Link to="/signup" state={location.state} className="text-link">
+          Sign up
+        </Link>
+      </p>
+    </AuthLayout>
   );
 }
