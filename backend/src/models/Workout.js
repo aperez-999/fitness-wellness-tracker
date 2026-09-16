@@ -16,6 +16,6 @@ const workoutSchema = new mongoose.Schema(
   { timestamps: { createdAt: true, updatedAt: false } },
 );
 
-workoutSchema.index({ userId: 1, date: -1 });
+workoutSchema.index({ userId: 1, date: -1, createdAt: -1, _id: -1 });
 
 export const Workout = mongoose.model("Workout", workoutSchema);

@@ -1,0 +1,108 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/manrope-latin-variable.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+
+.dayform-theme {
+  --linen: #f8f3ed;
+  --paper: #fffcf8;
+  --ink: #342b30;
+  --muted: #76676c;
+  --plum: #593849;
+  --rose: #edcfca;
+  --honey: #efc77e;
+  --line: #e8dfda;
+  --ease-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  color: var(--ink);
+  background: var(--linen);
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.dayform-theme :is(button, a) {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dayform-theme button:not(:disabled) {
+  cursor: pointer;
+}
+
+.dayform-theme :is(a, button, input, textarea, summary):focus-visible {
+  outline: 3px solid var(--plum);
+  outline-offset: 4px;
+}
+
+.dayform-theme svg {
+  flex-shrink: 0;
+}
+
+.brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  color: var(--plum);
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: -1.2px;
+  line-height: 1;
+  border-radius: 6px;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 38px;
+}
+
+.progress-button,
+.secondary-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.progress-button {
+  color: var(--paper);
+  background: var(--plum);
+}
+
+.progress-button:hover {
+  background: #70495d;
+}
+
+.progress-button:disabled {
+  opacity: 0.65;
+}
+
+.secondary-button {
+  color: var(--plum);
+  border: 1px solid #cdbfbb;
+  background: transparent;
+}
+
+.secondary-button:hover {
+  background: #f1e5e4;
+}
+
+.text-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  min-height: 44px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 750;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}

@@ -1,0 +1,403 @@
+.workout-analytics {
+  padding-top: 26px;
+}
+.analytics-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+.analytics-switch {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: #f3ede8;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+.analytics-switch button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border-radius: 9px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 650;
+}
+.analytics-switch button[aria-pressed="true"] {
+  background: var(--paper);
+  color: var(--plum);
+  box-shadow: 0 1px 4px #59384914;
+}
+.analytics-switch button:hover:not([aria-pressed="true"]) {
+  background: #e9dedc;
+}
+.analytics-comparison {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 28px;
+  align-items: center;
+  margin-block: 24px 30px;
+  padding: 24px;
+  background: #f6f0ed;
+  border-radius: 18px;
+}
+.analytics-comparison > p:first-child {
+  border-left: 3px solid var(--plum);
+  padding-left: 14px;
+}
+.analytics-comparison > p:nth-child(2) {
+  border-left: 3px solid #c89477;
+  padding-left: 14px;
+}
+.analytics-comparison p > span {
+  display: block;
+  color: var(--muted);
+  font-size: 12px;
+}
+.analytics-comparison strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 34px;
+  letter-spacing: -1.2px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+}
+.analytics-comparison small {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.analytics-context .analytics-delta {
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 750;
+}
+.analytics-chart-heading {
+  margin-bottom: 18px;
+}
+.analytics-chart-heading h3 {
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.3px;
+}
+.analytics-chart-heading p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.analytics-context,
+.analytics-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  max-width: 44ch;
+}
+.analytics-note {
+  max-width: none;
+  margin-bottom: 14px;
+}
+.week-comparison-chart,
+.activity-timeline {
+  padding: 0 6px 14px;
+}
+.week-comparison-chart figcaption {
+  display: flex;
+  gap: 20px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.chart-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.chart-key::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--plum);
+}
+.previous-key::before {
+  background: #c89477;
+}
+.paired-bars {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 22px;
+}
+.paired-bars button {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+  border-radius: 8px;
+  font-size: 12px;
+  padding: 8px 3px;
+}
+.paired-bars button:not(:disabled):hover {
+  background: #f4eeeb;
+}
+.paired-bars button[aria-pressed="true"] {
+  background: #eee2e5;
+  box-shadow: inset 0 -2px var(--plum);
+}
+.paired-values {
+  min-height: 20px;
+  font-weight: 750;
+  overflow-wrap: anywhere;
+}
+.paired-tracks {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  height: 148px;
+  border-bottom: 1px solid var(--line);
+  background: repeating-linear-gradient(
+    to top,
+    transparent 0,
+    transparent calc(25% - 1px),
+    #e8dfda88 calc(25% - 1px),
+    #e8dfda88 25%
+  );
+}
+.comparison-bar {
+  width: 22px;
+  max-width: 42%;
+  border-radius: 6px 6px 0 0;
+}
+.is-current {
+  background: var(--plum);
+}
+.is-previous {
+  background: #c89477;
+}
+.paired-bars button:disabled {
+  color: var(--muted);
+}
+.analytics-reading {
+  min-height: 46px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--linen);
+  line-height: 1.7;
+  color: var(--muted);
+  font-size: 12px;
+}
+.activity-timeline figcaption {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+.activity-timeline svg {
+  width: 100%;
+  min-width: 540px;
+  display: block;
+}
+.activity-timeline {
+  overflow-x: auto;
+}
+.activity-timeline text {
+  fill: var(--muted);
+  font:
+    11px Manrope,
+    sans-serif;
+}
+.timeline-grid {
+  stroke: var(--line);
+  stroke-width: 1;
+  stroke-dasharray: 3 5;
+}
+.timeline-line {
+  fill: none;
+  stroke: var(--plum);
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+}
+.timeline-dot {
+  fill: var(--plum);
+  pointer-events: none;
+}
+.timeline-dot.is-missing {
+  fill: var(--paper);
+  stroke: var(--plum);
+  stroke-width: 1.5;
+}
+.timeline-hit {
+  fill: transparent;
+  cursor: pointer;
+}
+.activity-timeline [role="button"]:focus-visible {
+  outline: none;
+}
+.activity-timeline [role="button"]:focus-visible .timeline-hit {
+  stroke: var(--plum);
+  stroke-width: 2;
+}
+.activity-timeline [aria-pressed="true"] .timeline-hit {
+  fill: #59384918;
+  stroke: var(--plum);
+  stroke-width: 1;
+}
+.analytics-table {
+  margin-top: 10px;
+}
+.analytics-table summary {
+  width: fit-content;
+  cursor: pointer;
+  min-height: 36px;
+  padding-block: 8px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 650;
+}
+.analytics-table-scroll {
+  overflow-x: auto;
+}
+.analytics-table table {
+  width: 100%;
+  margin-top: 10px;
+  text-align: left;
+  font-size: 12px;
+}
+.analytics-table caption {
+  text-align: left;
+  padding-block: 10px;
+  color: var(--muted);
+}
+.analytics-table :is(th, td) {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+}
+.recent-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.insight-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 14px;
+  border: 1px solid #cbb9c0;
+  border-radius: 13px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 750;
+}
+.insight-button[aria-expanded="true"],
+.insight-button:hover {
+  background: var(--plum);
+  color: var(--paper);
+  border-color: var(--plum);
+}
+.insight-view {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+}
+.insight-view.is-active {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+}
+.insight-view-clip {
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.insight-view.is-active .insight-view-clip {
+  overflow: clip;
+  overflow-clip-margin: 6px;
+}
+.insight-view-content {
+  display: flow-root;
+}
+.session-content .insight-view .session-list {
+  animation: none;
+}
+.weekly-comparison {
+  margin-top: 14px;
+  margin-bottom: 18px;
+  font-size: 12px;
+  color: #f2e2eb;
+}
+.timeline-scroll-hint {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .insight-button,
+  .analytics-switch button,
+  .paired-bars button {
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
+  }
+  .insight-view {
+    transition:
+      grid-template-rows 360ms var(--ease-soft),
+      opacity 200ms ease,
+      visibility 360ms;
+  }
+  .insight-view.is-active {
+    transition:
+      grid-template-rows 360ms var(--ease-soft),
+      opacity 260ms ease 80ms,
+      visibility 0s;
+  }
+  .comparison-bar {
+    transition: height 320ms var(--ease-soft);
+  }
+}
+@media (max-width: 760px) {
+  .timeline-scroll-hint {
+    display: block;
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .recent-workouts .section-heading {
+    flex-wrap: wrap;
+    row-gap: 14px;
+  }
+  .analytics-comparison {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    padding: 18px 14px;
+  }
+  .analytics-comparison strong {
+    font-size: 28px;
+  }
+  .analytics-comparison > p:is(:first-child, :nth-child(2)) {
+    padding-left: 10px;
+  }
+  .analytics-context {
+    grid-column: 1 / -1;
+  }
+  .paired-bars {
+    gap: 8px;
+  }
+  .paired-tracks {
+    height: 120px;
+    gap: 3px;
+  }
+  .week-comparison-chart,
+  .activity-timeline {
+    padding: 0 0 12px;
+  }
+  .paired-bars button {
+    font-size: 11px;
+  }
+  .recent-heading-actions {
+    gap: 8px;
+  }
+}

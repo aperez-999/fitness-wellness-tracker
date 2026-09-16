@@ -8,14 +8,21 @@ export default function ProtectedRoute() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-slate-600">
+      <div className="dayform-theme session-loading" role="status">
         Loading...
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" replace state={{ from: location.pathname }} />;
+    // Preserve date and activity prefills when returning from sign-in.
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname + location.search }}
+      />
+    );
   }
 
   return <Outlet />;

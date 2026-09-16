@@ -1,0 +1,76 @@
+.workout-remove-dialog {
+  width: min(440px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 20px 70px #342b3033;
+}
+.workout-remove-dialog::backdrop {
+  background: #342b3073;
+}
+.workout-remove-dialog h2 {
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+.workout-remove-dialog > p {
+  margin-top: 12px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.removal-session {
+  display: grid;
+  gap: 5px;
+  margin-block: 22px;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--linen);
+  overflow-wrap: anywhere;
+}
+.removal-session strong {
+  margin-bottom: 3px;
+  font-size: 16px;
+}
+.removal-session span {
+  color: var(--muted);
+  font-size: 12px;
+}
+.workout-remove-dialog .removal-error {
+  color: #973d56;
+  margin-bottom: 16px;
+}
+.removal-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.removal-actions button {
+  flex: 1;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .workout-remove-dialog[open] {
+    animation: removal-open 180ms var(--ease-soft);
+  }
+  @keyframes removal-open {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+@media (max-width: 480px) {
+  .workout-remove-dialog {
+    padding: 22px;
+  }
+}

@@ -1,0 +1,258 @@
+.workouts-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: start;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+.workout-form-panel {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--paper);
+}
+
+.workout-form fieldset {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  margin-top: 24px;
+}
+
+.workout-form fieldset:disabled {
+  opacity: 0.65;
+}
+
+.workout-field {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.workout-field label {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.workout-field label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.workout-field :is(input, textarea) {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 14px;
+  border: 1px solid #cdbfbb;
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--paper);
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.workout-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.workout-field :is(input, textarea)::placeholder {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.workout-field [aria-invalid="true"] {
+  border-color: #973d56;
+}
+
+.field-error {
+  color: #973d56;
+  font-size: 13px;
+}
+
+@media (max-width: 1100px) {
+  .workouts-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .workout-form-panel {
+    padding: 22px;
+    border-radius: 24px;
+  }
+}
+
+/* Activity artwork is the focal point; the rest stays compact and familiar. */
+.activity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.activity-choice {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  padding: 8px 4px 10px;
+  border: 2px solid transparent;
+  border-radius: 18px;
+  color: var(--plum);
+  background: #f6f0e8;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.activity-art {
+  width: 100%;
+  max-width: 110px;
+  height: 70px;
+  object-fit: contain;
+}
+.activity-choice:hover {
+  background: #f1e6da;
+}
+.activity-choice[aria-pressed="true"] {
+  border-color: #a87826;
+  background: #fcf0d2;
+}
+.activity-check {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  background: var(--plum);
+  color: var(--paper);
+}
+.rename-workout {
+  justify-self: start;
+  min-height: 24px;
+}
+.workout-date {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.workout-date > span {
+  padding-block: 10px;
+  font-weight: 750;
+}
+.workout-date details {
+  min-width: 0;
+  max-width: 100%;
+}
+.workout-date summary {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: var(--linen);
+  color: var(--plum);
+  cursor: pointer;
+  font-weight: 700;
+}
+.workout-date summary::-webkit-details-marker,
+.workout-note summary::-webkit-details-marker {
+  display: none;
+}
+.date-options {
+  display: grid;
+  gap: 12px;
+  padding-top: 12px;
+}
+.quick-dates {
+  display: flex;
+  gap: 8px;
+}
+.duration-picker > p {
+  margin-bottom: 10px;
+  font-weight: 750;
+}
+.duration-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) minmax(70px, 1.2fr);
+  gap: 8px;
+}
+.choice-chip {
+  min-height: 46px;
+  padding: 8px;
+  border: 1px solid #cdbfbb;
+  border-radius: 12px;
+  color: var(--plum);
+  font-size: 13px;
+  font-weight: 700;
+}
+.choice-chip:hover {
+  background: var(--linen);
+}
+.choice-chip[aria-pressed="true"] {
+  border-color: var(--plum);
+  background: var(--plum);
+  color: var(--paper);
+}
+.custom-minutes input {
+  height: 100%;
+  padding: 8px;
+  text-align: center;
+}
+.duration-picker .field-error {
+  margin-top: 8px;
+}
+.workout-note summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--plum);
+  cursor: pointer;
+  font-size: 13px;
+}
+.workout-note summary > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 12px;
+}
+.workout-note .workout-field {
+  margin-top: 8px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .activity-choice,
+  .choice-chip {
+    transition:
+      background-color 150ms ease,
+      border-color 150ms ease,
+      transform 150ms var(--ease-soft);
+  }
+  .activity-choice:active:not(:disabled),
+  .choice-chip:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+@media (max-width: 380px) {
+  .workout-form-panel {
+    padding-inline: 16px;
+  }
+  .activity-grid,
+  .duration-options {
+    gap: 6px;
+  }
+  .activity-art {
+    height: 58px;
+  }
+  .choice-chip {
+    padding-inline: 4px;
+    font-size: 12px;
+  }
+}

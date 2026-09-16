@@ -1,28 +1,27 @@
-export default function FormField({
-  id,
-  label,
-  type = "text",
-  value,
-  onChange,
-  placeholder,
-  autoComplete,
-  error,
-}) {
+export default function FormField({ id, label, error, hint, ...props }) {
+  const description = [hint && `${id}-hint`, error && `${id}-error`]
+    .filter(Boolean)
+    .join(" ");
   return (
-    <label className="block" htmlFor={id}>
-      <span className="text-sm font-medium text-slate-700">{label}</span>
+    <div className="form-field">
+      <label htmlFor={id}>{label}</label>
       <input
         id={id}
-        type={type}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        autoComplete={autoComplete}
-        className={`mt-1 w-full rounded-lg border px-3 py-2 ${
-          error ? "border-rose-400" : "border-slate-300"
-        }`}
+        required
+        aria-invalid={Boolean(error)}
+        aria-describedby={description || undefined}
+        {...props}
       />
-      {error ? <p className="mt-1 text-sm text-rose-600">{error}</p> : null}
-    </label>
+      {hint && (
+        <p id={`${id}-hint`} className="field-hint">
+          {hint}
+        </p>
+      )}
+      {error && (
+        <p id={`${id}-error`} className="auth-error">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
