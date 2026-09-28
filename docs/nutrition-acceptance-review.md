@@ -71,10 +71,12 @@ it does not contain passwords, JWTs, or database credentials.
 ## Interactive inputs and reference estimates
 
 The entry form now includes nutrient icons, synchronized sliders and exact
-number inputs, plus an optional meal estimate with editable portions. Saved
+number inputs, plus an inline estimate button on the Food or meal input. Saved
 estimates retain their reference and whether the values were adjusted.
 See [interactive nutrition evidence](evidence/nutrition-interactive/README.md)
-for supported meals, source links, limitations, and updated checks.
+for source links and the original implementation. The
+[current inline control](evidence/nutrition-inline/README.md) removes the preset
+picker; general AI estimation remains pending external-provider authorization.
 
 ## Teammate workflow verification — pending
 

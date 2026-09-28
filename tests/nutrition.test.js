@@ -251,61 +251,53 @@ test("saving cancels stale history reads and blocks duplicate submissions", asyn
   }
 });
 
-test("meal estimates fill editable sliders, scale portions, and retain provenance after reopening", async () => {
+test("inline meal icon fills editable nutrients and preserves estimate provenance", async () => {
   const page = await openPage();
+  assert.equal(await page.getByRole("button", { name: "Quick meal estimate", exact: true }).count(), 0);
+  assert.equal(await page.getByRole("combobox").count(), 0);
   await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
-  await page.getByText(/37.5 g dry oats/).waitFor();
-  await page.getByRole("button", { name: "Fill with estimate", exact: true }).click();
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "207");
   assert.equal(await page.locator("#nutrition-protein").inputValue(), "8.4");
   assert.equal(await page.locator("#nutrition-carbohydrates").inputValue(), "33.8");
   assert.equal(await page.locator("#nutrition-fat").inputValue(), "3.9");
-  await page.getByRole("button", { name: "Quick meal estimate", exact: true }).click();
-  await page.getByLabel("Servings", { exact: true }).fill("2");
-  await page.getByRole("button", { name: "Replace values with estimate", exact: true }).click();
-  assert.equal(await page.locator("#nutrition-calories").inputValue(), "414");
+  await page.getByText(/37.5 g dry oats/).waitFor();
   await page.getByRole("slider", { name: "Adjust protein", exact: true }).focus();
   await page.keyboard.press("End");
   assert.equal(await page.locator("#nutrition-protein").inputValue(), "100");
-  await page.locator("#nutrition-protein").fill("16.8");
+  await page.locator("#nutrition-protein").fill("8.4");
   await page.locator("#nutrition-calories").fill("1500");
   assert.equal(await page.getByRole("slider", { name: "Adjust calories", exact: true }).getAttribute("max"), "1500");
-  await page.locator("#nutrition-calories").fill("420");
+  await page.locator("#nutrition-calories").fill("210");
   await page.getByRole("button", { name: "Save entry", exact: true }).click();
   await page.getByText("Entry saved.", { exact: true }).waitFor();
   const stored = await NutritionLog.findOne({ userId: accounts.alex.user.id }).lean();
-  assert.deepEqual(stored.estimate, { referenceId: "berry-oatmeal", servings: 2, edited: true });
-  assert.equal(stored.calories, 420);
-  await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
-  assert.equal(await page.getByLabel("Servings", { exact: true }).inputValue(), "1");
+  assert.deepEqual(stored.estimate, { referenceId: "berry-oatmeal", servings: 1, edited: true });
+  assert.equal(stored.calories, 210);
   await page.reload();
   await page.getByText(/Estimate, adjusted/).waitFor();
   await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
-  await page.getByRole("button", { name: "Fill with estimate", exact: true }).click();
-  await page.locator("#nutrition-foodName").click();
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByRole("heading", { name: "Nutrition", exact: true }).click();
   assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
-  await page.screenshot({ path: path.join(artifacts, "nutrition-interactive-desktop.png"), fullPage: true });
+  await page.screenshot({ path: path.join(artifacts, "nutrition-inline-desktop.png"), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
-  await page.screenshot({ path: path.join(artifacts, "nutrition-interactive-mobile.png"), fullPage: true });
+  await page.screenshot({ path: path.join(artifacts, "nutrition-inline-mobile.png"), fullPage: true });
 });
 
-test("unsupported meals and invalid servings preserve entered values and estimate metadata is private", async () => {
+test("inline estimates handle empty and unsupported text without overwriting entered values", async () => {
   const page = await openPage();
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText("Enter a food or meal to estimate.").waitFor();
   await fillEntry(page, { ...valid, foodName: "Oatmeal with berries and peanut butter" });
-  await page.getByText(/No reference for this meal yet/).waitFor();
-  assert.equal(await page.getByRole("button", { name: /with estimate/ }).count(), 0);
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText(/An estimate isn't available for this meal yet/).waitFor();
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
-  await page.getByLabel("Reference meal", { exact: true }).selectOption("yogurt-parfait");
+  await page.locator("#nutrition-foodName").fill("Yogurt parfait");
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
-  await page.getByLabel("Servings", { exact: true }).fill("0");
-  assert.equal(await page.getByRole("button", { name: "Replace values with estimate" }).isDisabled(), true);
-  await page.getByLabel("Servings", { exact: true }).fill("1");
-  await page.getByRole("button", { name: "Increase servings" }).click();
-  assert.equal(await page.getByLabel("Servings", { exact: true }).inputValue(), "1.25");
-  await page.getByRole("button", { name: "Decrease servings" }).click();
-  await page.getByRole("button", { name: "Replace values with estimate" }).click();
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "259");
   await page.getByRole("button", { name: "Save entry", exact: true }).click();
   await page.getByText("Entry saved.", { exact: true }).waitFor();

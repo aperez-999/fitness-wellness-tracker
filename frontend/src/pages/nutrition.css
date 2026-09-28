@@ -316,39 +316,37 @@
 .nutrient-slider::-moz-range-progress { height: 5px; background: var(--nutrient-color); }
 .nutrient-slider::-moz-range-thumb { width: 15px; height: 15px; border: 3px solid var(--paper); border-radius: 50%; background: var(--nutrient-color); box-shadow: 0 0 0 1px var(--nutrient-color); }
 
-.meal-estimator { padding: 16px; border: 1px dashed #cdbfbb; border-radius: 16px; }
-.meal-estimator-heading { display: flex; align-items: center; gap: 8px; color: var(--plum); }
-.meal-estimator-heading { width: 100%; min-height: 32px; text-align: left; font-size: 13px; font-weight: 750; border-radius: 6px; }
-.meal-estimator-toggle { margin-left: auto; font-size: 20px; }
-.meal-estimator-intro, .meal-portion, .meal-unsupported { margin-top: 8px; font-size: 12px; line-height: 1.65; color: var(--muted); }
-.meal-estimator > p { margin-top: 8px; font-size: 12px; line-height: 1.65; color: var(--muted); }
-.meal-estimator select {
-  width: 100%;
-  min-height: 44px;
-  padding: 9px;
-  margin-top: 12px;
-  font: inherit;
-  font-size: 13px;
-  color: var(--ink);
-  background: var(--paper);
-  border: 1px solid #cdbfbb;
+.meal-name-input { position: relative; }
+.nutrition-composer .meal-name-input input { padding-right: 58px; }
+.meal-estimate-trigger {
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
   border-radius: 10px;
+  color: var(--plum);
+  background: #f3e7e6;
+  transition: background-color 160ms ease;
 }
-.meal-estimator select:focus-visible { outline: 3px solid var(--plum); outline-offset: 3px; }
-.meal-portion strong { color: var(--ink); font-weight: 700; }
-.meal-serving-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
-.meal-serving-control { display: flex; align-items: center; }
-.meal-serving-control button { width: 36px; height: 44px; color: var(--plum); font-size: 20px; border-radius: 8px; }
-.meal-serving-control button:hover { background: var(--linen); }
-.nutrition-composer .meal-serving-control input { width: 66px; min-height: 40px; padding: 8px; text-align: center; font-size: 14px; }
-.estimate-button { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 44px; margin-top: 12px; padding: 9px; color: var(--plum); background: #f1e5e4; border-radius: 10px; font-size: 12px; font-weight: 750; }
-.estimate-button:hover { background: #e8d8d9; }
-.meal-estimator button:disabled { opacity: .5; }
-.meal-source { display: inline-flex; align-items: center; min-height: 36px; color: var(--plum); text-decoration: underline; text-underline-offset: 3px; font-size: 11px; }
-.meal-disclaimer { display: flex; gap: 7px; }
-.meal-disclaimer svg { margin-top: 3px; }
-.estimate-applied { display: flex; align-items: start; gap: 7px; color: #345c42; font-size: 12px; }
-.estimate-applied svg { margin-top: 2px; }
+.meal-estimate-trigger:hover { background: #e9d5d8; }
+.meal-estimate-trigger:disabled { opacity: .5; }
+.inline-meal-estimate {
+  padding: 12px 14px;
+  border-left: 2px solid #789581;
+  background: #f1f5ef;
+  border-radius: 0 10px 10px 0;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.inline-meal-estimate p:first-child { display: flex; align-items: center; gap: 6px; color: #345c42; }
+.inline-meal-estimate p + p { margin-top: 5px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .meal-estimate-trigger { transition: none; }
+}
+
 .nutrition-estimate-label { margin-top: 8px; color: var(--muted); font-size: 11px; }
 
 @media (max-width: 1000px) {

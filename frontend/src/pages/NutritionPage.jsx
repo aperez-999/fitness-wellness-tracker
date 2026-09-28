@@ -4,8 +4,8 @@ import { apiFetch, getToken } from "../lib/api.js";
 import FormField from "../components/FormField.jsx";
 import Icon from "../components/Icon.jsx";
 import NutrientInput, { nutrientControls } from "../components/NutrientInput.jsx";
-import MealEstimator from "../components/MealEstimator.jsx";
-import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
+import MealNameField from "../components/MealNameField.jsx";
+import { estimateMeal, findMealReference, mealReferences } from "../../../shared/nutritionEstimates.mjs";
 import "./nutrition.css";
 
 const nutrients = [
@@ -85,6 +85,19 @@ function NutritionJournal() {
     requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
   }
 
+  function estimateFromFood() {
+    if (!draft.foodName.trim()) {
+      setErrors((current) => ({ ...current, foodName: "Enter a food or meal to estimate." }));
+      return;
+    }
+    const reference = findMealReference(draft.foodName);
+    if (!reference) {
+      setErrors((current) => ({ ...current, foodName: "An estimate isn't available for this meal yet. You can enter the values manually." }));
+      return;
+    }
+    applyEstimate(estimateMeal(reference.id, 1), { referenceId: reference.id, servings: 1 });
+  }
+
   async function save(event) {
     event.preventDefault();
     if (writeRequest.current) return;
@@ -134,13 +147,17 @@ function NutritionJournal() {
           <form ref={form} onSubmit={save} noValidate>
             <fieldset disabled={saving}>
               <FormField id="nutrition-date" label="Date" type="date" value={draft.date} error={errors.date} onChange={(event) => update("date", event.target.value)} />
-              <FormField id="nutrition-foodName" label="Food or meal (optional)" required={false} maxLength={120} placeholder="e.g. Oatmeal with berries" value={draft.foodName} error={errors.foodName} onChange={(event) => update("foodName", event.target.value)} />
-              <MealEstimator
-                foodName={draft.foodName}
+              <MealNameField
+                value={draft.foodName} error={errors.foodName}
+                onChange={(name) => update("foodName", name)}
+                onEstimate={estimateFromFood}
                 hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
-                onChoose={(name) => update("foodName", name)}
-                onApply={applyEstimate}
               />
+              {estimate && <div className="inline-meal-estimate" role="status">
+                <p><Icon name="check" size={16} /><strong>Reference estimate applied</strong></p>
+                <p>{mealReferences.find((meal) => meal.id === estimate.referenceId)?.portion}</p>
+                <p>Approximate values. Ingredients and portions vary; review and adjust before saving.</p>
+              </div>}
               <div className="nutrition-adjust-heading"><Icon name="edit" size={16} /><span>Slide, type, make it yours.</span></div>
               <div className="nutrition-inputs">
                 {nutrientControls.map((control) => (
@@ -149,9 +166,6 @@ function NutritionJournal() {
                     onChange={(value) => update(control.field, value)} />
                 ))}
               </div>
-              {estimate && <p className="estimate-applied" role="status"><Icon name="check" size={16} />
-                Estimate applied: {estimate.servings} × {mealReferences.find((meal) => meal.id === estimate.referenceId)?.name}. All values are editable.
-              </p>}
               <p className="nutrition-hint">All nutrition values are required. Enter 0 when there is none.</p>
               <button className="progress-button" type="submit"><Icon name="plus" size={18} />{saving ? "Saving…" : "Save entry"}</button>
             </fieldset>
