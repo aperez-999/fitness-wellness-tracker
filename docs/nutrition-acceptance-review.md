@@ -71,7 +71,7 @@ npm run build --prefix frontend
 
 Screenshots and API/database evidence are generated in `tests/artifacts/`.
 Reviewed copies and the test results are in
-[docs/evidence/nutrition/](evidence/nutrition/README.md).
+[current submission evidence](evidence/nutrition-gemini/README.md).
 The JSON evidence contains generated test account IDs and nutrition records;
 it does not contain passwords, JWTs, or database credentials.
 

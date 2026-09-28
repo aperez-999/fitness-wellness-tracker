@@ -1,54 +1,46 @@
-# Gemini nutrition estimate evidence
+# Nutrition tracking submission evidence
 
-Verified September 28, 2026 on `feat/nutrition-tracking`.
+Branch: `feat/nutrition-tracking`  
+Verified implementation: `22bb5fda12fd09e2d00896aaaf0977af1a4dcadd`  
+Verification date: September 28, 2026
 
-- 28 backend/frontend unit tests passed.
-- 13 nutrition integration/browser tests passed against real Express and a
-  disposable MongoDB database. Google responses were mocked in this suite;
-  no local `.env` or live credentials were used by automated tests.
-- Desktop and mobile axe accessibility scans found no violations; mobile had no
-  horizontal overflow. Screenshots below show the mocked estimate workflow.
-- Production frontend build passed.
-- A separate live request using the configured server key succeeded with
-  `gemini-3.5-flash-lite`. The generic input and returned estimate are recorded
-  in [live-gemini-check.json](live-gemini-check.json). No credential is included.
-- Tests cover authentication, owner isolation, saving adjusted AI values and
-  provenance to MongoDB, reload, quota failures, invalid output, and cancellation
-  of stale estimates. Signed estimate receipts cannot act as login tokens.
-- Guardrail coverage verifies local rejection of links, email addresses and
-  non-word input; international food names; one in-flight request per user;
-  provider quota cooldown and recovery; an inline retry countdown; and Undo
-  restoring all nutrient values and prior estimate provenance. Manual entry and
-  saving stay available during cooldown. No extra live provider calls were
-  needed to verify these protections.
+## Required evidence
 
-[Desktop screenshot](nutrition-gemini-desktop.png) ·
-[Mobile screenshot](nutrition-gemini-mobile.png)
+| Requirement | Evidence | Result |
+| --- | --- | --- |
+| Working UI screenshot | [Desktop](nutrition-gemini-desktop.png) and [mobile](nutrition-gemini-mobile.png) | Shows editable nutrition values, Gemini estimate, saved entry, and the final tray design |
+| Database/API evidence | [API response and MongoDB record](nutrition-api-evidence.json) | POST returned 201; MongoDB contains the date, all nutrients and authenticated owner; the second account sees no entries |
+| Tests | [28 unit tests](unit-tests.tap) and [13 workflow tests](workflow-tests.tap) | 41 passed, zero failures |
+| Production build | [Build output](frontend-build.txt) | Passed |
+| GitHub commit | Local implementation commit above; evidence stored in the commit containing this README | Remote branch publication is pending approval; a local commit alone does not fulfill this requirement |
 
-Human teammate workflow verification remains pending in the acceptance review.
+## What the tests verify
 
-## Portion note design update
+Authenticated creation, required fields, safe invalid-input handling, MongoDB
+persistence, ownership isolation, newest 30 entries, reload/reopen persistence,
+editable AI estimates and saved provenance, Undo, input guardrails, quota errors,
+and canceled requests. Desktop/mobile axe scans found no violations and mobile
+had no horizontal overflow.
 
-The estimate now presents its assumed portion as the main content, with a plate
-icon, a compact AI heading, an Undo action, and a quieter adjustment reminder.
-The two relevant existing browser tests passed again after this presentation-only
-change, including Undo/provenance behavior, desktop/mobile axe scans and mobile
-overflow checks. The frontend production build also passed. Screenshots above
-show the updated layout.
+Tests use generated accounts and a disposable MongoDB database. The screenshots
+and API JSON show separate test scenarios, so their nutrient values differ.
+Google responses are mocked during automated tests; no backend `.env` or live
+credentials are loaded. The earlier successful live provider check is recorded
+separately in [live-gemini-check.json](live-gemini-check.json).
 
-The heading now uses a custom salad-bowl SVG in the existing workout illustration
-palette. The desktop/mobile workflow and accessibility checks, plus the frontend
-build, passed again for this icon update.
+## Reproduce
 
-The four nutrient controls now sit inside a square molded tray with a rolled rim, subtle surface grain,
-recessed compartments and cast shadows. The existing desktop/mobile workflow, accessibility and
-overflow checks passed, and the frontend build passed. Screenshots are updated.
+From the repository root with dependencies installed and Node.js 22+:
 
-## Matte tray and compact guidance
+```sh
+node --test backend/tests/*.test.js frontend/tests/*.test.js
+node --test --test-concurrency=1 tests/nutrition.test.js
+npm --prefix frontend run build
+```
 
-The tray uses softer rim lighting and shadows, with lightly inset number fields
-that retain visible keyboard focus. The Gemini disclosure and portion note are
-more compact, preserving the assumed portion, approximation reminder and Undo.
-Nutrient labels remain unchanged. Three focused browser tests passed, covering
-editable estimates, Undo/provenance, quota recovery and desktop/mobile accessibility;
-the production build also passed. Screenshots above show this version.
+## Remaining verification
+
+The GitHub branch must be published to `aperez-999/fitness-wellness-tracker` and
+the resulting commit URL supplied. Another human teammate must independently
+verify the workflow and fill in the [acceptance review](../../nutrition-acceptance-review.md).
+Automated tests do not substitute for that sign-off.
