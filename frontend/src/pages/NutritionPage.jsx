@@ -2,6 +2,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import { apiFetch, getToken } from "../lib/api.js";
 import FormField from "../components/FormField.jsx";
+import Icon from "../components/Icon.jsx";
+import NutrientInput, { nutrientControls } from "../components/NutrientInput.jsx";
+import MealEstimator from "../components/MealEstimator.jsx";
+import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
 import "./nutrition.css";
 
 const nutrients = [
@@ -33,6 +37,7 @@ function NutritionJournal() {
   const [errors, setErrors] = useState({});
   const [saveError, setSaveError] = useState("");
   const [saved, setSaved] = useState(false);
+  const [estimate, setEstimate] = useState(null);
   const [saving, setSaving] = useState(false);
   const readRequest = useRef(null);
   const writeRequest = useRef(null);
@@ -71,6 +76,15 @@ function NutritionJournal() {
     setSaved(false);
   }
 
+  function applyEstimate(values, provenance) {
+    setDraft((current) => ({ ...current, ...values }));
+    setEstimate(provenance);
+    setErrors({});
+    setSaveError("");
+    setSaved(false);
+    requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
+  }
+
   async function save(event) {
     event.preventDefault();
     if (writeRequest.current) return;
@@ -83,13 +97,14 @@ function NutritionJournal() {
     const token = getToken();
     try {
       const { entry } = await apiFetch("/nutrition", {
-        method: "POST", signal: controller.signal, body: JSON.stringify(draft),
+        method: "POST", signal: controller.signal, body: JSON.stringify({ ...draft, estimate }),
       });
       if (controller.signal.aborted || token !== getToken()) return;
       setEntries((current) => [entry, ...current]
         .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt) || b._id.localeCompare(a._id))
         .slice(0, 30));
       setDraft((current) => ({ ...emptyDraft(), date: current.date }));
+      setEstimate(null);
       setSaved(true);
       void loadEntries();
     } catch (error) {
@@ -114,19 +129,31 @@ function NutritionJournal() {
       </header>
       <div className="nutrition-layout">
         <section className="nutrition-composer" aria-labelledby="nutrition-add-title">
-          <h2 id="nutrition-add-title">Add an entry</h2>
+          <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><Icon name="bowl" size={26} /></span>Add an entry</h2>
           <p>Record calories and macros for a food, meal, or day.</p>
           <form ref={form} onSubmit={save} noValidate>
             <fieldset disabled={saving}>
               <FormField id="nutrition-date" label="Date" type="date" value={draft.date} error={errors.date} onChange={(event) => update("date", event.target.value)} />
               <FormField id="nutrition-foodName" label="Food or meal (optional)" required={false} maxLength={120} placeholder="e.g. Oatmeal with berries" value={draft.foodName} error={errors.foodName} onChange={(event) => update("foodName", event.target.value)} />
+              <MealEstimator
+                foodName={draft.foodName}
+                hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
+                onChoose={(name) => update("foodName", name)}
+                onApply={applyEstimate}
+              />
+              <div className="nutrition-adjust-heading"><Icon name="edit" size={16} /><span>Slide, type, make it yours.</span></div>
               <div className="nutrition-inputs">
-                {nutrients.map(([field, label, unit]) => (
-                  <FormField key={field} id={`nutrition-${field}`} label={`${label} (${unit})`} type="number" min="0" step="any" inputMode="decimal" placeholder="0" value={draft[field]} error={errors[field]} onChange={(event) => update(field, event.target.value)} />
+                {nutrientControls.map((control) => (
+                  <NutrientInput key={control.field} {...control}
+                    value={draft[control.field]} error={errors[control.field]}
+                    onChange={(value) => update(control.field, value)} />
                 ))}
               </div>
+              {estimate && <p className="estimate-applied" role="status"><Icon name="check" size={16} />
+                Estimate applied: {estimate.servings} × {mealReferences.find((meal) => meal.id === estimate.referenceId)?.name}. All values are editable.
+              </p>}
               <p className="nutrition-hint">All nutrition values are required. Enter 0 when there is none.</p>
-              <button className="progress-button" type="submit">{saving ? "Saving…" : "Save entry"}</button>
+              <button className="progress-button" type="submit"><Icon name="plus" size={18} />{saving ? "Saving…" : "Save entry"}</button>
             </fieldset>
             {saveError && <p className="nutrition-error" role="alert">{saveError}</p>}
             {saved && <p className="nutrition-success" role="status">Entry saved.</p>}
@@ -147,9 +174,10 @@ function NutritionJournal() {
             {entries.map((entry) => (
               <li key={entry._id} className="nutrition-entry">
                 <div className="nutrition-entry-heading">
-                  <h3>{entry.foodName || "Nutrition entry"}</h3>
+                  <h3><Icon name={mealReferences.find((meal) => meal.id === entry.estimate?.referenceId)?.icon || "plate"} size={20} />{entry.foodName || "Nutrition entry"}</h3>
                   <time dateTime={entry.date.slice(0, 10)}>{dateFormat.format(new Date(entry.date))}</time>
                 </div>
+                {entry.estimate && <p className="nutrition-estimate-label">{entry.estimate.edited ? "Estimate, adjusted" : "Estimated"} · {entry.estimate.servings} × {mealReferences.find((meal) => meal.id === entry.estimate.referenceId)?.name}</p>}
                 <dl className="nutrition-values">
                   {nutrients.map(([field, label, unit]) => <div key={field}><dt>{label}</dt><dd>{entry[field] == null ? "—" : <>{numberFormat.format(entry[field])} <span>{unit}</span></>}</dd></div>)}
                 </dl>

@@ -13,7 +13,7 @@ router.use((_req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const entries = await NutritionLog.find({ userId: req.user.id })
-      .select("date foodName mealType calories protein carbohydrates fat createdAt userId")
+      .select("date foodName mealType calories protein carbohydrates fat createdAt userId estimate")
       .sort({ date: -1, createdAt: -1, _id: -1 })
       .limit(30)
       .lean();

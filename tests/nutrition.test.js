@@ -250,3 +250,69 @@ test("saving cancels stale history reads and blocks duplicate submissions", asyn
     releasePost.resolve();
   }
 });
+
+test("meal estimates fill editable sliders, scale portions, and retain provenance after reopening", async () => {
+  const page = await openPage();
+  await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
+  await page.getByText(/37.5 g dry oats/).waitFor();
+  await page.getByRole("button", { name: "Fill with estimate", exact: true }).click();
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "207");
+  assert.equal(await page.locator("#nutrition-protein").inputValue(), "8.4");
+  assert.equal(await page.locator("#nutrition-carbohydrates").inputValue(), "33.8");
+  assert.equal(await page.locator("#nutrition-fat").inputValue(), "3.9");
+  await page.getByRole("button", { name: "Quick meal estimate", exact: true }).click();
+  await page.getByLabel("Servings", { exact: true }).fill("2");
+  await page.getByRole("button", { name: "Replace values with estimate", exact: true }).click();
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "414");
+  await page.getByRole("slider", { name: "Adjust protein", exact: true }).focus();
+  await page.keyboard.press("End");
+  assert.equal(await page.locator("#nutrition-protein").inputValue(), "100");
+  await page.locator("#nutrition-protein").fill("16.8");
+  await page.locator("#nutrition-calories").fill("1500");
+  assert.equal(await page.getByRole("slider", { name: "Adjust calories", exact: true }).getAttribute("max"), "1500");
+  await page.locator("#nutrition-calories").fill("420");
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  const stored = await NutritionLog.findOne({ userId: accounts.alex.user.id }).lean();
+  assert.deepEqual(stored.estimate, { referenceId: "berry-oatmeal", servings: 2, edited: true });
+  assert.equal(stored.calories, 420);
+  await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
+  assert.equal(await page.getByLabel("Servings", { exact: true }).inputValue(), "1");
+  await page.reload();
+  await page.getByText(/Estimate, adjusted/).waitFor();
+  await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
+  await page.getByRole("button", { name: "Fill with estimate", exact: true }).click();
+  await page.locator("#nutrition-foodName").click();
+  assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
+  await page.screenshot({ path: path.join(artifacts, "nutrition-interactive-desktop.png"), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+  assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
+  await page.screenshot({ path: path.join(artifacts, "nutrition-interactive-mobile.png"), fullPage: true });
+});
+
+test("unsupported meals and invalid servings preserve entered values and estimate metadata is private", async () => {
+  const page = await openPage();
+  await fillEntry(page, { ...valid, foodName: "Oatmeal with berries and peanut butter" });
+  await page.getByText(/No reference for this meal yet/).waitFor();
+  assert.equal(await page.getByRole("button", { name: /with estimate/ }).count(), 0);
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
+  await page.getByLabel("Reference meal", { exact: true }).selectOption("yogurt-parfait");
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
+  await page.getByLabel("Servings", { exact: true }).fill("0");
+  assert.equal(await page.getByRole("button", { name: "Replace values with estimate" }).isDisabled(), true);
+  await page.getByLabel("Servings", { exact: true }).fill("1");
+  await page.getByRole("button", { name: "Increase servings" }).click();
+  assert.equal(await page.getByLabel("Servings", { exact: true }).inputValue(), "1.25");
+  await page.getByRole("button", { name: "Decrease servings" }).click();
+  await page.getByRole("button", { name: "Replace values with estimate" }).click();
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "259");
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  assert.equal((await request("/nutrition", accounts.sam.token)).data.entries.length, 0);
+  const own = await request("/nutrition", accounts.alex.token);
+  assert.equal(own.data.entries[0].estimate.edited, false);
+  for (const estimate of [{ referenceId: "fake", servings: 1 }, { referenceId: "berry-oatmeal" }, { referenceId: "berry-oatmeal", servings: -1 }]) {
+    assert.equal((await request("/nutrition", accounts.alex.token, { ...valid, estimate })).status, 400);
+  }
+});

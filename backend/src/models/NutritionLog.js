@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
 import { mealTypes } from "../utils/nutritionValidation.js";
 
 const nutrient = () => ({
@@ -24,6 +25,14 @@ const nutritionLogSchema = new mongoose.Schema(
     carbohydrates: nutrient(),
     fat: nutrient(),
     mealType: { type: String, enum: mealTypes },
+    estimate: {
+      type: new mongoose.Schema({
+        referenceId: { type: String, enum: mealReferences.map((meal) => meal.id), required: true },
+        servings: { type: Number, min: 0.25, max: 10, required: true },
+        edited: { type: Boolean, required: true },
+      }, { _id: false }),
+      default: undefined,
+    },
   },
   { timestamps: { createdAt: true, updatedAt: false } },
 );

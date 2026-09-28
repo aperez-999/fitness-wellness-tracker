@@ -35,3 +35,14 @@ test("nutrition rejects missing bodies, impossible dates, timestamps and invalid
   assert.ok(validateNutrition({ ...valid, mealType: "invalid" }).errors.mealType);
   assert.ok(validateNutrition({ ...valid, date: "2024-02-29" }).entry);
 });
+
+
+test("estimate provenance is validated and edits are derived from saved values", () => {
+  const estimated = { ...valid, calories: 207, protein: 8.4, carbohydrates: 33.8, fat: 3.9,
+    estimate: { referenceId: "berry-oatmeal", servings: 1, edited: true } };
+  assert.deepEqual(validateNutrition(estimated).entry.estimate, { referenceId: "berry-oatmeal", servings: 1, edited: false });
+  assert.equal(validateNutrition({ ...estimated, protein: 20 }).entry.estimate.edited, true);
+  for (const estimate of [{}, [], "text", { referenceId: "berry-oatmeal" }, { referenceId: "berry-oatmeal", servings: "1" }, { referenceId: "unknown", servings: 1 }, { referenceId: "berry-oatmeal", servings: 0 }]) {
+    assert.ok(validateNutrition({ ...valid, estimate }).errors.estimate);
+  }
+});

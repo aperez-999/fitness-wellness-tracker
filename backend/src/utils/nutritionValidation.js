@@ -1,3 +1,4 @@
+import { estimateMeal } from "../../../shared/nutritionEstimates.mjs";
 import { isCalendarDate } from "./workoutValidation.js";
 
 export const nutritionFields = ["calories", "protein", "carbohydrates", "fat"];
@@ -35,6 +36,20 @@ export function validateNutrition(body) {
   if (input.mealType != null) {
     if (!mealTypes.includes(input.mealType)) errors.mealType = "Choose a valid meal type.";
     else entry.mealType = input.mealType;
+  }
+  if (input.estimate != null) {
+    const { referenceId, servings } = input.estimate;
+    const expected = typeof servings === "number" ? estimateMeal(referenceId, servings) : null;
+    if (!expected) {
+      errors.estimate = "Choose a known meal reference and 0.25 to 10 servings.";
+    } else {
+      // Derive provenance and the edited flag ourselves; never trust client labels.
+      entry.estimate = {
+        referenceId,
+        servings,
+        edited: nutritionFields.some((field) => entry[field] !== expected[field]),
+      };
+    }
   }
   return Object.keys(errors).length ? { errors } : { entry };
 }

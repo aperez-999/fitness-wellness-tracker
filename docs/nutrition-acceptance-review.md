@@ -68,6 +68,14 @@ Reviewed copies and the test results are in
 The JSON evidence contains generated test account IDs and nutrition records;
 it does not contain passwords, JWTs, or database credentials.
 
+## Interactive inputs and reference estimates
+
+The entry form now includes nutrient icons, synchronized sliders and exact
+number inputs, plus an optional meal estimate with editable portions. Saved
+estimates retain their reference and whether the values were adjusted.
+See [interactive nutrition evidence](evidence/nutrition-interactive/README.md)
+for supported meals, source links, limitations, and updated checks.
+
 ## Teammate workflow verification — pending
 
 Run the app with a development MongoDB database and verify:
