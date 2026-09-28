@@ -243,12 +243,14 @@
 .nutrition-title-icon {
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
-  color: var(--plum);
-  background: #f3e5e0;
-  border-radius: 16px;
+  flex-shrink: 0;
+  width: 60px;
+  height: 56px;
+  background: #f5efe8;
+  border-radius: 18px;
 }
+
+.nutrition-title-icon img { display: block; }
 
 .nutrition-entry h3 svg { color: var(--plum); }
 .nutrition-adjust-heading { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; }

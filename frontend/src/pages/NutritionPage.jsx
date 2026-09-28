@@ -7,6 +7,7 @@ import NutrientInput, { nutrientControls } from "../components/NutrientInput.jsx
 import MealNameField from "../components/MealNameField.jsx";
 import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
 import { mealDescriptionError } from "../../../shared/mealDescription.mjs";
+import saladBowl from "../assets/nutrition/salad-bowl.svg";
 import "./nutrition.css";
 
 const nutrients = [
@@ -193,7 +194,7 @@ function NutritionJournal() {
       </header>
       <div className="nutrition-layout">
         <section className="nutrition-composer" aria-labelledby="nutrition-add-title">
-          <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><Icon name="bowl" size={26} /></span>Add an entry</h2>
+          <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><img src={saladBowl} alt="" width="56" height="42" /></span>Add an entry</h2>
           <p>Record calories and macros for a food, meal, or day.</p>
           <form ref={form} onSubmit={save} noValidate>
             <fieldset disabled={saving}>

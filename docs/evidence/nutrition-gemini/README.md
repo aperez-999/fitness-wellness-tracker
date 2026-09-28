@@ -35,3 +35,7 @@ The two relevant existing browser tests passed again after this presentation-onl
 change, including Undo/provenance behavior, desktop/mobile axe scans and mobile
 overflow checks. The frontend production build also passed. Screenshots above
 show the updated layout.
+
+The heading now uses a custom salad-bowl SVG in the existing workout illustration
+palette. The desktop/mobile workflow and accessibility checks, plus the frontend
+build, passed again for this icon update.
