@@ -27,7 +27,7 @@ App runs at `http://localhost:5173`.
 | `/signup` | Sign up |
 | `/dashboard` | Dashboard shell (summary cards) |
 | `/workouts` | Workout logging (list + create) |
-| `/nutrition` | Placeholder — Capstone 2 |
+| `/nutrition` | Nutrition entry form and the signed-in user’s 30 most recent entries |
 | `/goals` | Placeholder — Capstone 2 |
 | `/profile` | Signed-in user info |
 

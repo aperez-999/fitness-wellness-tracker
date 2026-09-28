@@ -61,3 +61,14 @@ duration totals, keyboard timeline selection, data tables and responsive layouts
 
 Screenshots are written to `tests/artifacts/` (ignored by Git). Test contexts,
 servers, and the temporary database are closed after the suite finishes.
+
+## Nutrition checks
+
+Run only nutrition integration tests with `node --test tests/nutrition.test.js`
+from the repository root. `npm test --prefix tests` runs both suites.
+Nutrition tests use the actual API router, a disposable MongoDB database, and
+Playwright. They cover required fields, malformed requests, authentication,
+owner spoofing, bounded recent history, UI saves, failed-request recovery, reload
+and browser-context reopen persistence, account switching, and accessibility.
+Evidence is written to `tests/artifacts/nutrition-{desktop,mobile}.png` and
+`tests/artifacts/nutrition-api-evidence.json`. No backend `.env` is loaded.

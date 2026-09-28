@@ -1,0 +1,230 @@
+/* Reuse Dayform's Manrope, plum, linen and paper palette. */
+.nutrition-page {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.nutrition-heading {
+  margin-bottom: 32px;
+}
+
+.nutrition-heading h1 {
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+}
+
+.nutrition-heading p {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.nutrition-layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 36px;
+  align-items: start;
+}
+
+.nutrition-page h2 {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -.6px;
+}
+
+.nutrition-composer {
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+}
+
+.nutrition-composer > p, .nutrition-history header p {
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.nutrition-composer form {
+  margin-top: 24px;
+}
+
+.nutrition-composer fieldset {
+  display: grid;
+  min-width: 0;
+  gap: 18px;
+}
+
+.nutrition-composer fieldset:disabled {
+  opacity: .7;
+}
+
+.nutrition-composer .form-field {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.nutrition-composer label {
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.nutrition-composer input {
+  width: 100%;
+  min-width: 0;
+  min-height: 48px;
+  padding: 11px 12px;
+  border: 1px solid #cdbfbb;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.nutrition-composer input::placeholder {
+  color: var(--muted);
+}
+
+.nutrition-composer input[aria-invalid="true"] {
+  border-color: #973d56;
+}
+
+.nutrition-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 14px;
+}
+
+.nutrition-hint {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.nutrition-error, .nutrition-composer .auth-error {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f7e7e6;
+  color: #733b4e;
+  font-size: 13px;
+}
+
+.nutrition-error {
+  margin-top: 16px;
+}
+
+.nutrition-success {
+  margin-top: 16px;
+  color: #345c42;
+  font-weight: 700;
+}
+
+.nutrition-history > header {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: start;
+  padding: 6px 0 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.nutrition-history button:disabled {
+  opacity: .6;
+}
+
+.nutrition-empty {
+  padding: 40px 0;
+  color: var(--muted);
+  max-width: 340px;
+}
+
+.nutrition-empty h3 {
+  color: var(--ink);
+  font-size: 17px;
+  font-weight: 750;
+  margin-bottom: 8px;
+}
+
+.nutrition-entry {
+  padding: 24px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.nutrition-entry-heading {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.nutrition-entry h3 {
+  font-weight: 750;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.nutrition-entry time {
+  flex-shrink: 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.nutrition-values {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.nutrition-values dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.nutrition-values dd {
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 750;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.nutrition-values dd span {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  .nutrition-layout {
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr);
+    gap: 24px;
+  }
+  .nutrition-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .nutrition-entry-heading {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
+
+@media (max-width: 850px) {
+  .nutrition-layout {
+    grid-template-columns: 1fr;
+  }
+  .nutrition-composer {
+    padding: 22px;
+  }
+  .nutrition-values {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .nutrition-values {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

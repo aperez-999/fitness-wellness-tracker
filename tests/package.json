@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test --test-concurrency=1 dashboard.test.js",
+    "test": "node --test --test-concurrency=1 *.test.js",
     "browsers": "playwright install chromium"
   },
   "devDependencies": {

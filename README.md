@@ -12,11 +12,11 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Workout logging
 - Workout persistence (MongoDB)
 - Recent workout display / end-to-end walking skeleton
+- Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 
 ## Planned features
 
 - Progress dashboard
-- Nutrition logging
 - Wellness goals
 - Charts and analytics
 - AI recommendations
@@ -101,6 +101,11 @@ Full Capstone 1 setup notes: [docs/capstone-1/user-guides/local-setup-guide.md](
 | Application | `frontend/`, `backend/` | Continuous codebase across both courses |
 
 Sprint status is tracked on the Capstone website board (not in a repo status file).
+
+## Nutrition verification
+
+See [nutrition acceptance review](docs/nutrition-acceptance-review.md) for the API
+contract, test commands, evidence, and the teammate verification checklist.
 
 ## Changelog
 
