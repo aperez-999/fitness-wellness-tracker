@@ -1,12 +1,12 @@
+import { mealDescriptionError } from "../../../shared/mealDescription.mjs";
 const fields = ['calories', 'protein', 'carbohydrates', 'fat'];
 export class EstimateError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
 
 export async function estimateFood(foodName, { fetchImpl = fetch, apiKey = process.env.GEMINI_API_KEY, model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite' } = {}) {
-  if (typeof foodName !== 'string' || !foodName.trim() || foodName.trim().length > 120) {
-    throw new EstimateError(400, 'Enter a food or meal of 120 characters or fewer.');
-  }
+  const inputError = mealDescriptionError(foodName);
+  if (inputError) throw new EstimateError(400, inputError);
   if (!apiKey) throw new EstimateError(503, 'AI estimates are not configured yet. You can enter values manually.');
   if (!/^gemini-[a-z0-9.-]+$/.test(model)) throw new EstimateError(503, 'AI estimates are not configured correctly.');
   const schema = {
@@ -66,5 +66,36 @@ export function createEstimateLimiter({ now = Date.now, perUser = 5, total = 20 
     count++;
     users.set(userId, (users.get(userId) || 0) + 1);
     return true;
+  };
+}
+
+// Protect the shared provider quota even when requests come from multiple tabs.
+export function createMealEstimator({ estimate = estimateFood, now = Date.now } = {}) {
+  const allow = createEstimateLimiter({ now });
+  const pending = new Set();
+  let retryAt = 0;
+  function limited(message, seconds) {
+    const error = new EstimateError(429, message);
+    error.retryAfterSeconds = seconds;
+    return error;
+  }
+  return async function estimateForUser(foodName, userId) {
+    const inputError = mealDescriptionError(foodName);
+    if (inputError) throw new EstimateError(400, inputError);
+    if (now() < retryAt) throw limited('AI estimates are resting for a moment. You can still enter values manually.', Math.ceil((retryAt - now()) / 1000));
+    if (pending.has(userId)) throw limited('Your previous estimate is still finishing. Please try again shortly.', 5);
+    if (!allow(userId)) throw limited('Too many estimates. Wait a minute or enter values manually.', 60);
+    pending.add(userId);
+    try {
+      return await estimate(foodName);
+    } catch (error) {
+      if (error instanceof EstimateError && error.status === 429) {
+        retryAt = now() + 60_000;
+        error.retryAfterSeconds = 60;
+      }
+      throw error;
+    } finally {
+      pending.delete(userId);
+    }
   };
 }

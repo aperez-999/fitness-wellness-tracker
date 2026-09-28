@@ -3,10 +3,10 @@ import { requireAuth } from "../middleware/auth.js";
 import { NutritionLog } from "../models/NutritionLog.js";
 import { validateNutrition } from "../utils/nutritionValidation.js";
 
-import { estimateFood, createEstimateLimiter, EstimateError } from "../services/mealEstimate.js";
+import { createMealEstimator, EstimateError } from "../services/mealEstimate.js";
 import { signEstimate } from "../utils/estimateReceipt.js";
 
-const allowEstimate = createEstimateLimiter();
+const estimateForUser = createMealEstimator();
 const router = Router();
 router.use(requireAuth);
 router.use((_req, res, next) => {
@@ -16,18 +16,14 @@ router.use((_req, res, next) => {
 
 router.post("/estimate", async (req, res, next) => {
   const foodName = req.body?.foodName;
-  if (typeof foodName !== "string" || !foodName.trim() || foodName.trim().length > 120) {
-    return res.status(400).json({ message: "Enter a food or meal of 120 characters or fewer." });
-  }
-  if (!allowEstimate(req.user.id)) {
-    res.set("Retry-After", "60");
-    return res.status(429).json({ message: "Too many estimates. Wait a minute or enter values manually." });
-  }
   try {
-    const estimate = await estimateFood(foodName);
+    const estimate = await estimateForUser(foodName, req.user.id);
     res.json({ ...estimate, receipt: signEstimate(estimate, foodName.trim(), req.user.id) });
   } catch (error) {
-    if (error instanceof EstimateError) return res.status(error.status).json({ message: error.message });
+    if (error instanceof EstimateError) {
+      if (error.retryAfterSeconds) res.set("Retry-After", String(error.retryAfterSeconds));
+      return res.status(error.status).json({ message: error.message, ...(error.retryAfterSeconds ? { retryAfterSeconds: error.retryAfterSeconds } : {}) });
+    }
     next(error);
   }
 });

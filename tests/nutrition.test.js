@@ -309,11 +309,14 @@ test("inline estimates handle empty input and quota failure without overwriting 
   const page = await openPage();
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   await page.getByText("Enter a food or meal to estimate.").waitFor();
-  providerStatus = 429;
+  await page.route("**/api/nutrition/estimate", route => route.fulfill({
+    status: 429, contentType: "application/json", body: JSON.stringify({ message: "AI estimate limit reached. Try again later or enter values manually.", retryAfterSeconds: 1 }),
+  }), { times: 1 });
   await fillEntry(page, { ...valid, foodName: "Oatmeal with berries and peanut butter" });
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   await page.getByText(/AI estimate limit reached/).waitFor();
-  providerStatus = 200;
+  assert.equal(await page.getByRole("button", { name: "Estimate nutrition", exact: true }).isDisabled(), true);
+  assert.equal(await page.getByRole("button", { name: "Save entry", exact: true }).isEnabled(), true);
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
   await page.locator("#nutrition-foodName").fill("Yogurt parfait");
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
@@ -333,7 +336,7 @@ test("inline estimates handle empty input and quota failure without overwriting 
 
 test("estimate API validates input, binds receipts to their owner, and limits requests", async () => {
   const startCalls = providerCalls;
-  for (const foodName of [null, {}, "", "a".repeat(121)]) {
+  for (const foodName of [null, {}, "", "a".repeat(121), "12345", "https://example.test", "me@example.test"]) {
     assert.equal((await request("/nutrition/estimate", accounts.alex.token, { foodName })).status, 400);
   }
   assert.equal(providerCalls, startCalls);
@@ -370,4 +373,51 @@ test("editing a meal cancels a pending estimate and prevents stale values", asyn
     assert.equal(stored.calories, 420);
     assert.equal(stored.estimate, undefined);
   } finally { release(); }
+});
+
+
+test("input guardrails stay local and Undo restores manual values and prior AI provenance", async () => {
+  const page = await openPage();
+  const startCalls = providerCalls;
+  await page.locator("#nutrition-foodName").fill("me@example.test");
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText("Use a food description without links or email addresses.").waitFor();
+  assert.equal(providerCalls, startCalls);
+  const manual = { ...valid, protein: 0 };
+  await fillEntry(page, manual);
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByRole("button", { name: "Undo AI estimate" }).click();
+  for (const field of ["calories", "protein", "carbohydrates", "fat"]) assert.equal(await page.locator(`#nutrition-${field}`).inputValue(), String(manual[field]));
+  assert.equal(await page.getByText("AI estimate applied", { exact: true }).count(), 0);
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  assert.equal((await NutritionLog.findOne().lean()).estimate, undefined);
+
+  await page.locator("#nutrition-foodName").fill("Yogurt parfait");
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByRole("button", { name: "Undo AI estimate" }).waitFor();
+  await page.locator("#nutrition-protein").fill("20");
+  assert.equal(await page.getByRole("button", { name: "Undo AI estimate" }).count(), 0);
+  await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByRole("button", { name: "Undo AI estimate" }).click();
+  assert.equal(await page.locator("#nutrition-protein").inputValue(), "20");
+  await page.getByText("AI estimate applied", { exact: true }).waitFor();
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  const stored = await NutritionLog.findOne({ foodName: "Yogurt parfait" }).lean();
+  assert.equal(stored.estimate.provider, "gemini");
+  assert.equal(stored.estimate.edited, true);
+  assert.equal(stored.protein, 20);
+});
+
+test("provider quota errors return a retry delay and block further requests server-side", async () => {
+  providerStatus = 429;
+  const calls = providerCalls;
+  const first = await request("/nutrition/estimate", accounts.alex.token, { foodName: "Oats" });
+  assert.equal(first.status, 429);
+  assert.equal(first.data.retryAfterSeconds, 60);
+  const second = await request("/nutrition/estimate", accounts.sam.token, { foodName: "Rice" });
+  assert.equal(second.status, 429);
+  assert.ok(second.data.retryAfterSeconds > 0);
+  assert.equal(providerCalls, calls + 1);
 });

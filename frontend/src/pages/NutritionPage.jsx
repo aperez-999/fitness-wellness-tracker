@@ -6,6 +6,7 @@ import Icon from "../components/Icon.jsx";
 import NutrientInput, { nutrientControls } from "../components/NutrientInput.jsx";
 import MealNameField from "../components/MealNameField.jsx";
 import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
+import { mealDescriptionError } from "../../../shared/mealDescription.mjs";
 import "./nutrition.css";
 
 const nutrients = [
@@ -38,6 +39,8 @@ function NutritionJournal() {
   const [saveError, setSaveError] = useState("");
   const [saved, setSaved] = useState(false);
   const [estimate, setEstimate] = useState(null);
+  const [previousEstimate, setPreviousEstimate] = useState(null);
+  const [retrySeconds, setRetrySeconds] = useState(0);
   const [estimating, setEstimating] = useState(false);
   const estimateRequest = useRef(null);
   const [saving, setSaving] = useState(false);
@@ -73,7 +76,14 @@ function NutritionJournal() {
     };
   }, [loadEntries]);
 
+  useEffect(() => {
+    if (retrySeconds <= 0) return;
+    const timer = setTimeout(() => setRetrySeconds((seconds) => Math.max(0, seconds - 1)), 1000);
+    return () => clearTimeout(timer);
+  }, [retrySeconds]);
+
   function update(field, value) {
+    setPreviousEstimate(null);
     estimateRequest.current?.abort();
     estimateRequest.current = null;
     setEstimating(false);
@@ -84,6 +94,7 @@ function NutritionJournal() {
   }
 
   function applyEstimate(values, provenance) {
+    setPreviousEstimate({ values: Object.fromEntries(nutrients.map(([field]) => [field, draft[field]])), estimate });
     setDraft((current) => ({ ...current, ...values }));
     setEstimate(provenance);
     setErrors({});
@@ -92,15 +103,27 @@ function NutritionJournal() {
     requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
   }
 
+  function undoEstimate() {
+    if (!previousEstimate) return;
+    setDraft((current) => ({ ...current, ...previousEstimate.values }));
+    setEstimate(previousEstimate.estimate);
+    setPreviousEstimate(null);
+    setErrors({});
+    setSaveError("");
+    requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
+  }
+
   async function estimateFromFood() {
-    if (estimateRequest.current || writeRequest.current) return;
-    if (!draft.foodName.trim()) {
-      setErrors((current) => ({ ...current, foodName: "Enter a food or meal to estimate." }));
+    if (estimateRequest.current || writeRequest.current || retrySeconds > 0) return;
+    const inputError = mealDescriptionError(draft.foodName);
+    if (inputError) {
+      setErrors((current) => ({ ...current, foodName: inputError }));
       return;
     }
     const controller = new AbortController();
     estimateRequest.current = controller;
     const token = getToken();
+    setPreviousEstimate(null);
     setEstimating(true);
     setErrors((current) => ({ ...current, foodName: undefined }));
     try {
@@ -113,7 +136,10 @@ function NutritionJournal() {
     } catch (error) {
       if (controller.signal.aborted || token !== getToken()) return;
       if (error.status === 401) logout();
-      else setErrors((current) => ({ ...current, foodName: error.message }));
+      else {
+        if (error.status === 429) setRetrySeconds(error.retryAfterSeconds || 60);
+        setErrors((current) => ({ ...current, foodName: error.message }));
+      }
     } finally {
       if (estimateRequest.current === controller) {
         estimateRequest.current = null;
@@ -142,6 +168,7 @@ function NutritionJournal() {
         .slice(0, 30));
       setDraft((current) => ({ ...emptyDraft(), date: current.date }));
       setEstimate(null);
+      setPreviousEstimate(null);
       setSaved(true);
       void loadEntries();
     } catch (error) {
@@ -174,11 +201,11 @@ function NutritionJournal() {
               <MealNameField
                 value={draft.foodName} error={errors.foodName}
                 onChange={(name) => update("foodName", name)}
-                onEstimate={estimateFromFood} estimating={estimating}
+                onEstimate={estimateFromFood} estimating={estimating} retrySeconds={retrySeconds}
                 hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
               />
               {estimate && <div className="inline-meal-estimate" role="status">
-                <p><Icon name="check" size={16} /><strong>AI estimate applied</strong></p>
+                <p><Icon name="check" size={16} /><strong>AI estimate applied</strong>{previousEstimate && <button type="button" className="text-link estimate-undo" onClick={undoEstimate} aria-label="Undo AI estimate">Undo</button>}</p>
                 <p>{estimate.portion}</p>
                 <p>AI estimate—actual nutrition may vary. Review portions and adjust before saving.</p>
               </div>}

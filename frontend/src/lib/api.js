@@ -19,6 +19,9 @@ async function parseResponse(response) {
   if (!response.ok) {
     const error = new Error(data.message || "Request failed");
     error.status = response.status;
+    if (Number.isFinite(data.retryAfterSeconds) && data.retryAfterSeconds > 0) {
+      error.retryAfterSeconds = Math.min(300, Math.ceil(data.retryAfterSeconds));
+    }
     error.fields = data.errors || {};
     throw error;
   }

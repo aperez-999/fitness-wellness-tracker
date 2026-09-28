@@ -30,7 +30,9 @@ sparkle. For example: `1 cup cooked oatmeal with half a cup of blueberries`.
 Use a Google AI Studio project on the **Free** tier. The application cannot
 inspect or enforce your Google billing tier; a key from a paid project can incur
 charges. There is no automatic model fallback or retry. The server limits
-estimates to five per user and twenty total per minute. Google's own quotas may
+estimates to five per user and twenty total per minute, with one in-flight
+request per user. A provider quota error pauses new provider requests for sixty
+seconds and shows a retry countdown; manual entry and saving remain available. Google's own quotas may
 be lower. This in-memory limiter suits the single-process demo; shared deployments
 would need a shared limiter. If a request fails, manual nutrition entry still works.
 
@@ -47,13 +49,18 @@ AI nutrition values are approximate, especially without ingredient weights.
 ## Failure handling and persistence
 
 The server validates model output, applies a 20-second timeout, and never returns
-provider error bodies or keys. Blank descriptions are rejected before an outbound
-request. Editing an input cancels the pending UI estimate so stale results cannot
+provider error bodies or keys. Blank descriptions, links, email addresses, markup/control characters and
+text without any letters are rejected before an outbound request. International
+food names and portion notation are supported. These are lightweight checks,
+not a complete personal-data filter or food classifier. Editing an input cancels the pending UI estimate so stale results cannot
 overwrite the draft. Auth changes cancel requests and clear private state.
 
 A signed receipt binds returned values and assumptions to the account and meal.
 The backend derives whether saved values were adjusted, then stores provenance
 with the entry in MongoDB. It does not store the receipt or API key in the entry.
+An inline Undo action restores all four values and any previous AI provenance
+after autofill. Further edits or saving dismiss Undo so it cannot overwrite newer
+changes.
 Older local reference estimates remain compatible.
 
 Automated tests mock Google while using real Express, MongoDB and browser flows;

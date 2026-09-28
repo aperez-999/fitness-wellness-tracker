@@ -360,3 +360,5 @@
   .nutrient-control { padding: 9px; }
   .nutrition-composer .nutrient-label { font-size: 11px; gap: 4px; }
 }
+
+.estimate-undo { margin-left: auto; min-height: 32px; padding: 4px 8px; }
