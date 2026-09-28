@@ -219,7 +219,6 @@ function NutritionJournal() {
                 </div>
                 <p className="estimate-note-hint">An estimate, with room to adjust. Check the portions and fine-tune the values below.</p>
               </div>}
-              <div className="nutrition-adjust-heading"><Icon name="edit" size={16} /><span>Slide, type, make it yours.</span></div>
               <div className="nutrition-inputs">
                 {nutrientControls.map((control) => (
                   <NutrientInput key={control.field} {...control}

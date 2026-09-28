@@ -253,7 +253,6 @@
 .nutrition-title-icon img { display: block; }
 
 .nutrition-entry h3 svg { color: var(--plum); }
-.nutrition-adjust-heading { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 12px; }
 
 .nutrient-control {
   --nutrient-color: #a34a2e;
