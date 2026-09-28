@@ -124,3 +124,4 @@ sequenceDiagram
 | POST | `/api/auth/login` | No | Authenticate user |
 | POST | `/api/auth/logout` | Yes | End session (client + optional server denylist later) |
 | GET | `/api/auth/me` | Yes | Return current user profile |
+| PATCH | `/api/auth/me` | Yes | Update the current user's display name |

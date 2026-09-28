@@ -3,7 +3,7 @@ import Icon from "./Icon.jsx";
 
 export default function FormField({
   id, label, error, invalid = Boolean(error), hint, type = "text",
-  visibilityLabel = "password", ...props
+  visibilityLabel = "password", required = true, ...props
 }) {
   const [visible, setVisible] = useState(false);
   const isPassword = type === "password";
@@ -13,7 +13,7 @@ export default function FormField({
   const input = (
     <input
       id={id}
-      required
+      required={required}
       aria-invalid={invalid}
       aria-describedby={description || undefined}
       {...props}

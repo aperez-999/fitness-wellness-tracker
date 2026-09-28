@@ -5,6 +5,7 @@ import { requireAuth } from "../middleware/auth.js";
 import { User } from "../models/User.js";
 import { signToken } from "../utils/jwt.js";
 import { validateEmail, validatePassword } from "../utils/password.js";
+import { validateProfileUpdate } from "../utils/profileValidation.js";
 
 const router = Router();
 const BCRYPT_ROUNDS = 10;
@@ -102,6 +103,30 @@ router.post("/logout", requireAuth, (_req, res) => {
 router.get("/me", requireAuth, async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id).select("-passwordHash");
+    if (!user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    return res.json({ user: toPublicUser(user) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.patch("/me", requireAuth, async (req, res, next) => {
+  try {
+    const result = validateProfileUpdate(req.body);
+    if (result.errors) {
+      return res.status(400).json({
+        message: "Check your profile details.",
+        errors: result.errors,
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { displayName: result.displayName },
+      { new: true, runValidators: true },
+    ).select("-passwordHash");
     if (!user) {
       return res.status(401).json({ message: "Unauthorized" });
     }

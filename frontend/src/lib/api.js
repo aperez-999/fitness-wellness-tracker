@@ -81,6 +81,13 @@ export function getMe() {
   return apiFetch("/auth/me");
 }
 
+export function updateProfile(profile) {
+  return apiFetch("/auth/me", {
+    method: "PATCH",
+    body: JSON.stringify(profile),
+  });
+}
+
 export function getWorkouts({
   summary = false,
   analytics = false,

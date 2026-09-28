@@ -58,6 +58,17 @@ Client must also clear stored token.
 | Auth | Yes |
 | Success | `{ user: { id, email, displayName, createdAt } }` |
 
+### `PATCH /auth/me`
+
+| | |
+|---|---|
+| Auth | Yes |
+| Body | `{ displayName }` |
+
+Updates the signed-in user's display name. The user id comes from the JWT. `email`, `password`, `passwordHash`, and `userId` in the body are ignored. An empty or whitespace-only name clears `displayName`. A non-string or a name longer than 80 characters returns `400` with `{ message, errors: { displayName } }`.
+
+**Success `200`:** `{ user: { id, email, displayName, createdAt } }`
+
 ## Planned — Workouts (Sprint 4–5)
 
 | Method | Path | Description |

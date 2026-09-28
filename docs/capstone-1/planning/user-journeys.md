@@ -59,8 +59,8 @@ Sprint 3 deliverable (User Story #16). Narrative journeys that complement flowch
 
 | Step | User action | System response | Screen |
 |------|-------------|-----------------|--------|
-| 1 | Clicks Profile in nav | Shows email, display name | Profile |
-| 2 | (Future) Updates display name | PATCH profile endpoint | Profile |
+| 1 | Clicks Profile in nav | Shows email, display name, and member since | Profile |
+| 2 | Updates display name | `PATCH /api/auth/me` saves the name for this user | Profile |
 | 3 | Clicks Logout | Session cleared, redirect to login | Login |
 
 ## Cross-journey navigation map

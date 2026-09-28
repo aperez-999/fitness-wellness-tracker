@@ -15,6 +15,7 @@ import {
   logout as apiLogout,
   setToken,
   signup as apiSignup,
+  updateProfile as apiUpdateProfile,
 } from "../lib/api.js";
 
 const AuthContext = createContext(null);
@@ -75,6 +76,13 @@ export function AuthProvider({ children }) {
     return newUser;
   }, []);
 
+  const updateProfile = useCallback(async (payload) => {
+    const token = getToken();
+    const { user: updated } = await apiUpdateProfile(payload);
+    if (getToken() === token) setUser(updated);
+    return updated;
+  }, []);
+
   const logout = useCallback(() => {
     // Start the request with the current token, then clear the session immediately.
     void apiLogout().catch(() => {});
@@ -91,8 +99,9 @@ export function AuthProvider({ children }) {
       login,
       signup,
       logout,
+      updateProfile,
     }),
-    [user, loading, login, signup, logout],
+    [user, loading, login, signup, logout, updateProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
