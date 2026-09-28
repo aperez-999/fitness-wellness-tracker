@@ -93,16 +93,41 @@
 }
 
 .nutrition-inputs {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(min-content, 1fr));
   aspect-ratio: 1;
   gap: 12px;
   padding: 14px;
-  border: 1px solid #cbbfaf;
+  border: 1px solid #b9aa96;
+  border-radius: 24px;
+  background-color: #e5dac9;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%2373624c' opacity='.065' filter='url(%23grain)' d='M0 0h140v140H0z'/%3E%3C/svg%3E"),
+    linear-gradient(145deg, #f7f1e6 0%, #e6dbc9 44%, #d7c9b5 100%);
+  box-shadow:
+    inset 0 2px 1px #fffef9,
+    inset 2px 0 2px #ffffff9c,
+    inset 0 -5px 3px #a5967e85,
+    inset -2px 0 2px #baa99080,
+    0 3px 0 #b9aa96,
+    0 6px 8px #64503c20,
+    0 14px 22px -12px #4e3b2859;
+}
+
+/* A continuous rolled lip catches light above the recessed wells. */
+.nutrition-inputs::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: 1px solid #fffdf5b3;
+  border-bottom-color: #b8a78e80;
+  border-right-color: #b8a78e66;
   border-radius: 20px;
-  background: #e9e0d4;
-  box-shadow: inset 0 2px 1px #fffaf3, inset 0 -3px 2px #cec2b2, 0 2px 4px #5938490a;
+  box-shadow: inset 0 1px 2px #8e7a5e29, 0 1px 1px #fffdf599;
+  pointer-events: none;
 }
 
 .nutrition-hint {
@@ -269,11 +294,16 @@
   justify-content: center;
   min-width: 0;
   padding: 12px;
-  background: var(--nutrient-tint);
-  border: 1px solid #59384914;
-  border-radius: 12px;
-  box-shadow: inset 0 2px 3px #5938490a, 0 1px 0 #fffaf3;
-
+  background: linear-gradient(145deg, #77604c0f, transparent 48%, #ffffff38), var(--nutrient-tint);
+  border: 1px solid #aa968066;
+  border-bottom-color: #fffdf2;
+  border-right-color: #fffdf2b3;
+  border-radius: 17px;
+  box-shadow:
+    inset 3px 4px 7px #66513c26,
+    inset 0 1px 2px #66513c1a,
+    inset -3px -3px 6px #ffffffa6,
+    0 1px 1px #fffdf2cc;
 }
 
 .nutrient-protein { --nutrient-color: #73528c; --nutrient-tint: #f4edf8; }
@@ -433,7 +463,8 @@
   .nutrition-layout { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
-  .nutrition-inputs { gap: 10px; padding: 10px; border-radius: 16px; }
+  .nutrition-inputs { gap: 10px; padding: 12px; border-radius: 20px; }
+  .nutrition-inputs::before { border-radius: 16px; }
   .nutrient-control { padding: 9px; }
   .nutrition-composer .nutrient-label { font-size: 11px; gap: 4px; }
 }
