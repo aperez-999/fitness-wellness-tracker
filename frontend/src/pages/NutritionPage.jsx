@@ -211,13 +211,13 @@ function NutritionJournal() {
                   {previousEstimate && <button type="button" className="estimate-undo" onClick={undoEstimate} aria-label="Undo AI estimate"><Icon name="undo" size={15} />Undo</button>}
                 </div>
                 <div className="estimate-portion">
-                  <span className="estimate-portion-icon"><Icon name="plate" size={32} /></span>
+                  <span className="estimate-portion-icon"><Icon name="plate" size={24} /></span>
                   <div>
                     <p className="estimate-portion-caption">Portion we used</p>
                     <p className="estimate-portion-text">{estimate.portion}</p>
                   </div>
                 </div>
-                <p className="estimate-note-hint">An estimate, with room to adjust. Check the portions and fine-tune the values below.</p>
+                <p className="estimate-note-hint">Approximate values. Adjust to match your portion.</p>
               </div>}
               <div className="nutrition-inputs">
                 {nutrientControls.map((control) => (

@@ -28,9 +28,8 @@ export default function MealNameField({ value, error, onChange, onEstimate, hasV
         </button>
       </div>
       <p id="meal-name-hint" className="nutrition-hint" role="status">
-        {retrySeconds > 0 ? `Try AI again in ${retrySeconds}s. Manual entry is still available.` : estimating ? "Estimating your meal…" : "Tap the sparkle for an AI estimate."}{hasValues ? " This replaces the four nutrition values." : ""}
+        {retrySeconds > 0 ? `Try AI again in ${retrySeconds}s. Manual entry is still available.` : estimating ? "Estimating your meal…" : "Sparkle sends meal text to Gemini. No personal details."}{hasValues && !estimating && retrySeconds <= 0 ? " Replaces values." : ""}
       </p>
-      <p className="nutrition-hint">Sends this description to Google Gemini. Include portions; avoid personal or medical details.</p>
       {error && <p id="meal-name-error" className="field-error" role="alert">{error}</p>}
     </div>
   );

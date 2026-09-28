@@ -101,20 +101,17 @@
   aspect-ratio: 1;
   gap: 12px;
   padding: 14px;
-  border: 1px solid #b9aa96;
+  border: 1px solid #c6bba9;
   border-radius: 24px;
   background-color: #e5dac9;
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='grain'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%2373624c' opacity='.065' filter='url(%23grain)' d='M0 0h140v140H0z'/%3E%3C/svg%3E"),
-    linear-gradient(145deg, #f7f1e6 0%, #e6dbc9 44%, #d7c9b5 100%);
+    linear-gradient(145deg, #eee7db 0%, #e6ddce 48%, #dfd4c3 100%);
   box-shadow:
-    inset 0 2px 1px #fffef9,
-    inset 2px 0 2px #ffffff9c,
-    inset 0 -5px 3px #a5967e85,
-    inset -2px 0 2px #baa99080,
-    0 3px 0 #b9aa96,
-    0 6px 8px #64503c20,
-    0 14px 22px -12px #4e3b2859;
+    inset 0 2px 3px #fffaf080,
+    inset 0 -3px 4px #a5967e40,
+    0 2px 0 #c6bba9,
+    0 5px 10px -3px #64503c26;
 }
 
 /* A continuous rolled lip catches light above the recessed wells. */
@@ -122,11 +119,11 @@
   content: "";
   position: absolute;
   inset: 4px;
-  border: 1px solid #fffdf5b3;
-  border-bottom-color: #b8a78e80;
-  border-right-color: #b8a78e66;
+  border: 1px solid #fffdf54d;
+  border-bottom-color: #b8a78e40;
+  border-right-color: #b8a78e33;
   border-radius: 20px;
-  box-shadow: inset 0 1px 2px #8e7a5e29, 0 1px 1px #fffdf599;
+  box-shadow: inset 0 1px 3px #8e7a5e14;
   pointer-events: none;
 }
 
@@ -294,16 +291,14 @@
   justify-content: center;
   min-width: 0;
   padding: 12px;
-  background: linear-gradient(145deg, #77604c0f, transparent 48%, #ffffff38), var(--nutrient-tint);
+  background: linear-gradient(145deg, #77604c0c, transparent 58%, #ffffff14), var(--nutrient-tint);
   border: 1px solid #aa968066;
-  border-bottom-color: #fffdf2;
-  border-right-color: #fffdf2b3;
+  border-bottom-color: #fffdf280;
+  border-right-color: #fffdf266;
   border-radius: 17px;
   box-shadow:
-    inset 3px 4px 7px #66513c26,
-    inset 0 1px 2px #66513c1a,
-    inset -3px -3px 6px #ffffffa6,
-    0 1px 1px #fffdf2cc;
+    inset 2px 3px 7px #66513c21,
+    inset -2px -2px 5px #ffffff59;
 }
 
 .nutrient-protein { --nutrient-color: #73528c; --nutrient-tint: #f4edf8; }
@@ -318,12 +313,21 @@
   min-height: 40px;
   padding: 4px 7px;
   width: 100%;
-  background: #ffffffa6;
-  border-color: transparent;
-  border-radius: 8px;
+  background: #ffffff1f;
+  border-color: #5938490d;
+  border-bottom-color: #ffffff80;
+  border-radius: 7px;
+  box-shadow: inset 0 1px 3px #5938490d;
   font-size: 24px;
   font-weight: 750;
   font-variant-numeric: tabular-nums;
+}
+
+.nutrition-composer .nutrient-number input:hover { background: #ffffff38; }
+.nutrition-composer .nutrient-number input:focus-visible {
+  outline: 2px solid var(--nutrient-color);
+  outline-offset: 2px;
+  background: #ffffff59;
 }
 
 .nutrition-composer .nutrient-number input[aria-invalid="true"] { border-color: #973d56; }
@@ -389,7 +393,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding: 7px 12px 7px 16px;
+  padding: 0 8px 0 12px;
   background: #f5eeea;
 }
 .estimate-note-label {
@@ -418,10 +422,10 @@
 .estimate-undo:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
 .estimate-portion {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr);
-  gap: 13px;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 9px;
   align-items: start;
-  padding: 19px 16px 17px;
+  padding: 10px 12px;
 }
 .estimate-portion-icon {
   display: grid;
@@ -430,21 +434,21 @@
   color: #936b58;
 }
 .estimate-portion-caption {
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   color: var(--muted);
   font-size: 11px;
 }
 .estimate-portion-text {
   color: var(--ink);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.5;
   letter-spacing: -.25px;
   overflow-wrap: anywhere;
 }
 .estimate-note-hint {
-  margin: 0 16px;
-  padding: 11px 0 14px;
+  margin: 0 12px;
+  padding: 7px 0 9px;
   border-top: 1px dashed #dfd2c9;
   color: var(--muted);
   font-size: 11px;

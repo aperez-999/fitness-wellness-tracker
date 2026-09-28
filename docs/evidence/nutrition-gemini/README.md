@@ -43,3 +43,12 @@ build, passed again for this icon update.
 The four nutrient controls now sit inside a square molded tray with a rolled rim, subtle surface grain,
 recessed compartments and cast shadows. The existing desktop/mobile workflow, accessibility and
 overflow checks passed, and the frontend build passed. Screenshots are updated.
+
+## Matte tray and compact guidance
+
+The tray uses softer rim lighting and shadows, with lightly inset number fields
+that retain visible keyboard focus. The Gemini disclosure and portion note are
+more compact, preserving the assumed portion, approximation reminder and Undo.
+Nutrient labels remain unchanged. Three focused browser tests passed, covering
+editable estimates, Undo/provenance, quota recovery and desktop/mobile accessibility;
+the production build also passed. Screenshots above show this version.
