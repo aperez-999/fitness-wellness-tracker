@@ -69,6 +69,11 @@ Configure `backend/.env` from `.env.example` (`MONGODB_URI`, `JWT_SECRET`, `CLIE
 
 On some Macs, AirPlay uses port **5000**. If the API fails with `EADDRINUSE`, set `PORT=5001` in `backend/.env`.
 
+If signup says it cannot reach the server, check that the API and MongoDB are
+both running. With the test dependencies installed, `npm --prefix tests run db:local`
+from the repository root starts a persistent local MongoDB database; keep it open
+alongside the backend and frontend terminals. See [local database setup](tests/README.md#persistent-local-development-database).
+
 Health check: `http://localhost:5000/api/health` (or `:5001` if you changed the port).
 
 ### Frontend

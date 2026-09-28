@@ -130,3 +130,89 @@
     border-radius: 24px;
   }
 }
+
+.password-input {
+  position: relative;
+}
+
+.password-input input {
+  padding-right: 52px;
+}
+
+.password-input input::-ms-reveal,
+.password-input input::-ms-clear {
+  display: none;
+}
+
+.password-toggle {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 9px;
+  color: var(--muted);
+}
+
+.password-toggle:hover {
+  color: var(--plum);
+  background: var(--linen);
+}
+
+.auth-form input {
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.auth-form input[aria-invalid="true"] {
+  border-color: #b47683;
+  background: #fff7f5;
+}
+
+.field-error {
+  color: #733b4e;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.auth-form .auth-error {
+  border: 1px solid #e7c8cd;
+  background: #fcf2f1;
+}
+
+.password-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin-top: 3px;
+}
+
+.password-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+}
+
+.password-checkmark {
+  display: grid;
+  place-items: center;
+  width: 15px;
+  height: 15px;
+  border: 1px solid #b7aba9;
+  border-radius: 50%;
+}
+
+.password-checklist .is-met {
+  color: #345c42;
+}
+
+.is-met .password-checkmark {
+  border-color: #789581;
+  background: #eaf1e9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-form input { transition: none; }
+}

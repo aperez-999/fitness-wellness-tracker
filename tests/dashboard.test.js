@@ -1399,11 +1399,42 @@ test("branded authentication is accessible and signup preserves the requested wo
     [],
   );
   await page.getByLabel("Email").fill("new-dayform@example.test");
-  await page.getByLabel("Password", { exact: true }).fill(password);
+  const passwordInput = page.getByLabel("Password", { exact: true });
+  const requirements = page.getByRole("list", { name: "Password requirements" });
+  assert.equal(await requirements.locator(".is-met").count(), 0);
+  await passwordInput.fill("abcdefgh");
+  assert.equal(await requirements.locator(".is-met").count(), 1);
+  await passwordInput.fill("abcdefgh1");
+  assert.equal(await requirements.locator(".is-met").count(), 2);
+  await passwordInput.fill("abcdefgh1!");
+  assert.equal(await requirements.locator(".is-met").count(), 3);
+  await page.getByRole("button", { name: "Show password", exact: true }).click();
+  assert.equal(await passwordInput.getAttribute("type"), "text");
+  assert.equal(await passwordInput.inputValue(), "abcdefgh1!");
+  await page.getByRole("button", { name: "Hide password", exact: true }).click();
+  assert.equal(await passwordInput.getAttribute("type"), "password");
+  await passwordInput.fill("short");
+  await passwordInput.press("Tab");
+  assert.equal(await requirements.locator(".is-met").count(), 0);
+  assert.equal(await passwordInput.getAttribute("aria-invalid"), "true");
+  await passwordInput.fill(password);
+  assert.equal(await passwordInput.getAttribute("aria-invalid"), "false");
   await page.getByLabel("Confirm password").fill("Different-password-9!");
   await page.getByRole("button", { name: "Sign up", exact: true }).click();
   await page.getByText("Passwords do not match.", { exact: true }).waitFor();
-  await page.getByLabel("Confirm password").fill(password);
+  const confirmation = page.getByLabel("Confirm password", { exact: true });
+  assert.equal(await confirmation.getAttribute("aria-invalid"), "true");
+  await page.waitForFunction(() =>
+    getComputedStyle(document.querySelector("#signup-confirm")).backgroundColor === "rgb(255, 247, 245)");
+  await page.screenshot({ path: path.join(artifacts, "signup-field-error.png"), fullPage: true });
+  await page.getByRole("button", { name: "Show password confirmation", exact: true }).click();
+  assert.equal(await confirmation.getAttribute("type"), "text");
+  await page.getByRole("button", { name: "Hide password confirmation", exact: true }).click();
+  await confirmation.fill(password);
+  assert.equal(await confirmation.getAttribute("aria-invalid"), "false");
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.screenshot({ path: path.join(artifacts, "signup-checklist-complete.png"), fullPage: true });
+  assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
   await page.getByRole("button", { name: "Sign up", exact: true }).click();
   await page.waitForURL("**/workouts?date=2026-09-17");
   assert.equal(
@@ -1896,4 +1927,34 @@ test("illustrated recent sessions, first-walk invitation, and account controls p
     await page.locator('.activity-choice[aria-pressed="true"]').count(),
     0,
   );
+});
+
+
+test("signup shows connection errors, retains values, and recovers on retry", async () => {
+  const context = await browser.newContext({ viewport: { width: 390, height: 950 } });
+  contexts.push(context);
+  const page = await context.newPage();
+  page.setDefaultTimeout(8_000);
+  await page.goto(base + "/signup");
+  await page.getByLabel("Email", { exact: true }).fill("recovery@example.test");
+  await page.getByLabel("Password", { exact: true }).fill(password);
+  await page.getByLabel("Confirm password", { exact: true }).fill(password);
+  await page.route("**/api/auth/signup", (route) => route.abort("connectionrefused"));
+  await page.getByRole("button", { name: "Sign up", exact: true }).click();
+  await page.getByRole("alert").waitFor();
+  assert.equal(await page.getByRole("alert").innerText(), "Can't reach the server. Please try again in a moment.");
+  assert.equal(await page.getByLabel("Password", { exact: true }).inputValue(), password);
+  assert.equal(await page.locator('[aria-invalid="true"]').count(), 0);
+  await page.screenshot({ path: path.join(artifacts, "signup-network-error.png"), fullPage: true });
+  assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
+  await page.unroute("**/api/auth/signup");
+  // A duplicate email is a field error, not a connection failure.
+  await page.getByLabel("Email", { exact: true }).fill("alex@example.test");
+  await page.getByRole("button", { name: "Sign up", exact: true }).click();
+  await page.getByText("An account with this email already exists.", { exact: true }).waitFor();
+  assert.equal(await page.getByLabel("Email", { exact: true }).getAttribute("aria-invalid"), "true");
+  await page.getByLabel("Email", { exact: true }).fill("recovery@example.test");
+  await page.getByRole("button", { name: "Sign up", exact: true }).click();
+  await page.waitForURL("**/dashboard");
+  assert.ok(await User.findOne({ email: "recovery@example.test" }));
 });

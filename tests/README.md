@@ -72,3 +72,18 @@ owner spoofing, bounded recent history, UI saves, failed-request recovery, reloa
 and browser-context reopen persistence, account switching, and accessibility.
 Evidence is written to `tests/artifacts/nutrition-{desktop,mobile}.png` and
 `tests/artifacts/nutrition-api-evidence.json`. No backend `.env` is loaded.
+
+## Persistent local development database
+
+If MongoDB is not installed/running locally, the existing test tools can start
+its downloaded executable for normal app development:
+
+```sh
+npm --prefix tests run db:local
+```
+
+Keep that terminal open, then start the backend and frontend in separate terminals.
+This binds MongoDB only to `127.0.0.1:27017` and stores data persistently in
+`backend/.local-data/mongodb/` (ignored by Git). It does not delete data on exit.
+Use only one MongoDB process on port 27017. The disposable test suites still use
+separate temporary databases and do not touch this development database.

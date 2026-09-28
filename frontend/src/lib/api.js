@@ -36,11 +36,15 @@ export async function apiFetch(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-  });
-
+  let response;
+  try {
+    response = await fetch(`${API_URL}${path}`, { ...options, headers });
+  } catch (cause) {
+    if (cause.name === "AbortError") throw cause;
+    const error = new Error("Can't reach the server. Please try again in a moment.", { cause });
+    error.code = "NETWORK_ERROR";
+    throw error;
+  }
   return parseResponse(response);
 }
 

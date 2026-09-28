@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "db:local": "node local-db.js",
     "test": "node --test --test-concurrency=1 *.test.js",
     "browsers": "playwright install chromium"
   },
