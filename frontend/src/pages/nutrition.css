@@ -333,16 +333,79 @@
 }
 .meal-estimate-trigger:hover { background: #e9d5d8; }
 .meal-estimate-trigger:disabled { opacity: .5; }
+/* A portion note: the assumption takes priority over the success message. */
 .inline-meal-estimate {
-  padding: 12px 14px;
-  border-left: 2px solid #789581;
-  background: #f1f5ef;
-  border-radius: 0 10px 10px 0;
-  font-size: 12px;
-  line-height: 1.65;
+  overflow: hidden;
+  border: 1px solid #e2d7d0;
+  border-radius: 14px;
+  background: #fffcf8;
 }
-.inline-meal-estimate p:first-child { display: flex; align-items: center; gap: 6px; color: #345c42; }
-.inline-meal-estimate p + p { margin-top: 5px; color: var(--muted); }
+.estimate-note-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px 7px 16px;
+  background: #f5eeea;
+}
+.estimate-note-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--plum);
+  font-size: 11px;
+  font-weight: 650;
+}
+.estimate-note-label svg { flex-shrink: 0; }
+.estimate-undo {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 36px;
+  padding: 5px 8px;
+  border-radius: 7px;
+  color: var(--plum);
+  font-size: 11px;
+  font-weight: 650;
+}
+.estimate-undo:hover { background: #e9dbd8; }
+.estimate-undo:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
+.estimate-portion {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  gap: 13px;
+  align-items: start;
+  padding: 19px 16px 17px;
+}
+.estimate-portion-icon {
+  display: grid;
+  place-items: center;
+  padding-top: 4px;
+  color: #936b58;
+}
+.estimate-portion-caption {
+  margin-bottom: 5px;
+  color: var(--muted);
+  font-size: 11px;
+}
+.estimate-portion-text {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: -.25px;
+  overflow-wrap: anywhere;
+}
+.estimate-note-hint {
+  margin: 0 16px;
+  padding: 11px 0 14px;
+  border-top: 1px dashed #dfd2c9;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
 @media (prefers-reduced-motion: reduce) {
   .meal-estimate-trigger { transition: none; }
 }
@@ -360,5 +423,3 @@
   .nutrient-control { padding: 9px; }
   .nutrition-composer .nutrient-label { font-size: 11px; gap: 4px; }
 }
-
-.estimate-undo { margin-left: auto; min-height: 32px; padding: 4px 8px; }

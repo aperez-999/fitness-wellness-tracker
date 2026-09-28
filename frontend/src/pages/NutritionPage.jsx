@@ -205,9 +205,18 @@ function NutritionJournal() {
                 hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
               />
               {estimate && <div className="inline-meal-estimate" role="status">
-                <p><Icon name="check" size={16} /><strong>AI estimate applied</strong>{previousEstimate && <button type="button" className="text-link estimate-undo" onClick={undoEstimate} aria-label="Undo AI estimate">Undo</button>}</p>
-                <p>{estimate.portion}</p>
-                <p>AI estimate—actual nutrition may vary. Review portions and adjust before saving.</p>
+                <div className="estimate-note-heading">
+                  <span className="estimate-note-label"><Icon name="sparkles" size={15} />AI estimate applied</span>
+                  {previousEstimate && <button type="button" className="estimate-undo" onClick={undoEstimate} aria-label="Undo AI estimate"><Icon name="undo" size={15} />Undo</button>}
+                </div>
+                <div className="estimate-portion">
+                  <span className="estimate-portion-icon"><Icon name="plate" size={32} /></span>
+                  <div>
+                    <p className="estimate-portion-caption">Portion we used</p>
+                    <p className="estimate-portion-text">{estimate.portion}</p>
+                  </div>
+                </div>
+                <p className="estimate-note-hint">An estimate, with room to adjust. Check the portions and fine-tune the values below.</p>
               </div>}
               <div className="nutrition-adjust-heading"><Icon name="edit" size={16} /><span>Slide, type, make it yours.</span></div>
               <div className="nutrition-inputs">

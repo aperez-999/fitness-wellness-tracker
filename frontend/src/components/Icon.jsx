@@ -72,6 +72,7 @@ const paths = {
   ),
   logout: <path d="M9 4H4v16h5m5-12 4 4-4 4m-5-4h12" />,
   plus: <path d="M12 5v14M5 12h14" />,
+  undo: <path d="M9 5 4 10l5 5M4 10h10a6 6 0 0 1 6 6v3" />,
   refresh: (
     <>
       <path d="M20 7v5h-5M4 17v-5h5" />

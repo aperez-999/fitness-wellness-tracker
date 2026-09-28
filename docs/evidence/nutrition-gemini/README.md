@@ -26,3 +26,12 @@ Verified September 28, 2026 on `feat/nutrition-tracking`.
 [Mobile screenshot](nutrition-gemini-mobile.png)
 
 Human teammate workflow verification remains pending in the acceptance review.
+
+## Portion note design update
+
+The estimate now presents its assumed portion as the main content, with a plate
+icon, a compact AI heading, an Undo action, and a quieter adjustment reminder.
+The two relevant existing browser tests passed again after this presentation-only
+change, including Undo/provenance behavior, desktop/mobile axe scans and mobile
+overflow checks. The frontend production build also passed. Screenshots above
+show the updated layout.
