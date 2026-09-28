@@ -95,7 +95,14 @@
 .nutrition-inputs {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px 14px;
+  grid-template-rows: repeat(2, minmax(min-content, 1fr));
+  aspect-ratio: 1;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #cbbfaf;
+  border-radius: 20px;
+  background: #e9e0d4;
+  box-shadow: inset 0 2px 1px #fffaf3, inset 0 -3px 2px #cec2b2, 0 2px 4px #5938490a;
 }
 
 .nutrition-hint {
@@ -257,10 +264,16 @@
 .nutrient-control {
   --nutrient-color: #a34a2e;
   --nutrient-tint: #fff3e8;
-  padding: 13px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 12px;
   background: var(--nutrient-tint);
-  border: 1px solid transparent;
-  border-radius: 16px;
+  border: 1px solid #59384914;
+  border-radius: 12px;
+  box-shadow: inset 0 2px 3px #5938490a, 0 1px 0 #fffaf3;
+
 }
 
 .nutrient-protein { --nutrient-color: #73528c; --nutrient-tint: #f4edf8; }
@@ -419,8 +432,8 @@
 @media (max-width: 850px) {
   .nutrition-layout { grid-template-columns: 1fr; }
 }
-@media (max-width: 380px) {
-  .nutrition-inputs { gap: 10px; }
+@media (max-width: 480px) {
+  .nutrition-inputs { gap: 10px; padding: 10px; border-radius: 16px; }
   .nutrient-control { padding: 9px; }
   .nutrition-composer .nutrient-label { font-size: 11px; gap: 4px; }
 }

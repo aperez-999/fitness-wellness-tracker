@@ -39,3 +39,7 @@ show the updated layout.
 The heading now uses a custom salad-bowl SVG in the existing workout illustration
 palette. The desktop/mobile workflow and accessibility checks, plus the frontend
 build, passed again for this icon update.
+
+The four nutrient controls now sit inside a square tray with a raised rim and
+recessed compartments. The existing desktop/mobile workflow, accessibility and
+overflow checks passed, and the frontend build passed. Screenshots are updated.
