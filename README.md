@@ -119,3 +119,5 @@ See [CHANGELOG.md](./CHANGELOG.md).
 ## License
 
 See [LICENSE](./LICENSE).
+
+For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md).

@@ -21,7 +21,7 @@ is stored there, so a still-valid session survives reopening.
 
 ## API contract
 
-Both endpoints require `Authorization: Bearer <token>` and send `Cache-Control: no-store`.
+All endpoints require `Authorization: Bearer <token>` and send `Cache-Control: no-store`.
 
 - `POST /api/nutrition`: requires `date` (`YYYY-MM-DD`, real calendar date),
   `calories`, `protein`, `carbohydrates`, and `fat` (finite nonnegative numbers or
@@ -31,6 +31,13 @@ Both endpoints require `Authorization: Bearer <token>` and send `Cache-Control: 
   `userId` always comes from the verified token; client ownership is ignored.
 - `GET /api/nutrition`: returns `200 { entries }`, with only the authenticated
   user's latest 30 records. Query parameters cannot override the owner.
+- `POST /api/nutrition/estimate`: accepts `{ foodName }` (1–120 characters),
+  sends only that text to Gemini, and returns four values, assumed portions,
+  provider/model metadata, and a signed receipt. No entry is saved until the user
+  clicks Save entry. Submit `estimate: { receipt }` with the entry to retain
+  verified AI provenance. Receipts are bound to the user and meal, expire after
+  seven days, and cannot be used as login tokens. Quotas and provider failures
+  return safe errors; entered values stay intact.
 - Missing or invalid authentication returns `401`. The UI returns to login when
   the API rejects an expired session. Failed saves retain the draft for retry.
 
@@ -68,15 +75,17 @@ Reviewed copies and the test results are in
 The JSON evidence contains generated test account IDs and nutrition records;
 it does not contain passwords, JWTs, or database credentials.
 
-## Interactive inputs and reference estimates
+## Interactive inputs and Gemini estimates
 
-The entry form now includes nutrient icons, synchronized sliders and exact
-number inputs, plus an inline estimate button on the Food or meal input. Saved
-estimates retain their reference and whether the values were adjusted.
-See [interactive nutrition evidence](evidence/nutrition-interactive/README.md)
-for source links and the original implementation. The
-[current inline control](evidence/nutrition-inline/README.md) removes the preset
-picker; general AI estimation remains pending external-provider authorization.
+The entry form includes nutrient icons, synchronized sliders and exact number
+inputs, plus an inline AI estimate button on the Food or meal input. Gemini uses
+specified quantities or assumes a typical portion, displayed for review. The
+user can edit all values. Saved estimates retain their provider, model, portions
+and whether the values were adjusted. Older reference estimates remain readable.
+
+See [Gemini setup](gemini-nutrition.md) and
+[current evidence](evidence/nutrition-gemini/README.md). The earlier reference
+picker and local-only inline screenshots are historical implementations.
 
 ## Teammate workflow verification — pending
 

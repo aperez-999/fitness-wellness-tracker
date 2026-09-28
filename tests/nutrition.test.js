@@ -16,6 +16,9 @@ const password = "Nutrition-test-902!";
 const valid = { date: "2026-09-28", foodName: "Oatmeal with berries", calories: 420, protein: 18.5, carbohydrates: 62, fat: 11 };
 let database, mongoose, apiServer, vite, browser, api, base, accounts, NutritionLog, User;
 const contexts = [];
+const realFetch = globalThis.fetch;
+let providerStatus = 200, providerCalls = 0;
+const portion = "37.5 g dry oats, yogurt and berries; one bowl";
 
 async function request(endpoint, token, body) {
   const response = await fetch(api + endpoint, {
@@ -48,6 +51,17 @@ async function fillEntry(page, entry = valid) {
 }
 
 before(async () => {
+  process.env.GEMINI_API_KEY = "integration-test-key-never-real";
+  process.env.GEMINI_MODEL = "gemini-3.5-flash-lite";
+  globalThis.fetch = async (url, options) => {
+    if (!String(url).startsWith("https://generativelanguage.googleapis.com/")) return realFetch(url, options);
+    providerCalls++;
+    if (providerStatus !== 200) return { ok: false, status: providerStatus };
+    const body = JSON.parse(options.body);
+    const food = body.contents[0].parts[0].text;
+    const values = food === "Yogurt parfait" ? { calories: 259, protein: 9, carbohydrates: 43, fat: 6 } : { calories: 207, protein: 8.4, carbohydrates: 33.8, fat: 3.9 };
+    return { ok: true, status: 200, json: async () => ({ candidates: [{ finishReason: "STOP", content: { parts: [{ text: JSON.stringify({ isFood: true, portion, ...values }) }] } }] }) };
+  };
   process.env.JWT_SECRET = randomBytes(32).toString("hex");
   const { default: express } = await importLocal("backend/node_modules/express/index.js");
   const { default: cors } = await importLocal("backend/node_modules/cors/lib/index.js");
@@ -76,6 +90,7 @@ before(async () => {
 
 beforeEach(async () => {
   await Promise.all([NutritionLog.deleteMany({}), User.deleteMany({})]);
+  providerStatus = 200;
   accounts = {};
   for (const name of ["alex", "sam"]) {
     const result = await request("/auth/signup", null, { email: `${name}@example.test`, displayName: name === "alex" ? "Alex Morgan" : "Sam Rivera", password, confirmPassword: password });
@@ -85,6 +100,7 @@ beforeEach(async () => {
 });
 afterEach(async () => { await Promise.all(contexts.splice(0).map((context) => context.close())); });
 after(async () => {
+  globalThis.fetch = realFetch;
   await browser?.close();
   await vite?.close();
   if (apiServer) await new Promise((resolve) => apiServer.close(resolve));
@@ -94,6 +110,7 @@ after(async () => {
 
 test("API authenticates, stores all nutrients in MongoDB, and enforces ownership", async () => {
   for (const token of [undefined, "invalid"]) {
+    assert.equal((await request("/nutrition/estimate", token, { foodName: "Oats" })).status, 401);
     assert.equal((await request("/nutrition", token)).status, 401);
     assert.equal((await request("/nutrition", token, valid)).status, 401);
   }
@@ -257,6 +274,7 @@ test("inline meal icon fills editable nutrients and preserves estimate provenanc
   assert.equal(await page.getByRole("combobox").count(), 0);
   await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText("AI estimate applied", { exact: true }).waitFor();
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "207");
   assert.equal(await page.locator("#nutrition-protein").inputValue(), "8.4");
   assert.equal(await page.locator("#nutrition-carbohydrates").inputValue(), "33.8");
@@ -272,7 +290,7 @@ test("inline meal icon fills editable nutrients and preserves estimate provenanc
   await page.getByRole("button", { name: "Save entry", exact: true }).click();
   await page.getByText("Entry saved.", { exact: true }).waitFor();
   const stored = await NutritionLog.findOne({ userId: accounts.alex.user.id }).lean();
-  assert.deepEqual(stored.estimate, { referenceId: "berry-oatmeal", servings: 1, edited: true });
+  assert.deepEqual(stored.estimate, { provider: "gemini", model: "gemini-3.5-flash-lite", portion, edited: true });
   assert.equal(stored.calories, 210);
   await page.reload();
   await page.getByText(/Estimate, adjusted/).waitFor();
@@ -280,24 +298,27 @@ test("inline meal icon fills editable nutrients and preserves estimate provenanc
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   await page.getByRole("heading", { name: "Nutrition", exact: true }).click();
   assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
-  await page.screenshot({ path: path.join(artifacts, "nutrition-inline-desktop.png"), fullPage: true });
+  await page.screenshot({ path: path.join(artifacts, "nutrition-gemini-desktop.png"), fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
   assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
-  await page.screenshot({ path: path.join(artifacts, "nutrition-inline-mobile.png"), fullPage: true });
+  await page.screenshot({ path: path.join(artifacts, "nutrition-gemini-mobile.png"), fullPage: true });
 });
 
-test("inline estimates handle empty and unsupported text without overwriting entered values", async () => {
+test("inline estimates handle empty input and quota failure without overwriting entered values", async () => {
   const page = await openPage();
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   await page.getByText("Enter a food or meal to estimate.").waitFor();
+  providerStatus = 429;
   await fillEntry(page, { ...valid, foodName: "Oatmeal with berries and peanut butter" });
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
-  await page.getByText(/An estimate isn't available for this meal yet/).waitFor();
+  await page.getByText(/AI estimate limit reached/).waitFor();
+  providerStatus = 200;
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
   await page.locator("#nutrition-foodName").fill("Yogurt parfait");
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText("AI estimate applied", { exact: true }).waitFor();
   assert.equal(await page.locator("#nutrition-calories").inputValue(), "259");
   await page.getByRole("button", { name: "Save entry", exact: true }).click();
   await page.getByText("Entry saved.", { exact: true }).waitFor();
@@ -307,4 +328,46 @@ test("inline estimates handle empty and unsupported text without overwriting ent
   for (const estimate of [{ referenceId: "fake", servings: 1 }, { referenceId: "berry-oatmeal" }, { referenceId: "berry-oatmeal", servings: -1 }]) {
     assert.equal((await request("/nutrition", accounts.alex.token, { ...valid, estimate })).status, 400);
   }
+});
+
+
+test("estimate API validates input, binds receipts to their owner, and limits requests", async () => {
+  const startCalls = providerCalls;
+  for (const foodName of [null, {}, "", "a".repeat(121)]) {
+    assert.equal((await request("/nutrition/estimate", accounts.alex.token, { foodName })).status, 400);
+  }
+  assert.equal(providerCalls, startCalls);
+  const result = await request("/nutrition/estimate", accounts.alex.token, { foodName: valid.foodName });
+  assert.equal(result.status, 200);
+  assert.equal(result.cache, "no-store");
+  assert.equal((await request("/nutrition", accounts.sam.token, { ...valid, estimate: { receipt: result.data.receipt } })).status, 400);
+  assert.equal((await request("/nutrition", accounts.alex.token, { ...valid, foodName: "Other meal", estimate: { receipt: result.data.receipt } })).status, 400);
+  for (let i = 0; i < 4; i++) assert.equal((await request("/nutrition/estimate", accounts.alex.token, { foodName: "Oats" })).status, 200);
+  assert.equal((await request("/nutrition/estimate", accounts.alex.token, { foodName: "Oats" })).status, 429);
+  assert.equal(providerCalls, startCalls + 5);
+});
+
+test("editing a meal cancels a pending estimate and prevents stale values", async () => {
+  const page = await openPage();
+  await fillEntry(page);
+  let release;
+  const held = new Promise(resolve => { release = resolve; });
+  await page.route("**/api/nutrition/estimate", async route => {
+    await held;
+    try { await route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ values: { calories: 999 }, portion: "Stale", receipt: "stale" }) }); } catch { /* aborted */ }
+  });
+  try {
+    await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+    await page.getByText("Estimating your meal…", { exact: false }).waitFor();
+    assert.equal(await page.getByRole("button", { name: "Save entry", exact: true }).isDisabled(), true);
+    await page.locator("#nutrition-foodName").fill("A different meal");
+    release();
+    assert.equal(await page.locator("#nutrition-calories").inputValue(), "420");
+    await page.getByRole("button", { name: "Save entry", exact: true }).click();
+    await page.getByText("Entry saved.", { exact: true }).waitFor();
+    const stored = await NutritionLog.findOne().lean();
+    assert.equal(stored.foodName, "A different meal");
+    assert.equal(stored.calories, 420);
+    assert.equal(stored.estimate, undefined);
+  } finally { release(); }
 });

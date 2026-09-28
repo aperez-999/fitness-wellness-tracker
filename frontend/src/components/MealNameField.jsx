@@ -1,6 +1,6 @@
 import Icon from "./Icon.jsx";
 
-export default function MealNameField({ value, error, onChange, onEstimate, hasValues }) {
+export default function MealNameField({ value, error, onChange, onEstimate, hasValues, estimating }) {
   return (
     <div className="form-field meal-name-field">
       <label htmlFor="nutrition-foodName">Food or meal (optional)</label>
@@ -21,13 +21,16 @@ export default function MealNameField({ value, error, onChange, onEstimate, hasV
           aria-label="Estimate nutrition"
           title="Estimate nutrition from this meal"
           onClick={onEstimate}
+          disabled={estimating}
+          aria-busy={estimating}
         >
           <Icon name="sparkles" size={20} />
         </button>
       </div>
       <p id="meal-name-hint" className="nutrition-hint">
-        Tap the sparkle for an estimate.{hasValues ? " This replaces the four nutrition values." : ""}
+        {estimating ? "Estimating your meal…" : "Tap the sparkle for an AI estimate."}{hasValues ? " This replaces the four nutrition values." : ""}
       </p>
+      <p className="nutrition-hint">Sends this description to Google Gemini. Include portions; avoid personal or medical details.</p>
       {error && <p id="meal-name-error" className="field-error" role="alert">{error}</p>}
     </div>
   );

@@ -5,7 +5,7 @@ import FormField from "../components/FormField.jsx";
 import Icon from "../components/Icon.jsx";
 import NutrientInput, { nutrientControls } from "../components/NutrientInput.jsx";
 import MealNameField from "../components/MealNameField.jsx";
-import { estimateMeal, findMealReference, mealReferences } from "../../../shared/nutritionEstimates.mjs";
+import { mealReferences } from "../../../shared/nutritionEstimates.mjs";
 import "./nutrition.css";
 
 const nutrients = [
@@ -38,6 +38,8 @@ function NutritionJournal() {
   const [saveError, setSaveError] = useState("");
   const [saved, setSaved] = useState(false);
   const [estimate, setEstimate] = useState(null);
+  const [estimating, setEstimating] = useState(false);
+  const estimateRequest = useRef(null);
   const [saving, setSaving] = useState(false);
   const readRequest = useRef(null);
   const writeRequest = useRef(null);
@@ -67,10 +69,15 @@ function NutritionJournal() {
     return () => {
       readRequest.current?.abort();
       writeRequest.current?.abort();
+      estimateRequest.current?.abort();
     };
   }, [loadEntries]);
 
   function update(field, value) {
+    estimateRequest.current?.abort();
+    estimateRequest.current = null;
+    setEstimating(false);
+    if (field === "foodName") setEstimate(null);
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
     setSaved(false);
@@ -85,22 +92,39 @@ function NutritionJournal() {
     requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
   }
 
-  function estimateFromFood() {
+  async function estimateFromFood() {
+    if (estimateRequest.current || writeRequest.current) return;
     if (!draft.foodName.trim()) {
       setErrors((current) => ({ ...current, foodName: "Enter a food or meal to estimate." }));
       return;
     }
-    const reference = findMealReference(draft.foodName);
-    if (!reference) {
-      setErrors((current) => ({ ...current, foodName: "An estimate isn't available for this meal yet. You can enter the values manually." }));
-      return;
+    const controller = new AbortController();
+    estimateRequest.current = controller;
+    const token = getToken();
+    setEstimating(true);
+    setErrors((current) => ({ ...current, foodName: undefined }));
+    try {
+      const data = await apiFetch("/nutrition/estimate", {
+        method: "POST", signal: controller.signal,
+        body: JSON.stringify({ foodName: draft.foodName.trim() }),
+      });
+      if (controller.signal.aborted || token !== getToken()) return;
+      applyEstimate(data.values, { receipt: data.receipt, portion: data.portion });
+    } catch (error) {
+      if (controller.signal.aborted || token !== getToken()) return;
+      if (error.status === 401) logout();
+      else setErrors((current) => ({ ...current, foodName: error.message }));
+    } finally {
+      if (estimateRequest.current === controller) {
+        estimateRequest.current = null;
+        if (!controller.signal.aborted && token === getToken()) setEstimating(false);
+      }
     }
-    applyEstimate(estimateMeal(reference.id, 1), { referenceId: reference.id, servings: 1 });
   }
 
   async function save(event) {
     event.preventDefault();
-    if (writeRequest.current) return;
+    if (writeRequest.current || estimateRequest.current) return;
     setErrors({});
     setSaveError("");
     setSaved(false);
@@ -125,7 +149,7 @@ function NutritionJournal() {
       if (error.status === 401) logout();
       else {
         setErrors(error.fields || {});
-        setSaveError(error.status === 400 ? "Check the highlighted fields and save again." : "Could not save your entry. Your details are still here; try again.");
+        setSaveError(error.status === 400 ? (error.fields?.estimate || "Check the highlighted fields and save again.") : "Could not save your entry. Your details are still here; try again.");
         requestAnimationFrame(() => form.current?.querySelector('[aria-invalid="true"]')?.focus());
       }
     } finally {
@@ -150,13 +174,13 @@ function NutritionJournal() {
               <MealNameField
                 value={draft.foodName} error={errors.foodName}
                 onChange={(name) => update("foodName", name)}
-                onEstimate={estimateFromFood}
+                onEstimate={estimateFromFood} estimating={estimating}
                 hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
               />
               {estimate && <div className="inline-meal-estimate" role="status">
-                <p><Icon name="check" size={16} /><strong>Reference estimate applied</strong></p>
-                <p>{mealReferences.find((meal) => meal.id === estimate.referenceId)?.portion}</p>
-                <p>Approximate values. Ingredients and portions vary; review and adjust before saving.</p>
+                <p><Icon name="check" size={16} /><strong>AI estimate applied</strong></p>
+                <p>{estimate.portion}</p>
+                <p>AI estimate—actual nutrition may vary. Review portions and adjust before saving.</p>
               </div>}
               <div className="nutrition-adjust-heading"><Icon name="edit" size={16} /><span>Slide, type, make it yours.</span></div>
               <div className="nutrition-inputs">
@@ -167,7 +191,7 @@ function NutritionJournal() {
                 ))}
               </div>
               <p className="nutrition-hint">All nutrition values are required. Enter 0 when there is none.</p>
-              <button className="progress-button" type="submit"><Icon name="plus" size={18} />{saving ? "Saving…" : "Save entry"}</button>
+              <button className="progress-button" type="submit" disabled={estimating}><Icon name="plus" size={18} />{saving ? "Saving…" : "Save entry"}</button>
             </fieldset>
             {saveError && <p className="nutrition-error" role="alert">{saveError}</p>}
             {saved && <p className="nutrition-success" role="status">Entry saved.</p>}
@@ -191,7 +215,7 @@ function NutritionJournal() {
                   <h3><Icon name={mealReferences.find((meal) => meal.id === entry.estimate?.referenceId)?.icon || "plate"} size={20} />{entry.foodName || "Nutrition entry"}</h3>
                   <time dateTime={entry.date.slice(0, 10)}>{dateFormat.format(new Date(entry.date))}</time>
                 </div>
-                {entry.estimate && <p className="nutrition-estimate-label">{entry.estimate.edited ? "Estimate, adjusted" : "Estimated"} · {entry.estimate.servings} × {mealReferences.find((meal) => meal.id === entry.estimate.referenceId)?.name}</p>}
+                {entry.estimate && <p className="nutrition-estimate-label">{entry.estimate.edited ? "Estimate, adjusted" : "Estimated"} · {entry.estimate.provider === "gemini" ? `AI · ${entry.estimate.portion}` : `${entry.estimate.servings} × ${mealReferences.find((meal) => meal.id === entry.estimate.referenceId)?.name}`}</p>}
                 <dl className="nutrition-values">
                   {nutrients.map(([field, label, unit]) => <div key={field}><dt>{label}</dt><dd>{entry[field] == null ? "—" : <>{numberFormat.format(entry[field])} <span>{unit}</span></>}</dd></div>)}
                 </dl>

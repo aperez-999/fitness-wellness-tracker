@@ -1,10 +1,11 @@
+import { verifyEstimate } from "./estimateReceipt.js";
 import { estimateMeal } from "../../../shared/nutritionEstimates.mjs";
 import { isCalendarDate } from "./workoutValidation.js";
 
 export const nutritionFields = ["calories", "protein", "carbohydrates", "fat"];
 export const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
 
-export function validateNutrition(body) {
+export function validateNutrition(body, { userId } = {}) {
   const input = body && typeof body === "object" && !Array.isArray(body) ? body : {};
   const errors = {};
   const entry = {};
@@ -37,7 +38,14 @@ export function validateNutrition(body) {
     if (!mealTypes.includes(input.mealType)) errors.mealType = "Choose a valid meal type.";
     else entry.mealType = input.mealType;
   }
-  if (input.estimate != null) {
+  if (input.estimate?.receipt != null) {
+    const original = verifyEstimate(input.estimate.receipt, entry.foodName, userId);
+    if (!original) errors.estimate = "This AI estimate is no longer valid. Estimate the meal again.";
+    else entry.estimate = {
+      provider: original.provider, model: original.model, portion: original.portion,
+      edited: nutritionFields.some((field) => entry[field] !== original.values[field]),
+    };
+  } else if (input.estimate != null) {
     const { referenceId, servings } = input.estimate;
     const expected = typeof servings === "number" ? estimateMeal(referenceId, servings) : null;
     if (!expected) {
