@@ -1,7 +1,9 @@
 # Nutrition tracking submission evidence
 
-Branch: `feat/nutrition-tracking`  
-Verified implementation: `22bb5fda12fd09e2d00896aaaf0977af1a4dcadd`  
+Branch: `feat/nutrition-tracking`
+
+Verified implementation: `22bb5fda12fd09e2d00896aaaf0977af1a4dcadd`
+
 Verification date: September 28, 2026
 
 ## Required evidence
@@ -12,7 +14,7 @@ Verification date: September 28, 2026
 | Database/API evidence | [API response and MongoDB record](nutrition-api-evidence.json) | POST returned 201; MongoDB contains the date, all nutrients and authenticated owner; the second account sees no entries |
 | Tests | [28 unit tests](unit-tests.tap) and [13 workflow tests](workflow-tests.tap) | 41 passed, zero failures |
 | Production build | [Build output](frontend-build.txt) | Passed |
-| GitHub commit | Local implementation commit above; evidence stored in the commit containing this README | Remote branch publication is pending approval; a local commit alone does not fulfill this requirement |
+| GitHub commit | [Implementation](https://github.com/aperez-999/fitness-wellness-tracker/commit/22bb5fda12fd09e2d00896aaaf0977af1a4dcadd) and [evidence package](https://github.com/aperez-999/fitness-wellness-tracker/commit/b18c3cb0bb9e9d58b4236f71e5d065edd305b76b) | Published to `feat/nutrition-tracking` |
 
 ## What the tests verify
 
@@ -40,7 +42,6 @@ npm --prefix frontend run build
 
 ## Remaining verification
 
-The GitHub branch must be published to `aperez-999/fitness-wellness-tracker` and
-the resulting commit URL supplied. Another human teammate must independently
-verify the workflow and fill in the [acceptance review](../../nutrition-acceptance-review.md).
+The branch and evidence commits are published on GitHub. Another human teammate
+must independently verify the workflow and fill in the [acceptance review](../../nutrition-acceptance-review.md).
 Automated tests do not substitute for that sign-off.
