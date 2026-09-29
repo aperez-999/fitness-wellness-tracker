@@ -12,11 +12,11 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Workout logging
 - Workout persistence (MongoDB)
 - Recent workout display / end-to-end walking skeleton
+- Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 
 ## Planned features
 
 - Progress dashboard
-- Nutrition logging
 - Wellness goals
 - Charts and analytics
 - AI recommendations
@@ -69,6 +69,11 @@ Configure `backend/.env` from `.env.example` (`MONGODB_URI`, `JWT_SECRET`, `CLIE
 
 On some Macs, AirPlay uses port **5000**. If the API fails with `EADDRINUSE`, set `PORT=5001` in `backend/.env`.
 
+If signup says it cannot reach the server, check that the API and MongoDB are
+both running. With the test dependencies installed, `npm --prefix tests run db:local`
+from the repository root starts a persistent local MongoDB database; keep it open
+alongside the backend and frontend terminals. See [local database setup](tests/README.md#persistent-local-development-database).
+
 Health check: `http://localhost:5000/api/health` (or `:5001` if you changed the port).
 
 ### Frontend
@@ -102,6 +107,11 @@ Full Capstone 1 setup notes: [docs/capstone-1/user-guides/local-setup-guide.md](
 
 Sprint status is tracked on the Capstone website board (not in a repo status file).
 
+## Nutrition verification
+
+See [nutrition acceptance review](docs/nutrition-acceptance-review.md) for the API
+contract, test commands, evidence, and the teammate verification checklist.
+
 ## Changelog
 
 See [CHANGELOG.md](./CHANGELOG.md).
@@ -109,3 +119,5 @@ See [CHANGELOG.md](./CHANGELOG.md).
 ## License
 
 See [LICENSE](./LICENSE).
+
+For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md).

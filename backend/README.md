@@ -40,6 +40,8 @@ src/
 | POST | `/api/auth/login` | Login |
 | POST | `/api/auth/logout` | Logout (auth required) |
 | GET | `/api/auth/me` | Current user (auth required) |
+| GET | `/api/nutrition` | Latest 30 nutrition entries for current user (auth required) |
+| POST | `/api/nutrition` | Save date, calories, protein, carbohydrates, fat (auth required) |
 
 See [../docs/capstone-1/architecture/api.md](../docs/capstone-1/architecture/api.md) for full contracts.
 

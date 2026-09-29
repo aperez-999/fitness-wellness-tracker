@@ -12,6 +12,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const redirectTo = location.state?.from || "/dashboard";
 
@@ -21,11 +22,13 @@ export default function LoginPage() {
     event.preventDefault();
     if (submitting) return;
     setError("");
+    setInvalidCredentials(false);
     setSubmitting(true);
     try {
       await login({ email, password });
       navigate(redirectTo, { replace: true });
     } catch (err) {
+      setInvalidCredentials(err.status === 401);
       setError(err.message || "Could not sign in. Try again.");
     } finally {
       setSubmitting(false);
@@ -44,7 +47,8 @@ export default function LoginPage() {
             label="Email"
             type="email"
             value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            onChange={(event) => { setEmail(event.target.value); setInvalidCredentials(false); setError(""); }}
+            invalid={invalidCredentials}
             placeholder="you@example.com"
             autoComplete="email"
           />
@@ -53,7 +57,8 @@ export default function LoginPage() {
             label="Password"
             type="password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={(event) => { setPassword(event.target.value); setInvalidCredentials(false); setError(""); }}
+            invalid={invalidCredentials}
             autoComplete="current-password"
           />
           {error && (

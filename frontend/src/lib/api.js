@@ -19,6 +19,9 @@ async function parseResponse(response) {
   if (!response.ok) {
     const error = new Error(data.message || "Request failed");
     error.status = response.status;
+    if (Number.isFinite(data.retryAfterSeconds) && data.retryAfterSeconds > 0) {
+      error.retryAfterSeconds = Math.min(300, Math.ceil(data.retryAfterSeconds));
+    }
     error.fields = data.errors || {};
     throw error;
   }
@@ -36,11 +39,15 @@ export async function apiFetch(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}${path}`, {
-    ...options,
-    headers,
-  });
-
+  let response;
+  try {
+    response = await fetch(`${API_URL}${path}`, { ...options, headers });
+  } catch (cause) {
+    if (cause.name === "AbortError") throw cause;
+    const error = new Error("Can't reach the server. Please try again in a moment.", { cause });
+    error.code = "NETWORK_ERROR";
+    throw error;
+  }
   return parseResponse(response);
 }
 

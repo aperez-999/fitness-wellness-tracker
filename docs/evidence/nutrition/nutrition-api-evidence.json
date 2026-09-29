@@ -1,0 +1,31 @@
+{
+  "environment": "Disposable MongoDB; generated test accounts; no production data",
+  "checkedAt": "2026-09-28T18:41:33.884Z",
+  "createStatus": 201,
+  "entry": {
+    "userId": "6abab4dd8ab8fab18d8609ee",
+    "foodName": "Oatmeal with berries",
+    "date": "2026-09-28T00:00:00.000Z",
+    "calories": 420,
+    "protein": 18.5,
+    "carbohydrates": 62,
+    "fat": 11,
+    "_id": "6abab4dd8ab8fab18d8609f3",
+    "createdAt": "2026-09-28T18:41:33.835Z",
+    "__v": 0
+  },
+  "databaseRecord": {
+    "_id": "6abab4dd8ab8fab18d8609f3",
+    "userId": "6abab4dd8ab8fab18d8609ee",
+    "foodName": "Oatmeal with berries",
+    "date": "2026-09-28T00:00:00.000Z",
+    "calories": 420,
+    "protein": 18.5,
+    "carbohydrates": 62,
+    "fat": 11,
+    "createdAt": "2026-09-28T18:41:33.835Z",
+    "__v": 0
+  },
+  "ownerListCount": 1,
+  "otherUserList": []
+}

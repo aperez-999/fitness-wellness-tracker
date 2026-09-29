@@ -1,0 +1,178 @@
+TAP version 13
+# Subtest: Gemini sends only meal text to the fixed Google endpoint, returns bounded numbers
+ok 1 - Gemini sends only meal text to the fixed Google endpoint, returns bounded numbers
+  ---
+  duration_ms: 6.5199
+  type: 'test'
+  ...
+# Subtest: invalid input or missing configuration never calls Google
+ok 2 - invalid input or missing configuration never calls Google
+  ---
+  duration_ms: 3.1781
+  type: 'test'
+  ...
+# Subtest: quota, unavailable, timeout and malformed responses fail safely without provider details
+ok 3 - quota, unavailable, timeout and malformed responses fail safely without provider details
+  ---
+  duration_ms: 3.8917
+  type: 'test'
+  ...
+# Subtest: estimate receipts bind the user, food and provider values and cannot become auth tokens
+ok 4 - estimate receipts bind the user, food and provider values and cannot become auth tokens
+  ---
+  duration_ms: 15.4173
+  type: 'test'
+  ...
+# Subtest: per-user and global limits reset after a minute
+ok 5 - per-user and global limits reset after a minute
+  ---
+  duration_ms: 0.8127
+  type: 'test'
+  ...
+# Subtest: obvious non-meal text stays local while international food names remain valid
+ok 6 - obvious non-meal text stays local while international food names remain valid
+  ---
+  duration_ms: 2.2985
+  type: 'test'
+  ...
+# Subtest: duplicate in-flight requests are blocked and failures release the user
+ok 7 - duplicate in-flight requests are blocked and failures release the user
+  ---
+  duration_ms: 1.2129
+  type: 'test'
+  ...
+# Subtest: provider quota failures pause all users without more outbound calls, then recover
+ok 8 - provider quota failures pause all users without more outbound calls, then recover
+  ---
+  duration_ms: 0.8686
+  type: 'test'
+  ...
+# Subtest: nutrition accepts required values, zero and decimals, and ignores client ownership
+ok 9 - nutrition accepts required values, zero and decimals, and ignores client ownership
+  ---
+  duration_ms: 6.1928
+  type: 'test'
+  ...
+# Subtest: nutrition accepts decimal input formats supported by number fields
+ok 10 - nutrition accepts decimal input formats supported by number fields
+  ---
+  duration_ms: 0.9312
+  type: 'test'
+  ...
+# Subtest: nutrition rejects missing, non-finite, negative and non-numeric nutrients
+ok 11 - nutrition rejects missing, non-finite, negative and non-numeric nutrients
+  ---
+  duration_ms: 1.6412
+  type: 'test'
+  ...
+# Subtest: nutrition rejects missing bodies, impossible dates, timestamps and invalid optional fields
+ok 12 - nutrition rejects missing bodies, impossible dates, timestamps and invalid optional fields
+  ---
+  duration_ms: 0.8416
+  type: 'test'
+  ...
+# Subtest: estimate provenance is validated and edits are derived from saved values
+ok 13 - estimate provenance is validated and edits are derived from saved values
+  ---
+  duration_ms: 1.0823
+  type: 'test'
+  ...
+# Subtest: validates real calendar days and leap years
+ok 14 - validates real calendar days and leap years
+  ---
+  duration_ms: 4.522
+  type: 'test'
+  ...
+# Subtest: uses the user's timezone for completed workouts
+ok 15 - uses the user's timezone for completed workouts
+  ---
+  duration_ms: 44.2457
+  type: 'test'
+  ...
+# Subtest: rejects invalid names, notes, and durations with field errors
+ok 16 - rejects invalid names, notes, and durations with field errors
+  ---
+  duration_ms: 9.8411
+  type: 'test'
+  ...
+# Subtest: requires duration, preserves zero and decimals, and trims text
+ok 17 - requires duration, preserves zero and decimals, and trims text
+  ---
+  duration_ms: 3.3828
+  type: 'test'
+  ...
+# Subtest: week bounds include Sunday, reset Monday, and cross year and DST boundaries
+ok 18 - week bounds include Sunday, reset Monday, and cross year and DST boundaries
+  ---
+  duration_ms: 1.0443
+  type: 'test'
+  ...
+# Subtest: common meal names match references without guessing unrecognized additions
+ok 19 - common meal names match references without guessing unrecognized additions
+  ---
+  duration_ms: 3.0004
+  type: 'test'
+  ...
+# Subtest: estimates scale all four nutrients and reject invalid portions
+ok 20 - estimates scale all four nutrients and reject invalid portions
+  ---
+  duration_ms: 5.0493
+  type: 'test'
+  ...
+# Subtest: compares elapsed weekdays, not a partial week against a full one
+ok 21 - compares elapsed weekdays, not a partial week against a full one
+  ---
+  duration_ms: 2.9251
+  type: 'test'
+  ...
+# Subtest: retains missing-duration counts and zero-duration records
+ok 22 - retains missing-duration counts and zero-duration records
+  ---
+  duration_ms: 3.2716
+  type: 'test'
+  ...
+# Subtest: calendar shifts and empty timelines remain consistent across year and DST boundaries
+ok 23 - calendar shifts and empty timelines remain consistent across year and DST boundaries
+  ---
+  duration_ms: 1.1039
+  type: 'test'
+  ...
+# Subtest: presents the backend summary as seven calendar days with totals
+ok 24 - presents the backend summary as seven calendar days with totals
+  ---
+  duration_ms: 5.411
+  type: 'test'
+  ...
+# Subtest: keeps recorded zero distinct from missing durations
+ok 25 - keeps recorded zero distinct from missing durations
+  ---
+  duration_ms: 4.0442
+  type: 'test'
+  ...
+# Subtest: formats date-only workouts without shifting them into the previous day
+ok 26 - formats date-only workouts without shifting them into the previous day
+  ---
+  duration_ms: 2.4239
+  type: 'test'
+  ...
+# Subtest: renders a complete empty week and distinguishes unloaded data
+ok 27 - renders a complete empty week and distinguishes unloaded data
+  ---
+  duration_ms: 2.1746
+  type: 'test'
+  ...
+# Subtest: keeps seven consecutive days across DST and year boundaries
+ok 28 - keeps seven consecutive days across DST and year boundaries
+  ---
+  duration_ms: 5.5868
+  type: 'test'
+  ...
+1..28
+# tests 28
+# suites 0
+# pass 28
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 400.7287

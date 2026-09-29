@@ -144,3 +144,6 @@ vite.config.ts.timestamp-*
 
 # Capstone submission artifact
 fitness-wellness-tracker.zip
+
+# Persistent local development database
+backend/.local-data/

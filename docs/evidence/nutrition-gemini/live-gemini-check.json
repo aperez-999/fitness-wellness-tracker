@@ -1,0 +1,15 @@
+{
+  "verifiedOn": "2026-09-28",
+  "kind": "Live provider request through backend estimateFood service; separate from mocked browser tests",
+  "input": "1 cup cooked oatmeal with half a cup of blueberries",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "portion": "1 cup cooked oatmeal with 0.5 cup blueberries",
+  "values": {
+    "calories": 210,
+    "protein": 6.5,
+    "carbohydrates": 41.5,
+    "fat": 2.5
+  },
+  "note": "Approximate model output, not a verified nutrition reference."
+}

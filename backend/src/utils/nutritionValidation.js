@@ -1,0 +1,63 @@
+import { verifyEstimate } from "./estimateReceipt.js";
+import { estimateMeal } from "../../../shared/nutritionEstimates.mjs";
+import { isCalendarDate } from "./workoutValidation.js";
+
+export const nutritionFields = ["calories", "protein", "carbohydrates", "fat"];
+export const mealTypes = ["breakfast", "lunch", "dinner", "snack"];
+
+export function validateNutrition(body, { userId } = {}) {
+  const input = body && typeof body === "object" && !Array.isArray(body) ? body : {};
+  const errors = {};
+  const entry = {};
+  if (!isCalendarDate(input.date)) {
+    errors.date = "Enter a valid date in YYYY-MM-DD format.";
+  } else {
+    entry.date = input.date;
+  }
+
+  for (const field of nutritionFields) {
+    const value = input[field];
+    const isNumeric = typeof value === "number" ||
+      (typeof value === "string" && /^(?:\d+\.?\d*|\.\d+)(?:e[+-]?\d+)?$/i.test(value.trim()));
+    const number = isNumeric ? Number(value) : NaN;
+    if (!Number.isFinite(number) || number < 0 || number > Number.MAX_SAFE_INTEGER) {
+      errors[field] = "Enter a number of zero or more.";
+    } else {
+      entry[field] = number;
+    }
+  }
+
+  if (input.foodName != null) {
+    if (typeof input.foodName !== "string" || input.foodName.trim().length > 120) {
+      errors.foodName = "Keep the food or meal name to 120 characters or fewer.";
+    } else if (input.foodName.trim()) {
+      entry.foodName = input.foodName.trim();
+    }
+  }
+  if (input.mealType != null) {
+    if (!mealTypes.includes(input.mealType)) errors.mealType = "Choose a valid meal type.";
+    else entry.mealType = input.mealType;
+  }
+  if (input.estimate?.receipt != null) {
+    const original = verifyEstimate(input.estimate.receipt, entry.foodName, userId);
+    if (!original) errors.estimate = "This AI estimate is no longer valid. Estimate the meal again.";
+    else entry.estimate = {
+      provider: original.provider, model: original.model, portion: original.portion,
+      edited: nutritionFields.some((field) => entry[field] !== original.values[field]),
+    };
+  } else if (input.estimate != null) {
+    const { referenceId, servings } = input.estimate;
+    const expected = typeof servings === "number" ? estimateMeal(referenceId, servings) : null;
+    if (!expected) {
+      errors.estimate = "Choose a known meal reference and 0.25 to 10 servings.";
+    } else {
+      // Derive provenance and the edited flag ourselves; never trust client labels.
+      entry.estimate = {
+        referenceId,
+        servings,
+        edited: nutritionFields.some((field) => entry[field] !== expected[field]),
+      };
+    }
+  }
+  return Object.keys(errors).length ? { errors } : { entry };
+}

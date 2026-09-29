@@ -61,3 +61,29 @@ duration totals, keyboard timeline selection, data tables and responsive layouts
 
 Screenshots are written to `tests/artifacts/` (ignored by Git). Test contexts,
 servers, and the temporary database are closed after the suite finishes.
+
+## Nutrition checks
+
+Run only nutrition integration tests with `node --test tests/nutrition.test.js`
+from the repository root. `npm test --prefix tests` runs both suites.
+Nutrition tests use the actual API router, a disposable MongoDB database, and
+Playwright. They cover required fields, malformed requests, authentication,
+owner spoofing, bounded recent history, UI saves, failed-request recovery, reload
+and browser-context reopen persistence, account switching, and accessibility.
+Evidence is written to `tests/artifacts/nutrition-{desktop,mobile}.png` and
+`tests/artifacts/nutrition-api-evidence.json`. No backend `.env` is loaded.
+
+## Persistent local development database
+
+If MongoDB is not installed/running locally, the existing test tools can start
+its downloaded executable for normal app development:
+
+```sh
+npm --prefix tests run db:local
+```
+
+Keep that terminal open, then start the backend and frontend in separate terminals.
+This binds MongoDB only to `127.0.0.1:27017` and stores data persistently in
+`backend/.local-data/mongodb/` (ignored by Git). It does not delete data on exit.
+Use only one MongoDB process on port 27017. The disposable test suites still use
+separate temporary databases and do not touch this development database.

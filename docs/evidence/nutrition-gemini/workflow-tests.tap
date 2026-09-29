@@ -1,0 +1,105 @@
+TAP version 13
+# Subtest: API authenticates, stores all nutrients in MongoDB, and enforces ownership
+ok 1 - API authenticates, stores all nutrients in MongoDB, and enforces ownership
+  ---
+  duration_ms: 4353.9675
+  type: 'test'
+  ...
+# SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+#     at JSON.parse (<anonymous>)
+#     at parse (C:\\Users\\akifc\\fitness-wellness-tracker\\backend\\node_modules\\body-parser\\lib\\types\\json.js:92:19)
+#     at C:\\Users\\akifc\\fitness-wellness-tracker\\backend\\node_modules\\body-parser\\lib\\read.js:128:18
+#     at AsyncResource.runInAsyncScope (node:async_hooks:214:14)
+#     at invokeCallback (C:\\Users\\akifc\\fitness-wellness-tracker\\backend\\node_modules\\raw-body\\index.js:238:16)
+#     at done (C:\\Users\\akifc\\fitness-wellness-tracker\\backend\\node_modules\\raw-body\\index.js:227:7)
+#     at IncomingMessage.onEnd (C:\\Users\\akifc\\fitness-wellness-tracker\\backend\\node_modules\\raw-body\\index.js:287:7)
+#     at IncomingMessage.emit (node:events:519:28)
+#     at endReadableNT (node:internal/streams/readable:1698:12)
+#     at process.processTicksAndRejections (node:internal/process/task_queues:90:21) {
+#   expose: true,
+#   statusCode: 400,
+#   status: 400,
+#   body: '{',
+#   type: 'entity.parse.failed'
+# }
+# Subtest: API rejects malformed and missing values without inserting records, then accepts a valid entry
+ok 2 - API rejects malformed and missing values without inserting records, then accepts a valid entry
+  ---
+  duration_ms: 604.5318
+  type: 'test'
+  ...
+# Subtest: recent entries are limited to 30 and sorted by date and creation time
+ok 3 - recent entries are limited to 30 and sorted by date and creation time
+  ---
+  duration_ms: 398.077
+  type: 'test'
+  ...
+# Subtest: browser saves, validates, persists across reload and reopening, and renders accessible mobile UI
+ok 4 - browser saves, validates, persists across reload and reopening, and renders accessible mobile UI
+  ---
+  duration_ms: 10535.841
+  type: 'test'
+  ...
+# Subtest: browser keeps drafts on save failure and recovers from failed reads
+ok 5 - browser keeps drafts on save failure and recovers from failed reads
+  ---
+  duration_ms: 1807.8798
+  type: 'test'
+  ...
+# Subtest: account switching clears private entries and drafts; expired sessions return to login
+ok 6 - account switching clears private entries and drafts; expired sessions return to login
+  ---
+  duration_ms: 2202.0183
+  type: 'test'
+  ...
+# Subtest: saving cancels stale history reads and blocks duplicate submissions
+ok 7 - saving cancels stale history reads and blocks duplicate submissions
+  ---
+  duration_ms: 1622.7211
+  type: 'test'
+  ...
+# Subtest: inline meal icon fills editable nutrients and preserves estimate provenance
+ok 8 - inline meal icon fills editable nutrients and preserves estimate provenance
+  ---
+  duration_ms: 5051.7637
+  type: 'test'
+  ...
+# Subtest: inline estimates handle empty input and quota failure without overwriting entered values
+ok 9 - inline estimates handle empty input and quota failure without overwriting entered values
+  ---
+  duration_ms: 3073.8323
+  type: 'test'
+  ...
+# Subtest: estimate API validates input, binds receipts to their owner, and limits requests
+ok 10 - estimate API validates input, binds receipts to their owner, and limits requests
+  ---
+  duration_ms: 346.597
+  type: 'test'
+  ...
+# Subtest: editing a meal cancels a pending estimate and prevents stale values
+ok 11 - editing a meal cancels a pending estimate and prevents stale values
+  ---
+  duration_ms: 1691.9639
+  type: 'test'
+  ...
+# Subtest: input guardrails stay local and Undo restores manual values and prior AI provenance
+ok 12 - input guardrails stay local and Undo restores manual values and prior AI provenance
+  ---
+  duration_ms: 2076.3832
+  type: 'test'
+  ...
+# Subtest: provider quota errors return a retry delay and block further requests server-side
+ok 13 - provider quota errors return a retry delay and block further requests server-side
+  ---
+  duration_ms: 289.4366
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36485.3291
