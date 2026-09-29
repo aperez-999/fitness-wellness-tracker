@@ -54,12 +54,12 @@
   gap: 8px;
 }
 
-.form-field label {
+.form-field :is(label, .field-label) {
   font-size: 13px;
   font-weight: 750;
 }
 
-.form-field input {
+.form-field :is(input, textarea) {
   width: 100%;
   min-height: 48px;
   padding: 12px 14px;
@@ -67,14 +67,20 @@
   border-radius: 12px;
   color: var(--ink);
   background: var(--paper);
+  font-family: inherit;
   font-size: 16px;
 }
 
-.form-field input::placeholder {
+.form-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-field :is(input, textarea)::placeholder {
   color: var(--muted);
 }
 
-.form-field input[aria-invalid="true"] {
+.form-field :is(input, textarea)[aria-invalid="true"] {
   border-color: #973d56;
 }
 

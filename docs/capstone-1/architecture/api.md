@@ -56,18 +56,18 @@ Client must also clear stored token.
 | | |
 |---|---|
 | Auth | Yes |
-| Success | `{ user: { id, email, displayName, createdAt } }` |
+| Success | `{ user: { id, email, displayName, pronouns, aboutMe, favoriteActivities, createdAt } }` |
 
 ### `PATCH /auth/me`
 
 | | |
 |---|---|
 | Auth | Yes |
-| Body | `{ displayName }` |
+| Body | `{ displayName, pronouns, aboutMe, favoriteActivities }` |
 
-Updates the signed-in user's display name. The user id comes from the JWT. `email`, `password`, `passwordHash`, and `userId` in the body are ignored. An empty or whitespace-only name clears `displayName`. A non-string or a name longer than 80 characters returns `400` with `{ message, errors: { displayName } }`.
+Updates the signed-in user's profile. The user id comes from the JWT. `email`, `password`, `passwordHash`, and `userId` in the body are ignored. Empty or whitespace-only text clears that field. `favoriteActivities` must be a list of unique values from Walk, Strength, Run, Cycle, and Mobility. Invalid fields return `400` with `{ message, errors }`.
 
-**Success `200`:** `{ user: { id, email, displayName, createdAt } }`
+**Success `200`:** `{ user: { id, email, displayName, pronouns, aboutMe, favoriteActivities, createdAt } }`
 
 ## Planned — Workouts (Sprint 4–5)
 

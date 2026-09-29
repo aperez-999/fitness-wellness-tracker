@@ -15,6 +15,9 @@ function toPublicUser(user) {
     id: user._id,
     email: user.email,
     displayName: user.displayName || null,
+    pronouns: user.pronouns || null,
+    aboutMe: user.aboutMe || null,
+    favoriteActivities: user.favoriteActivities || [],
     createdAt: user.createdAt,
   };
 }
@@ -124,7 +127,12 @@ router.patch("/me", requireAuth, async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(
       req.user.id,
-      { displayName: result.displayName },
+      {
+        displayName: result.displayName,
+        pronouns: result.pronouns,
+        aboutMe: result.aboutMe,
+        favoriteActivities: result.favoriteActivities,
+      },
       { new: true, runValidators: true },
     ).select("-passwordHash");
     if (!user) {

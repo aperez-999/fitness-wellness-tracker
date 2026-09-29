@@ -3,20 +3,25 @@ import Icon from "./Icon.jsx";
 
 export default function FormField({
   id, label, error, invalid = Boolean(error), hint, type = "text",
-  visibilityLabel = "password", required = true, ...props
+  visibilityLabel = "password", required = true, multiline = false, ...props
 }) {
   const [visible, setVisible] = useState(false);
   const isPassword = type === "password";
   const description = [hint && `${id}-hint`, error && `${id}-error`]
     .filter(Boolean)
     .join(" ");
-  const input = (
+  const shared = {
+    id,
+    required,
+    "aria-invalid": invalid,
+    "aria-describedby": description || undefined,
+    ...props,
+  };
+  const input = multiline ? (
+    <textarea {...shared} />
+  ) : (
     <input
-      id={id}
-      required={required}
-      aria-invalid={invalid}
-      aria-describedby={description || undefined}
-      {...props}
+      {...shared}
       type={isPassword && visible ? "text" : type}
     />
   );

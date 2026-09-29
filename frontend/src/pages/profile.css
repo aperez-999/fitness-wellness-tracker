@@ -1,0 +1,36 @@
+.profile-section {
+  display: grid;
+  gap: 16px;
+}
+
+.profile-section + .profile-section {
+  margin-top: 28px;
+}
+
+.profile-section h2 {
+  font-size: 15px;
+  font-weight: 750;
+}
+
+.profile-activities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.profile-activity {
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 1px solid #cdbfbb;
+  border-radius: 999px;
+  color: var(--plum);
+  background: transparent;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.profile-activity[aria-pressed="true"] {
+  border-color: var(--plum);
+  color: var(--paper);
+  background: var(--plum);
+}

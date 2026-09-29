@@ -17,6 +17,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    pronouns: {
+      type: String,
+      trim: true,
+    },
+    aboutMe: {
+      type: String,
+      trim: true,
+    },
+    favoriteActivities: {
+      type: [String],
+    },
   },
   { timestamps: true },
 );
