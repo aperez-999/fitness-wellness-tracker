@@ -84,7 +84,10 @@ test("unit is optional and limited to 30 characters", () => {
 });
 
 test("target date must be a real day, today or later, in the user's timezone", () => {
-  for (const targetDate of ["2026-02-30", "10/31/2026", "", null, 20261031]) {
+  for (const targetDate of [undefined, null, ""]) {
+    assert.equal(validateGoal({ ...valid, targetDate }, { now }).errors.targetDate, "Choose a target date.");
+  }
+  for (const targetDate of ["2026-02-30", "10/31/2026", " ", 20261031]) {
     assert.equal(
       validateGoal({ ...valid, targetDate }, { now }).errors.targetDate,
       "Enter a valid date in YYYY-MM-DD format.",

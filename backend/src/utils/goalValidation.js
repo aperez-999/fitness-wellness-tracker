@@ -85,7 +85,9 @@ export function validateGoal(body, { now = new Date(), mode = "create", currentT
   } catch {
     errors.timeZone = "Use a valid timezone.";
   }
-  if (!isCalendarDate(input.targetDate)) {
+  if (input.targetDate == null || input.targetDate === "") {
+    errors.targetDate = "Choose a target date.";
+  } else if (!isCalendarDate(input.targetDate)) {
     errors.targetDate = "Enter a valid date in YYYY-MM-DD format.";
   } else if (today && input.targetDate < today && input.targetDate !== currentTargetDate) {
     errors.targetDate = "Choose today or a later date.";
