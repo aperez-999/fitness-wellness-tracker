@@ -158,4 +158,42 @@ function notifyWorkoutsChanged() {
   }
 }
 
+function userTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone;
+}
+ 
+// status: "active" (default) or "completed"
+export function getGoals({ status = "active", ...options } = {}) {
+  const query = new URLSearchParams({ status });
+  return apiFetch(`/goals?${query}`, { cache: "no-store", ...options });
+}
+ 
+export function createGoal(goal, options = {}) {
+  return apiFetch("/goals", {
+    ...options,
+    method: "POST",
+    body: JSON.stringify({ ...goal, timeZone: userTimeZone() }),
+  });
+}
+ 
+export function updateGoal(id, goal, options = {}) {
+  return apiFetch(`/goals/${encodeURIComponent(id)}`, {
+    ...options,
+    method: "PUT",
+    body: JSON.stringify({ ...goal, timeZone: userTimeZone() }),
+  });
+}
+ 
+export async function removeGoal(id, options = {}) {
+  try {
+    await apiFetch(`/goals/${encodeURIComponent(id)}`, {
+      ...options,
+      method: "DELETE",
+    });
+  } catch (error) {
+    // Already deleted (for example, in another tab) is the result we wanted.
+    if (error.status !== 404) throw error;
+  }
+}
+
 export { API_URL };
