@@ -116,3 +116,21 @@ test("updates may keep a past date and change status", () => {
   // New goals always start active, whatever the browser sends.
   assert.equal(validateGoal({ ...valid, status: "completed" }, { now }).goal.status, undefined);
 });
+
+test("completing a goal raises progress to the target", () => {
+  const complete = (currentValue, options = {}) =>
+    validateGoal({ ...valid, currentValue, status: "completed" }, { now, mode: "update", ...options }).goal;
+  assert.equal(complete(5).currentValue, 20);
+  assert.equal(complete(undefined).currentValue, 20);
+  // Going past the target is kept.
+  assert.equal(complete(25).currentValue, 25);
+  // A progress-only update to an already completed goal can't lower it below the target.
+  const progressOnly = validateGoal({ ...valid, currentValue: 3 }, { now, mode: "update", currentStatus: "completed" });
+  assert.equal(progressOnly.goal.currentValue, 20);
+  assert.equal(progressOnly.goal.status, undefined);
+  // Active goals and reopened goals keep whatever progress was sent.
+  assert.equal(validateGoal({ ...valid, currentValue: 3 }, { now, mode: "update", currentStatus: "active" }).goal.currentValue, 3);
+  assert.equal(validateGoal({ ...valid, currentValue: 3, status: "active" }, { now, mode: "update", currentStatus: "completed" }).goal.currentValue, 3);
+  // New goals ignore status entirely.
+  assert.equal(validateGoal({ ...valid, currentValue: 3, status: "completed" }, { now }).goal.currentValue, 3);
+});

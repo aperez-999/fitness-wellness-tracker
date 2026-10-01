@@ -23,7 +23,12 @@ function toNumber(value) {
 // options.currentTargetDate when updating, the goal's saved date as "YYYY-MM-DD".
 //                           Keeping that date is allowed even if it has passed,
 //                           so overdue goals can still be edited or completed.
-export function validateGoal(body, { now = new Date(), mode = "create", currentTargetDate } = {}) {
+// options.currentStatus     when updating, the goal's saved status. Used when the
+//                           request doesn't change the status (like a progress update).
+export function validateGoal(
+  body,
+  { now = new Date(), mode = "create", currentTargetDate, currentStatus } = {},
+) {
   const input = body && typeof body === "object" && !Array.isArray(body) ? body : {};
   const errors = {};
   const goal = {};
@@ -102,6 +107,13 @@ export function validateGoal(body, { now = new Date(), mode = "create", currentT
     } else {
       goal.status = input.status;
     }
+  }
+
+  // A completed goal counts as fully achieved, so its progress is raised to the target.
+  // Progress already above the target is kept as is.
+  const status = goal.status ?? (mode === "update" ? currentStatus : undefined);
+  if (status === "completed" && goal.targetValue != null && goal.currentValue != null) {
+    goal.currentValue = Math.max(goal.currentValue, goal.targetValue);
   }
 
   return Object.keys(errors).length ? { errors } : { goal };

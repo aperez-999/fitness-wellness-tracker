@@ -24,7 +24,7 @@ export function createGoalRouter({ now = () => new Date() } = {}) {
     next();
   });
 
-  // GET /api/goals -> the user's active goals
+  // GET /api/goals             -> the user's active goals
   // GET /api/goals?status=completed -> the user's completed goals
   router.get("/", async (req, res, next) => {
     const status = req.query.status ?? "active";
@@ -66,9 +66,10 @@ export function createGoalRouter({ now = () => new Date() } = {}) {
       return res.status(400).json({ message: "Invalid goal ID." });
     }
     try {
-      // Load the saved goal first so an overdue goal can keep its old date.
+      // Load the saved goal first: an overdue goal may keep its old date, and a
+      // completed goal keeps full progress even when only progress is sent.
       const existing = await Goal.findOne({ _id: req.params.id, userId: req.user.id })
-        .select("targetDate")
+        .select("targetDate status")
         .lean();
       if (!existing) return res.status(404).json({ message: "Goal not found." });
 
@@ -76,6 +77,7 @@ export function createGoalRouter({ now = () => new Date() } = {}) {
         now: now(),
         mode: "update",
         currentTargetDate: existing.targetDate.toISOString().slice(0, 10),
+        currentStatus: existing.status,
       });
       if (result.errors) {
         return res
