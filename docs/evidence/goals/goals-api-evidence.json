@@ -1,0 +1,34 @@
+{
+  "created": {
+    "status": 201,
+    "ownerMatchesToken": true,
+    "spoofedOwnerIgnored": true
+  },
+  "emptyCreate": {
+    "status": 400,
+    "errors": {
+      "title": "Enter a goal name between 1 and 120 characters.",
+      "category": "Choose workout, nutrition, or wellness.",
+      "targetValue": "Enter a target above zero.",
+      "targetDate": "Choose a target date."
+    }
+  },
+  "otherUserList": 0,
+  "completedProgress": "25 / 25",
+  "storedGoals": [
+    {
+      "title": "Run 25 miles",
+      "owner": "6abf00c41bba7780487fe42f",
+      "status": "completed",
+      "progress": "25 / 25",
+      "targetDate": "2026-11-01"
+    },
+    {
+      "title": "Drink 8 glasses",
+      "owner": "6abf00c41bba7780487fe42f",
+      "status": "active",
+      "progress": "0 / 8",
+      "targetDate": "2026-10-09"
+    }
+  ]
+}

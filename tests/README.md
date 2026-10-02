@@ -73,6 +73,17 @@ and browser-context reopen persistence, account switching, and accessibility.
 Evidence is written to `tests/artifacts/nutrition-{desktop,mobile}.png` and
 `tests/artifacts/nutrition-api-evidence.json`. No backend `.env` is loaded.
 
+## Goal checks
+
+Run only goal integration tests with `node --test tests/goals.test.js` from the
+repository root. Goal tests use the actual API router, a disposable MongoDB
+database, and Playwright. They cover authentication, required fields and invalid
+input, owner spoofing, privacy between accounts, editing, slider progress saves,
+completion raising progress to the target, overdue goals, deletion, reload
+persistence, the phone layout, and accessibility. Evidence is written to
+`tests/artifacts/goals-{desktop,mobile}.png` and
+`tests/artifacts/goals-api-evidence.json`. No backend `.env` is loaded.
+
 ## Persistent local development database
 
 If MongoDB is not installed/running locally, the existing test tools can start
