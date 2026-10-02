@@ -35,6 +35,13 @@ function toDraft(goal) {
   };
 }
 
+// How far one slider step moves: whole numbers for whole-number targets, hundredths
+// for decimal ones, and about 100 to 1,000 steps in total for very large targets.
+function sliderStep(target) {
+  if (target > 1000) return 10 ** (Math.floor(Math.log10(target)) - 2);
+  return Number.isInteger(target) ? 1 : 0.01;
+}
+
 export default function GoalsPage() {
   const { user } = useAuth();
   // Keyed by user, so switching accounts starts with a clean page.
@@ -212,6 +219,25 @@ function GoalsBoard() {
     }
   }
 
+  // Saves a new progress value from a card's slider. Returns true if it worked.
+  async function saveProgress(goal, value) {
+    setActionError("");
+    try {
+      // No status is sent, so moving the slider never completes or reopens a goal.
+      const { goal: saved } = await updateGoal(goal._id, { ...toDraft(goal), currentValue: value });
+      setGoals((current) => current.map((item) => (item._id === saved._id ? saved : item)));
+      return true;
+    } catch (error) {
+      if (error.status === 404) {
+        // The goal was deleted, so there is nothing left to update.
+        setGoals((current) => current.filter((item) => item._id !== goal._id));
+        return false;
+      }
+      handleActionError(error, "Your progress couldn't be saved. Try again.");
+      return false;
+    }
+  }
+
   async function remove(goal) {
     if (busy) return;
     setBusy(true);
@@ -352,6 +378,7 @@ function GoalsBoard() {
               confirming={confirmingId === goal._id}
               onEdit={() => openForm(goal)}
               onStatus={(status) => changeStatus(goal, status)}
+              onProgress={(value) => saveProgress(goal, value)}
               onAskDelete={() => { setConfirmingId(goal._id); setNotice(""); setActionError(""); }}
               onCancelDelete={() => setConfirmingId(null)}
               onDelete={() => remove(goal)}
@@ -364,7 +391,7 @@ function GoalsBoard() {
 }
 
 // One goal in the list: name, type, progress bar, due date, and its buttons.
-function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onAskDelete, onCancelDelete, onDelete }) {
+function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress, onAskDelete, onCancelDelete, onDelete }) {
   const [, typeLabel, typeIcon] = categories.find(([value]) => value === goal.category) ?? categories[2];
   const active = goal.status === "active";
   const date = goal.targetDate.slice(0, 10);
@@ -382,11 +409,17 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onAskDelete
         <h3>{goal.title}</h3>
         <span className="goal-type"><Icon name={typeIcon} size={16} />{typeLabel}</span>
       </div>
-      {/* The bar is decoration; the numbers below carry the same information for screen readers. */}
-      <div className="goal-progress" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
-      <p className="goal-numbers">
-        {numberFormat.format(goal.currentValue)} / {numberFormat.format(goal.targetValue)}{goal.unit ? ` ${goal.unit}` : ""}
-      </p>
+      {active ? (
+        <ProgressSlider goal={goal} disabled={busy} onSave={onProgress} />
+      ) : (
+        <>
+          {/* The bar is decoration; the numbers below carry the same information for screen readers. */}
+          <div className="goal-progress" aria-hidden="true"><span style={{ width: `${percent}%` }} /></div>
+          <p className="goal-numbers">
+            {numberFormat.format(goal.currentValue)} / {numberFormat.format(goal.targetValue)}{goal.unit ? ` ${goal.unit}` : ""}
+          </p>
+        </>
+      )}
       <p className={`goal-due${overdue ? " is-overdue" : ""}`}>
         <Icon name="calendar" size={15} /><time dateTime={date}>{dueText}</time>
       </p>
@@ -417,3 +450,78 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onAskDelete
     </li>
   );
 }
+
+// Drag the slider (or use the arrow keys) to change progress.
+// It saves by itself half a second after the last change.
+function ProgressSlider({ goal, disabled, onSave }) {
+  const [value, setValue] = useState(goal.currentValue);
+  const [saveState, setSaveState] = useState(""); // "", "saving", or "saved"
+  // While waiting to save: { timer, value }. Otherwise null.
+  const pending = useRef(null);
+  // Always points at the newest onSave, so a delayed save uses the goal's latest details.
+  const latestSave = useRef(onSave);
+  useEffect(() => {
+    latestSave.current = onSave;
+  });
+
+  // Follow saved changes made elsewhere (like the Edit form), unless the slider is mid-change.
+  useEffect(() => {
+    if (!pending.current) setValue(goal.currentValue);
+  }, [goal.currentValue]);
+
+  // If the card disappears before the save runs (for example, switching lists), save right away.
+  useEffect(() => () => {
+    if (pending.current) {
+      clearTimeout(pending.current.timer);
+      latestSave.current(pending.current.value);
+      pending.current = null;
+    }
+  }, []);
+
+  async function save(next) {
+    setSaveState("saving");
+    const ok = await latestSave.current(next);
+    setSaveState(ok ? "saved" : "");
+    // On failure, go back to the last saved value.
+    if (!ok && !pending.current) setValue(goal.currentValue);
+  }
+
+  function change(event) {
+    const next = Number(event.target.value);
+    setValue(next);
+    setSaveState("");
+    clearTimeout(pending.current?.timer);
+    pending.current = {
+      value: next,
+      timer: setTimeout(() => {
+        pending.current = null;
+        save(next);
+      }, 500),
+    };
+  }
+
+  const target = goal.targetValue;
+  const unit = goal.unit ? ` ${goal.unit}` : "";
+  // Progress past the target shows as a full slider; the numbers still show the real value.
+  const shown = Math.min(value, target);
+
+  return (
+    <div className="goal-progress-control">
+      <input
+        type="range" className="goal-slider"
+        min="0" max={target} step={sliderStep(target)} value={shown}
+        disabled={disabled} onChange={change}
+        aria-label={`Progress for ${goal.title}`}
+        aria-valuetext={`${numberFormat.format(value)} of ${numberFormat.format(target)}${unit}`}
+        style={{ "--fill": `${(shown / target) * 100}%` }}
+      />
+      <p className="goal-numbers">
+        {numberFormat.format(value)} / {numberFormat.format(target)}{unit}
+        <span className="goal-save-state" aria-live="polite">
+          {saveState === "saving" ? "Saving…" : saveState === "saved" ? "Saved" : ""}
+        </span>
+      </p>
+    </div>
+  );
+}
+
