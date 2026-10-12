@@ -7,7 +7,7 @@ import {
   test as nodeTest,
 } from "node:test";
 import { randomBytes } from "node:crypto";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
@@ -72,6 +72,8 @@ async function openPage(route = "/dashboard", configure) {
   contexts.push(context);
   const page = await context.newPage();
   page.setDefaultTimeout(8_000);
+  // A cold Vite start can take longer than individual UI interactions.
+  page.setDefaultNavigationTimeout(30_000);
   await page.clock.install({ time: now });
   await page.goto(base + "/login");
   await page.evaluate(
@@ -217,6 +219,144 @@ after(async () => {
   if (apiServer) await new Promise((resolve) => apiServer.close(resolve));
   await mongoose?.disconnect();
   await database?.stop();
+});
+
+test("Sprint 3 history orders calendar dates and ties consistently and keeps reads private", async () => {
+  const userId = accounts.empty.user.id;
+  const createdAt = new Date("2026-09-19T12:00:00Z");
+  const records = await Workout.insertMany([
+    { userId, name: "Older day", date: "2026-09-17", durationMinutes: 10, createdAt },
+    { userId, name: "Same day first", date: "2026-09-18", durationMinutes: 20, createdAt },
+    { userId, name: "Same day second", date: "2026-09-18", durationMinutes: 30, createdAt },
+    {
+      userId,
+      name: "Same day later save",
+      date: "2026-09-18",
+      durationMinutes: 40,
+      createdAt: new Date("2026-09-19T13:00:00Z"),
+    },
+  ]);
+  const expected = [records[3], records[2], records[1], records[0]].map(
+    (record) => String(record._id),
+  );
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = await request(`/workouts?userId=${accounts.sam.user.id}`, accounts.empty.token);
+    assert.equal(result.status, 200);
+    assert.deepEqual(result.data.workouts.map((workout) => workout._id), expected);
+    assert(result.data.workouts.every((workout) => workout.userId === userId));
+  }
+  const page = await openPage("/workouts", async (page) => {
+    await page.evaluate((token) => localStorage.setItem("fwt_token", token), accounts.empty.token);
+  });
+  await page.getByRole("heading", { name: "Same day later save", exact: true }).waitFor();
+  assert.deepEqual(await page.locator(".session-row h4").allTextContents(), [
+    "Same day later save", "Same day second", "Same day first", "Older day",
+  ]);
+  assert.deepEqual(
+    await page.locator(".history-date time").evaluateAll(
+      (elements) => elements.map((element) => element.dateTime),
+    ),
+    ["2026-09-18", "2026-09-17"],
+  );
+  await page.screenshot({
+    path: path.join(artifacts, "workout-history-desktop.png"),
+    fullPage: true,
+  });
+});
+
+test("Sprint 3 last workout edits persist and confirmed deletion restores empty history after reload", async () => {
+  const userId = accounts.empty.user.id;
+  const page = await openPage("/workouts", async (page) => {
+    await page.evaluate((token) => localStorage.setItem("fwt_token", token), accounts.empty.token);
+  });
+  const empty = page.getByRole("heading", { name: "Your first session starts here" });
+  await empty.waitFor();
+  const workout = await save("Evening walk", "2026-09-18", 20, "Original note", accounts.empty.token);
+  await page.getByRole("button", { name: "Refresh workouts" }).click();
+  const row = page.locator(`[data-workout-id="${workout._id}"]`);
+  await row.waitFor();
+  assert.match(await row.textContent(), /20 min/);
+  await row.getByRole("button", { name: "Edit Evening walk", exact: true }).click();
+  let editor = page.getByRole("group", { name: "Edit Evening walk", exact: true });
+  await editor.getByLabel("Workout name").fill("Discard this draft");
+  await editor.getByRole("button", { name: "Cancel", exact: true }).click();
+  await row.getByRole("heading", { name: "Evening walk", exact: true }).waitFor();
+  assert.equal((await Workout.findById(workout._id).lean()).name, "Evening walk");
+  await row.getByRole("button", { name: "Edit Evening walk", exact: true }).click();
+  editor = page.getByRole("group", { name: "Edit Evening walk", exact: true });
+  await editor.getByLabel("Workout name").fill("Lakeside walk");
+  await editor.getByLabel("Date", { exact: true }).fill("2026-09-19");
+  await editor.getByLabel("Minutes", { exact: true }).fill("32.5");
+  await editor.getByLabel("Notes (optional)").fill("Steady pace");
+  await row.evaluate((element) =>
+    Promise.all(element.getAnimations({ subtree: true }).map((animation) => animation.finished)),
+  );
+  await page.screenshot({
+    path: path.join(artifacts, "workout-history-edit.png"),
+    fullPage: true,
+  });
+  await editor.getByRole("button", { name: "Save changes" }).click();
+  await row.getByRole("heading", { name: "Lakeside walk", exact: true }).waitFor();
+  await page.reload();
+  await row.getByRole("heading", { name: "Lakeside walk", exact: true }).waitFor();
+  assert.match(await row.textContent(), /32.5 min/);
+  assert.equal(await page.locator(".history-date time").getAttribute("datetime"), "2026-09-19");
+  const stored = await Workout.findById(workout._id).lean();
+  assert.equal(stored.name, "Lakeside walk");
+  assert.equal(stored.date.toISOString().slice(0, 10), "2026-09-19");
+  assert.equal(stored.durationMinutes, 32.5);
+  assert.equal(stored.notes, "Steady pace");
+  assert.equal(String(stored.userId), userId);
+  assert.equal(stored.createdAt.toISOString(), workout.createdAt);
+  await row.getByRole("button", { name: "Remove Lakeside walk", exact: true }).click();
+  const confirmation = page.getByRole("group", { name: "Remove Lakeside walk", exact: true });
+  await confirmation.getByRole("button", { name: "Keep session" }).click();
+  await row.getByRole("heading", { name: "Lakeside walk", exact: true }).waitFor();
+  assert.ok(await Workout.exists({ _id: workout._id }));
+  await row.getByRole("button", { name: "Remove Lakeside walk", exact: true }).click();
+  await page.setViewportSize({ width: 390, height: 1000 });
+  await confirmation.evaluate((element) =>
+    Promise.all(element.getAnimations().map((animation) => animation.finished)),
+  );
+  await page.screenshot({
+    path: path.join(artifacts, "workout-history-delete-mobile.png"),
+    fullPage: true,
+  });
+  await confirmation.getByRole("button", { name: "Remove session", exact: true }).click();
+  await empty.waitFor();
+  assert.equal(await Workout.countDocuments({ userId }), 0);
+  await page.reload();
+  await empty.waitFor();
+  assert.equal(await page.locator(".session-row").count(), 0);
+  assert.deepEqual((await request("/workouts", accounts.empty.token)).data.workouts, []);
+  assert.equal(await Workout.countDocuments({ userId: accounts.sam.user.id }), 1);
+  const audit = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag21aa"])
+    .analyze();
+  assert.deepEqual(audit.violations.map((violation) => violation.id), []);
+  await page.screenshot({
+    path: path.join(artifacts, "workout-history-empty-mobile.png"),
+    fullPage: true,
+  });
+  const evidence = {
+    scenario: "Sprint 3 final-session lifecycle",
+    clock: now.toISOString(),
+    edited: {
+      name: stored.name,
+      date: stored.date,
+      durationMinutes: stored.durationMinutes,
+      notes: stored.notes,
+    },
+    editSurvivesReload: true,
+    deletionSurvivesReload: true,
+    remainingOwnerWorkouts: 0,
+    otherAccountWorkoutsUnchanged: true,
+    emptyStateAccessibilityViolations: audit.violations.length,
+  };
+  await writeFile(
+    path.join(artifacts, "workout-history-evidence.json"),
+    JSON.stringify(evidence, null, 2) + "\n",
+  );
 });
 
 test("summary aggregates real data, limits recent results, and isolates reads and writes", async () => {

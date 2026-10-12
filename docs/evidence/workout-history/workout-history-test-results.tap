@@ -1,0 +1,155 @@
+TAP version 13
+# Port 5173 is in use, trying another one...
+# Subtest: Sprint 3 history orders calendar dates and ties consistently and keeps reads private
+ok 1 - Sprint 3 history orders calendar dates and ties consistently and keeps reads private
+  ---
+  duration_ms: 7854.3282
+  type: 'test'
+  ...
+# Subtest: Sprint 3 last workout edits persist and confirmed deletion restores empty history after reload
+ok 2 - Sprint 3 last workout edits persist and confirmed deletion restores empty history after reload
+  ---
+  duration_ms: 6917.7002
+  type: 'test'
+  ...
+# Subtest: summary aggregates real data, limits recent results, and isolates reads and writes
+ok 3 - summary aggregates real data, limits recent results, and isolates reads and writes
+  ---
+  duration_ms: 552.6223
+  type: 'test'
+  ...
+# Subtest: removal requires authentication and deletes only the owner's exact record
+ok 4 - removal requires authentication and deletes only the owner's exact record
+  ---
+  duration_ms: 518.33
+  type: 'test'
+  ...
+# Subtest: removal confirmation, retry, cross-tab updates, and selected-day empty state
+ok 5 - removal confirmation, retry, cross-tab updates, and selected-day empty state
+  ---
+  duration_ms: 8552.4551
+  type: 'test'
+  ...
+# Subtest: editing enforces ownership and updates fair weekly comparisons
+ok 6 - editing enforces ownership and updates fair weekly comparisons
+  ---
+  duration_ms: 622.2835
+  type: 'test'
+  ...
+# Subtest: large histories support inline edits, inline removal, and a bounded recent preview
+ok 7 - large histories support inline edits, inline removal, and a bounded recent preview
+  ---
+  duration_ms: 7582.5762
+  type: 'test'
+  ...
+# Subtest: Deep Insight loads on demand, compares matching weekdays, and offers an accessible timeline
+ok 8 - Deep Insight loads on demand, compares matching weekdays, and offers an accessible timeline
+  ---
+  duration_ms: 11017.3629
+  type: 'test'
+  ...
+# Subtest: inline confirmation and Deep Insight transitions survive quick reversals and reduced motion
+ok 9 - inline confirmation and Deep Insight transitions survive quick reversals and reduced motion
+  ---
+  duration_ms: 4292.4923
+  type: 'test'
+  ...
+# Subtest: API rejects malformed inputs and honors timezone boundaries
+ok 10 - API rejects malformed inputs and honors timezone boundaries
+  ---
+  duration_ms: 584.5196
+  type: 'test'
+  ...
+# Subtest: dashboard supports responsive layouts, day selection, keyboard notes, and proportional bars
+ok 11 - dashboard supports responsive layouts, day selection, keyboard notes, and proportional bars
+  ---
+  duration_ms: 6171.9034
+  type: 'test'
+  ...
+# Subtest: logging has labels, validation, feedback, and survives an older in-flight list
+ok 12 - logging has labels, validation, feedback, and survives an older in-flight list
+  ---
+  duration_ms: 5131.6322
+  type: 'test'
+  ...
+# Subtest: stalled saves time out, preserve the draft, and allow a deliberate retry
+ok 13 - stalled saves time out, preserve the draft, and allow a deliberate retry
+  ---
+  duration_ms: 2153.8378
+  type: 'test'
+  ...
+# Subtest: overlapping refresh events share a request and polling finds new saves
+ok 14 - overlapping refresh events share a request and polling finds new saves
+  ---
+  duration_ms: 1901.9844
+  type: 'test'
+  ...
+# Subtest: refresh failures recover and expired logout never waits for the network
+ok 15 - refresh failures recover and expired logout never waits for the network
+  ---
+  duration_ms: 2467.3586
+  type: 'test'
+  ...
+# Subtest: cross-tab switches discard old responses and logout removes private content
+ok 16 - cross-tab switches discard old responses and logout removes private content
+  ---
+  duration_ms: 2339.2915
+  type: 'test'
+  ...
+# Subtest: initial failures and timed-out refreshes recover without showing invented totals
+ok 17 - initial failures and timed-out refreshes recover without showing invented totals
+  ---
+  duration_ms: 1938.0822
+  type: 'test'
+  ...
+# Subtest: Dayform polish preserves date context, strengthens selection, and respects reduced motion
+ok 18 - Dayform polish preserves date context, strengthens selection, and respects reduced motion
+  ---
+  duration_ms: 2731.2976
+  type: 'test'
+  ...
+# Subtest: branded authentication is accessible and signup preserves the requested workout date
+ok 19 - branded authentication is accessible and signup preserves the requested workout date
+  ---
+  duration_ms: 6631.2023
+  type: 'test'
+  ...
+# Subtest: history filters and one inline encouragement per successful save
+ok 20 - history filters and one inline encouragement per successful save
+  ---
+  duration_ms: 10372.7622
+  type: 'test'
+  ...
+# Subtest: quick logging, repeat review, reload persistence, and private history
+ok 21 - quick logging, repeat review, reload persistence, and private history
+  ---
+  duration_ms: 13425.8393
+  type: 'test'
+  ...
+# Subtest: landscape loads locally and mascot motion follows new activity and reduced-motion preferences
+ok 22 - landscape loads locally and mascot motion follows new activity and reduced-motion preferences
+  ---
+  duration_ms: 2236.1544
+  type: 'test'
+  ...
+# Subtest: illustrated recent sessions, first-walk invitation, and account controls preserve accessible navigation
+ok 23 - illustrated recent sessions, first-walk invitation, and account controls preserve accessible navigation
+  ---
+  duration_ms: 6671.5428
+  type: 'test'
+  ...
+# Subtest: signup shows connection errors, retains values, and recovers on retry
+ok 24 - signup shows connection errors, retains values, and recovers on retry
+  ---
+  duration_ms: 2771.591
+  type: 'test'
+  ...
+1..24
+# tests 24
+# suites 0
+# pass 24
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 117801.8048
