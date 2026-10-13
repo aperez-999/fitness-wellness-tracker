@@ -62,6 +62,15 @@ duration totals, keyboard timeline selection, data tables and responsive layouts
 Screenshots are written to `tests/artifacts/` (ignored by Git). Test contexts,
 servers, and the temporary database are closed after the suite finishes.
 
+## Sprint 3 workout history acceptance
+
+```sh
+node --test --test-name-pattern="Sprint 3" tests/dashboard.test.js
+```
+
+See the [acceptance report](../docs/capstone-2/sprint-3/workout-history-management.md)
+for results and screenshots.
+
 ## Nutrition checks
 
 Run only nutrition integration tests with `node --test tests/nutrition.test.js`
