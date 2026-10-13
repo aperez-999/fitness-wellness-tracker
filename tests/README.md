@@ -64,20 +64,12 @@ servers, and the temporary database are closed after the suite finishes.
 
 ## Sprint 3 workout history acceptance
 
-Run the focused checks from the repository root:
-
 ```sh
 node --test --test-name-pattern="Sprint 3" tests/dashboard.test.js
 ```
 
-These checks verify stable newest-first history (including identical timestamps),
-private reads, edit/cancel behavior, saved fields after reload, and deleting the
-last session back to an accessible empty history. They generate
-`tests/artifacts/workout-history-*.png` and `workout-history-evidence.json`.
-The full dashboard suite also checks unauthorized edits/deletes, invalid inputs,
-failed-request recovery, account changes, and progress updates.
 See the [acceptance report](../docs/capstone-2/sprint-3/workout-history-management.md)
-for all eight story criteria and saved evidence.
+for results and screenshots.
 
 ## Nutrition checks
 
