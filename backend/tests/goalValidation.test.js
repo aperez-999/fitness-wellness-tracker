@@ -27,6 +27,7 @@ test("accepts a valid goal and cleans up its values", () => {
     currentValue: 0,
     unit: "miles",
     targetDate: "2026-10-31",
+    tracking: "manual",
   });
 });
 
@@ -133,4 +134,80 @@ test("completing a goal raises progress to the target", () => {
   assert.equal(validateGoal({ ...valid, currentValue: 3, status: "active" }, { now, mode: "update", currentStatus: "completed" }).goal.currentValue, 3);
   // New goals ignore status entirely.
   assert.equal(validateGoal({ ...valid, currentValue: 3, status: "completed" }, { now }).goal.currentValue, 3);
+});
+
+test("goals are manual unless a workout goal counts workouts or minutes", () => {
+  const manual = validateGoal({ ...valid, startDate: "2026-10-01" }, { now }).goal;
+  assert.equal(manual.tracking, "manual");
+  assert.equal(manual.currentValue, 0);
+  // Manual goals don't use a start date, so one sent by the browser is ignored.
+  assert.equal(manual.startDate, undefined);
+  for (const tracking of ["steps", "", 1, "WorkoutCount"]) {
+    assert.equal(
+      validateGoal({ ...valid, tracking }, { now }).errors.tracking,
+      "Choose manual, workout count, workout minutes, or workout hours.",
+    );
+  }
+  for (const category of ["nutrition", "wellness"]) {
+    assert.equal(
+      validateGoal({ ...valid, category, tracking: "workoutMinutes", startDate: "2026-10-01" }, { now }).errors.tracking,
+      "Only workout goals can count your workouts.",
+    );
+  }
+});
+
+test("tracked goals need a start date and use a fixed unit instead of saved progress", () => {
+  const tracked = { ...valid, tracking: "workoutCount", startDate: "2026-10-01" };
+  // The unit and progress sent by the browser are ignored, even if they're invalid.
+  const { goal, errors } = validateGoal({ ...tracked, unit: "a".repeat(31), currentValue: "abc" }, { now });
+  assert.equal(errors, undefined);
+  assert.deepEqual(goal, {
+    title: "Run 20 miles",
+    category: "workout",
+    targetValue: 20,
+    unit: "workouts",
+    targetDate: "2026-10-31",
+    tracking: "workoutCount",
+    startDate: "2026-10-01",
+  });
+  assert.equal(validateGoal({ ...tracked, tracking: "workoutMinutes" }, { now }).goal.unit, "minutes");
+  assert.equal(validateGoal({ ...tracked, tracking: "workoutHours" }, { now }).goal.unit, "hours");
+
+  for (const startDate of [undefined, null, ""]) {
+    assert.equal(validateGoal({ ...tracked, startDate }, { now }).errors.startDate, "Choose a start date.");
+  }
+  for (const startDate of ["2026-02-30", "10/01/2026", 20261001]) {
+    assert.equal(
+      validateGoal({ ...tracked, startDate }, { now }).errors.startDate,
+      "Enter a valid date in YYYY-MM-DD format.",
+    );
+  }
+  assert.equal(
+    validateGoal({ ...tracked, startDate: "2026-11-01" }, { now }).errors.startDate,
+    "Choose a start date on or before the target date.",
+  );
+  // A past start date and a start date equal to the target date are both fine.
+  assert.equal(validateGoal({ ...tracked, startDate: "2026-09-01" }, { now }).goal.startDate, "2026-09-01");
+  assert.equal(validateGoal({ ...tracked, startDate: "2026-10-31" }, { now }).goal.startDate, "2026-10-31");
+});
+
+test("updates keep the saved tracking unless a new one is sent", () => {
+  const update = (body, options) => validateGoal({ ...valid, ...body }, { now, mode: "update", ...options });
+  assert.equal(update({ startDate: "2026-10-01" }, { currentTracking: "workoutCount" }).goal.tracking, "workoutCount");
+  // A tracked goal still needs its start date when tracking isn't sent.
+  assert.equal(update({}, { currentTracking: "workoutCount" }).errors.startDate, "Choose a start date.");
+  // Goals saved before tracking existed count as manual.
+  assert.equal(update({}, { currentTracking: undefined }).goal.tracking, "manual");
+  // Switching back to manual saves the progress that was sent.
+  const reverted = update({ tracking: "manual", currentValue: 7 }, { currentTracking: "workoutMinutes" }).goal;
+  assert.equal(reverted.tracking, "manual");
+  assert.equal(reverted.currentValue, 7);
+  assert.equal(reverted.unit, "miles");
+  // Completing a tracked goal doesn't touch saved progress; it comes from workouts.
+  const completed = update(
+    { tracking: "workoutCount", startDate: "2026-10-01", status: "completed" },
+    { currentStatus: "active" },
+  ).goal;
+  assert.equal(completed.status, "completed");
+  assert.equal(completed.currentValue, undefined);
 });

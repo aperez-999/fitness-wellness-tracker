@@ -13,11 +13,11 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Workout persistence (MongoDB)
 - Recent workout display / end-to-end walking skeleton
 - Nutrition logging with calories and macros, private recent history, and MongoDB persistence
+- Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
 
 ## Planned features
 
 - Progress dashboard
-- Wellness goals
 - Charts and analytics
 - AI recommendations
 - Notifications

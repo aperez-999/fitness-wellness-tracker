@@ -205,7 +205,16 @@
   overflow-wrap: anywhere;
 }
 
-.goal-type {
+/* The type label and status badges sit together on the right of the card's title. */
+.goal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.goal-type,
+.goal-badge {
   display: inline-flex;
   flex-shrink: 0;
   gap: 6px;
@@ -216,6 +225,16 @@
   color: var(--plum);
   font-size: 12px;
   font-weight: 700;
+}
+
+.goal-badge.is-complete {
+  background: #fbefd6;
+  color: #6b4a14;
+}
+
+.goal-badge.is-reached {
+  background: #e6f0e8;
+  color: #345c42;
 }
 
 .goal-progress {
@@ -304,6 +323,16 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 600;
+}
+
+/* "Counting your workouts from Oct 1" on tracked goals. */
+.goal-source {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
 }
 
 .goal-due {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import { createGoal, getGoals, removeGoal, updateGoal } from "../lib/api.js";
+import { createGoal, getGoals, removeGoal, updateGoal, WORKOUTS_CHANGED } from "../lib/api.js";
 import FormField from "../components/FormField.jsx";
 import Icon from "../components/Icon.jsx";
 import "./goals.css";
@@ -11,8 +11,20 @@ const categories = [
   ["nutrition", "Nutrition", "nutrition"],
   ["wellness", "Wellness", "leaf"],
 ];
+// [value saved in the database, label shown to the user]. Only workout goals can count workouts.
+const trackingOptions = [
+  ["manual", "I'll update it myself"],
+  ["workoutCount", "Count my workouts"],
+  ["workoutMinutes", "Add up my workout minutes"],
+  ["workoutHours", "Add up my workout hours"],
+];
+// Tracked goals always use these units; the server sets the same ones.
+const trackedUnits = { workoutCount: "workouts", workoutMinutes: "minutes", workoutHours: "hours" };
 const unitSuggestions = ["miles", "km", "workouts", "minutes", "steps", "lbs", "kg", "cal", "glasses", "hours"];
-const emptyDraft = { title: "", category: "workout", targetValue: "", currentValue: "", unit: "", targetDate: "" };
+const emptyDraft = {
+  title: "", category: "workout", targetValue: "", currentValue: "", unit: "", targetDate: "",
+  tracking: "manual", startDate: "",
+};
 const numberFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 // Goal dates are saved as midnight UTC, so they are shown in UTC to display the day that was picked.
 const dateFormat = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -24,6 +36,7 @@ function localToday() {
 }
 
 // Turns a saved goal into form values. Form inputs work with text, so numbers become strings.
+// Tracking and start date are included so actions like Mark complete keep a tracked goal tracked.
 function toDraft(goal) {
   return {
     title: goal.title,
@@ -32,6 +45,8 @@ function toDraft(goal) {
     currentValue: String(goal.currentValue ?? 0),
     unit: goal.unit ?? "",
     targetDate: goal.targetDate.slice(0, 10),
+    tracking: goal.tracking ?? "manual",
+    startDate: goal.startDate?.slice(0, 10) ?? "",
   };
 }
 
@@ -76,19 +91,25 @@ function GoalsBoard() {
   const focusInvalid = useRef(false);
 
   // Loads the list for the current view. A newer load cancels an older one.
-  const loadGoals = useCallback(async () => {
+  // A quiet load is a background refresh: the list stays on screen and a failure shows no error.
+  const loadGoals = useCallback(async ({ quiet = false } = {}) => {
     loadRequest.current?.abort();
     const controller = new AbortController();
     loadRequest.current = controller;
-    setLoading(true);
-    setLoadError("");
+    if (!quiet) {
+      setLoading(true);
+      setLoadError("");
+    }
     try {
       const data = await getGoals({ status: view, signal: controller.signal });
-      if (!controller.signal.aborted) setGoals(data.goals);
+      if (!controller.signal.aborted) {
+        setGoals(data.goals);
+        setLoadError("");
+      }
     } catch (error) {
       if (controller.signal.aborted) return;
       if (error.status === 401) logout();
-      else setLoadError("Your goals couldn't be loaded.");
+      else if (!quiet) setLoadError("Your goals couldn't be loaded.");
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
@@ -98,6 +119,27 @@ function GoalsBoard() {
   useEffect(() => {
     loadGoals();
     return () => loadRequest.current?.abort();
+  }, [loadGoals]);
+
+  // Tracked goals count workouts, so refresh when workouts change: in this tab, in another
+  // tab (which writes to localStorage), or when the user comes back to this tab.
+  useEffect(() => {
+    const refresh = () => {
+      if (document.visibilityState === "visible") loadGoals({ quiet: true });
+    };
+    const refreshOnStorage = (event) => {
+      if (event.key === WORKOUTS_CHANGED) refresh();
+    };
+    window.addEventListener(WORKOUTS_CHANGED, refresh);
+    window.addEventListener("storage", refreshOnStorage);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.removeEventListener(WORKOUTS_CHANGED, refresh);
+      window.removeEventListener("storage", refreshOnStorage);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
   }, [loadGoals]);
 
   // When the form opens, put the cursor in its first field.
@@ -147,6 +189,18 @@ function GoalsBoard() {
   function update(field, value) {
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
+  }
+
+  // Only workout goals can count workouts, so other types go back to manual progress.
+  function changeCategory(category) {
+    setDraft((current) => ({ ...current, category, tracking: category === "workout" ? current.tracking : "manual" }));
+    setErrors((current) => ({ ...current, category: undefined, tracking: undefined }));
+  }
+
+  // A tracked goal needs a start date, so today is filled in if there isn't one yet.
+  function changeTracking(tracking) {
+    setDraft((current) => ({ ...current, tracking, startDate: current.startDate || localToday() }));
+    setErrors((current) => ({ ...current, tracking: undefined }));
   }
 
   // Shared handling for failed card actions (complete, reopen, delete).
@@ -259,6 +313,15 @@ function GoalsBoard() {
 
   const today = localToday();
   const isNew = editing === "new";
+  const tracked = draft.tracking !== "manual";
+  // Kept in a variable because it appears in two places: on its own, or next to the start date.
+  const targetDateField = (
+    <FormField
+      id="goal-date" label="Target date" type="date" min={isNew ? today : undefined}
+      value={draft.targetDate} error={errors.targetDate || errors.timeZone}
+      onChange={(event) => update("targetDate", event.target.value)}
+    />
+  );
 
   return (
     <div className="goals-page">
@@ -288,36 +351,59 @@ function GoalsBoard() {
                   id="goal-category" value={draft.category}
                   aria-invalid={Boolean(errors.category)}
                   aria-describedby={errors.category ? "goal-category-error" : undefined}
-                  onChange={(event) => update("category", event.target.value)}
+                  onChange={(event) => changeCategory(event.target.value)}
                 >
                   {categories.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                 </select>
                 {errors.category && <p id="goal-category-error" className="field-error">{errors.category}</p>}
               </div>
+              {draft.category === "workout" && (
+                <div className="form-field">
+                  <label htmlFor="goal-tracking">Track progress</label>
+                  <select
+                    id="goal-tracking" value={draft.tracking}
+                    aria-invalid={Boolean(errors.tracking)}
+                    aria-describedby={errors.tracking ? "goal-tracking-error" : undefined}
+                    onChange={(event) => changeTracking(event.target.value)}
+                  >
+                    {trackingOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                  </select>
+                  {errors.tracking && <p id="goal-tracking-error" className="field-error">{errors.tracking}</p>}
+                </div>
+              )}
               <div className="goals-form-row">
                 <FormField
-                  id="goal-target" label="Target" type="number" inputMode="decimal" min="0" step="any"
+                  id="goal-target" label={tracked ? `Target ${trackedUnits[draft.tracking]}` : "Target"}
+                  type="number" inputMode="decimal" min="0" step="any"
                   value={draft.targetValue} error={errors.targetValue}
                   onChange={(event) => update("targetValue", event.target.value)}
                 />
-                <FormField
-                  id="goal-unit" label="Unit (optional)" required={false} list="goal-unit-options"
-                  maxLength={30} placeholder="miles" value={draft.unit} error={errors.unit}
-                  onChange={(event) => update("unit", event.target.value)}
-                />
+                {!tracked && (
+                  <FormField
+                    id="goal-unit" label="Unit (optional)" required={false} list="goal-unit-options"
+                    maxLength={30} placeholder="miles" value={draft.unit} error={errors.unit}
+                    onChange={(event) => update("unit", event.target.value)}
+                  />
+                )}
               </div>
-              {!isNew && (
+              {!isNew && !tracked && (
                 <FormField
                   id="goal-progress" label="Progress so far" type="number" inputMode="decimal" min="0" step="any"
                   required={false} value={draft.currentValue} error={errors.currentValue}
                   onChange={(event) => update("currentValue", event.target.value)}
                 />
               )}
-              <FormField
-                id="goal-date" label="Target date" type="date" min={isNew ? today : undefined}
-                value={draft.targetDate} error={errors.targetDate || errors.timeZone}
-                onChange={(event) => update("targetDate", event.target.value)}
-              />
+              {tracked ? (
+                <div className="goals-form-row">
+                  <FormField
+                    id="goal-start" label="Start date" type="date" max={draft.targetDate || undefined}
+                    hint="Workouts from this day through the target date count."
+                    value={draft.startDate} error={errors.startDate}
+                    onChange={(event) => update("startDate", event.target.value)}
+                  />
+                  {targetDateField}
+                </div>
+              ) : targetDateField}
               <datalist id="goal-unit-options">
                 {unitSuggestions.map((unit) => <option key={unit} value={unit} />)}
               </datalist>
@@ -351,7 +437,7 @@ function GoalsBoard() {
         {actionError && <p className="goals-error" role="alert">{actionError}</p>}
         {loadError && (
           <div className="goals-error" role="alert">
-            {loadError} <button className="text-link" type="button" onClick={loadGoals}>Try again</button>
+            {loadError} <button className="text-link" type="button" onClick={() => loadGoals()}>Try again</button>
           </div>
         )}
         {loading && goals.length === 0 && <p className="goals-empty" role="status">Loading your goals…</p>}
@@ -390,10 +476,13 @@ function GoalsBoard() {
   );
 }
 
-// One goal in the list: name, type, progress bar, due date, and its buttons.
+// One goal in the list: name, badges, type, progress, due date, and its buttons.
 function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress, onAskDelete, onCancelDelete, onDelete }) {
   const [, typeLabel, typeIcon] = categories.find(([value]) => value === goal.category) ?? categories[2];
   const active = goal.status === "active";
+  // Tracked goals get their progress from workouts, so they show a bar instead of a slider.
+  const tracked = Boolean(trackedUnits[goal.tracking]);
+  const reached = active && goal.currentValue >= goal.targetValue;
   const date = goal.targetDate.slice(0, 10);
   const formattedDate = dateFormat.format(new Date(goal.targetDate));
   const overdue = active && date < today;
@@ -407,9 +496,13 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
     <li className={`goal-card${active ? "" : " is-complete"}`}>
       <div className="goal-card-heading">
         <h3>{goal.title}</h3>
-        <span className="goal-type"><Icon name={typeIcon} size={16} />{typeLabel}</span>
+        <div className="goal-badges">
+          {!active && <span className="goal-badge is-complete"><Icon name="check" size={16} />Completed</span>}
+          {reached && <span className="goal-badge is-reached"><Icon name="sparkles" size={16} />Target reached</span>}
+          <span className="goal-type"><Icon name={typeIcon} size={16} />{typeLabel}</span>
+        </div>
       </div>
-      {active ? (
+      {active && !tracked ? (
         <ProgressSlider goal={goal} disabled={busy} onSave={onProgress} />
       ) : (
         <>
@@ -419,6 +512,15 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
             {numberFormat.format(goal.currentValue)} / {numberFormat.format(goal.targetValue)}{goal.unit ? ` ${goal.unit}` : ""}
           </p>
         </>
+      )}
+      {tracked && (
+        <p className="goal-source">
+          <Icon name="activity" size={15} />
+          <span>
+            Counting your {goal.tracking === "workoutCount" ? "workouts" : `workout ${trackedUnits[goal.tracking]}`} from{" "}
+            <time dateTime={goal.startDate.slice(0, 10)}>{dateFormat.format(new Date(goal.startDate))}</time>
+          </span>
+        </p>
       )}
       <p className={`goal-due${overdue ? " is-overdue" : ""}`}>
         <Icon name="calendar" size={15} /><time dateTime={date}>{dueText}</time>
@@ -524,4 +626,3 @@ function ProgressSlider({ goal, disabled, onSave }) {
     </div>
   );
 }
-
