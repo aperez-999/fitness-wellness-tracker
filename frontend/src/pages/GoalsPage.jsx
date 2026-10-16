@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
-import { createGoal, getGoals, removeGoal, updateGoal } from "../lib/api.js";
+import { createGoal, getGoals, removeGoal, updateGoal, WORKOUTS_CHANGED } from "../lib/api.js";
 import FormField from "../components/FormField.jsx";
 import Icon from "../components/Icon.jsx";
 import "./goals.css";
@@ -90,19 +90,25 @@ function GoalsBoard() {
   const focusInvalid = useRef(false);
 
   // Loads the list for the current view. A newer load cancels an older one.
-  const loadGoals = useCallback(async () => {
+  // A quiet load is a background refresh: the list stays on screen and a failure shows no error.
+  const loadGoals = useCallback(async ({ quiet = false } = {}) => {
     loadRequest.current?.abort();
     const controller = new AbortController();
     loadRequest.current = controller;
-    setLoading(true);
-    setLoadError("");
+    if (!quiet) {
+      setLoading(true);
+      setLoadError("");
+    }
     try {
       const data = await getGoals({ status: view, signal: controller.signal });
-      if (!controller.signal.aborted) setGoals(data.goals);
+      if (!controller.signal.aborted) {
+        setGoals(data.goals);
+        setLoadError("");
+      }
     } catch (error) {
       if (controller.signal.aborted) return;
       if (error.status === 401) logout();
-      else setLoadError("Your goals couldn't be loaded.");
+      else if (!quiet) setLoadError("Your goals couldn't be loaded.");
     } finally {
       if (!controller.signal.aborted) setLoading(false);
     }
@@ -112,6 +118,27 @@ function GoalsBoard() {
   useEffect(() => {
     loadGoals();
     return () => loadRequest.current?.abort();
+  }, [loadGoals]);
+
+  // Tracked goals count workouts, so refresh when workouts change: in this tab, in another
+  // tab (which writes to localStorage), or when the user comes back to this tab.
+  useEffect(() => {
+    const refresh = () => {
+      if (document.visibilityState === "visible") loadGoals({ quiet: true });
+    };
+    const refreshOnStorage = (event) => {
+      if (event.key === WORKOUTS_CHANGED) refresh();
+    };
+    window.addEventListener(WORKOUTS_CHANGED, refresh);
+    window.addEventListener("storage", refreshOnStorage);
+    window.addEventListener("focus", refresh);
+    document.addEventListener("visibilitychange", refresh);
+    return () => {
+      window.removeEventListener(WORKOUTS_CHANGED, refresh);
+      window.removeEventListener("storage", refreshOnStorage);
+      window.removeEventListener("focus", refresh);
+      document.removeEventListener("visibilitychange", refresh);
+    };
   }, [loadGoals]);
 
   // When the form opens, put the cursor in its first field.
@@ -409,7 +436,7 @@ function GoalsBoard() {
         {actionError && <p className="goals-error" role="alert">{actionError}</p>}
         {loadError && (
           <div className="goals-error" role="alert">
-            {loadError} <button className="text-link" type="button" onClick={loadGoals}>Try again</button>
+            {loadError} <button className="text-link" type="button" onClick={() => loadGoals()}>Try again</button>
           </div>
         )}
         {loading && goals.length === 0 && <p className="goals-empty" role="status">Loading your goals…</p>}
