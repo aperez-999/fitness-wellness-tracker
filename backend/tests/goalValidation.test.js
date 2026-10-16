@@ -197,7 +197,7 @@ test("updates keep the saved tracking unless a new one is sent", () => {
   assert.equal(update({}, { currentTracking: "workoutCount" }).errors.startDate, "Choose a start date.");
   // Goals saved before tracking existed count as manual.
   assert.equal(update({}, { currentTracking: undefined }).goal.tracking, "manual");
-  // Switching back to manual brings progress back.
+  // Switching back to manual saves the progress that was sent.
   const reverted = update({ tracking: "manual", currentValue: 7 }, { currentTracking: "workoutMinutes" }).goal;
   assert.equal(reverted.tracking, "manual");
   assert.equal(reverted.currentValue, 7);

@@ -11,8 +11,19 @@ const categories = [
   ["nutrition", "Nutrition", "nutrition"],
   ["wellness", "Wellness", "leaf"],
 ];
+// [value saved in the database, label shown to the user]. Only workout goals can count workouts.
+const trackingOptions = [
+  ["manual", "I'll update it myself"],
+  ["workoutCount", "Count my workouts"],
+  ["workoutMinutes", "Add up my workout minutes"],
+];
+// Tracked goals always use these units; the server sets the same ones.
+const trackedUnits = { workoutCount: "workouts", workoutMinutes: "minutes" };
 const unitSuggestions = ["miles", "km", "workouts", "minutes", "steps", "lbs", "kg", "cal", "glasses", "hours"];
-const emptyDraft = { title: "", category: "workout", targetValue: "", currentValue: "", unit: "", targetDate: "" };
+const emptyDraft = {
+  title: "", category: "workout", targetValue: "", currentValue: "", unit: "", targetDate: "",
+  tracking: "manual", startDate: "",
+};
 const numberFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 // Goal dates are saved as midnight UTC, so they are shown in UTC to display the day that was picked.
 const dateFormat = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
@@ -152,6 +163,18 @@ function GoalsBoard() {
     setErrors((current) => ({ ...current, [field]: undefined }));
   }
 
+  // Only workout goals can count workouts, so other types go back to manual progress.
+  function changeCategory(category) {
+    setDraft((current) => ({ ...current, category, tracking: category === "workout" ? current.tracking : "manual" }));
+    setErrors((current) => ({ ...current, category: undefined, tracking: undefined }));
+  }
+
+  // A tracked goal needs a start date, so today is filled in if there isn't one yet.
+  function changeTracking(tracking) {
+    setDraft((current) => ({ ...current, tracking, startDate: current.startDate || localToday() }));
+    setErrors((current) => ({ ...current, tracking: undefined }));
+  }
+
   // Shared handling for failed card actions (complete, reopen, delete).
   function handleActionError(error, message) {
     if (error.status === 401) return logout();
@@ -262,6 +285,15 @@ function GoalsBoard() {
 
   const today = localToday();
   const isNew = editing === "new";
+  const tracked = draft.tracking !== "manual";
+  // Kept in a variable because it appears in two places: on its own, or next to the start date.
+  const targetDateField = (
+    <FormField
+      id="goal-date" label="Target date" type="date" min={isNew ? today : undefined}
+      value={draft.targetDate} error={errors.targetDate || errors.timeZone}
+      onChange={(event) => update("targetDate", event.target.value)}
+    />
+  );
 
   return (
     <div className="goals-page">
@@ -291,36 +323,59 @@ function GoalsBoard() {
                   id="goal-category" value={draft.category}
                   aria-invalid={Boolean(errors.category)}
                   aria-describedby={errors.category ? "goal-category-error" : undefined}
-                  onChange={(event) => update("category", event.target.value)}
+                  onChange={(event) => changeCategory(event.target.value)}
                 >
                   {categories.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
                 </select>
                 {errors.category && <p id="goal-category-error" className="field-error">{errors.category}</p>}
               </div>
+              {draft.category === "workout" && (
+                <div className="form-field">
+                  <label htmlFor="goal-tracking">Track progress</label>
+                  <select
+                    id="goal-tracking" value={draft.tracking}
+                    aria-invalid={Boolean(errors.tracking)}
+                    aria-describedby={errors.tracking ? "goal-tracking-error" : undefined}
+                    onChange={(event) => changeTracking(event.target.value)}
+                  >
+                    {trackingOptions.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                  </select>
+                  {errors.tracking && <p id="goal-tracking-error" className="field-error">{errors.tracking}</p>}
+                </div>
+              )}
               <div className="goals-form-row">
                 <FormField
-                  id="goal-target" label="Target" type="number" inputMode="decimal" min="0" step="any"
+                  id="goal-target" label={tracked ? `Target ${trackedUnits[draft.tracking]}` : "Target"}
+                  type="number" inputMode="decimal" min="0" step="any"
                   value={draft.targetValue} error={errors.targetValue}
                   onChange={(event) => update("targetValue", event.target.value)}
                 />
-                <FormField
-                  id="goal-unit" label="Unit (optional)" required={false} list="goal-unit-options"
-                  maxLength={30} placeholder="miles" value={draft.unit} error={errors.unit}
-                  onChange={(event) => update("unit", event.target.value)}
-                />
+                {!tracked && (
+                  <FormField
+                    id="goal-unit" label="Unit (optional)" required={false} list="goal-unit-options"
+                    maxLength={30} placeholder="miles" value={draft.unit} error={errors.unit}
+                    onChange={(event) => update("unit", event.target.value)}
+                  />
+                )}
               </div>
-              {!isNew && (
+              {!isNew && !tracked && (
                 <FormField
                   id="goal-progress" label="Progress so far" type="number" inputMode="decimal" min="0" step="any"
                   required={false} value={draft.currentValue} error={errors.currentValue}
                   onChange={(event) => update("currentValue", event.target.value)}
                 />
               )}
-              <FormField
-                id="goal-date" label="Target date" type="date" min={isNew ? today : undefined}
-                value={draft.targetDate} error={errors.targetDate || errors.timeZone}
-                onChange={(event) => update("targetDate", event.target.value)}
-              />
+              {tracked ? (
+                <div className="goals-form-row">
+                  <FormField
+                    id="goal-start" label="Start date" type="date" max={draft.targetDate || undefined}
+                    hint="Workouts from this day through the target date count."
+                    value={draft.startDate} error={errors.startDate}
+                    onChange={(event) => update("startDate", event.target.value)}
+                  />
+                  {targetDateField}
+                </div>
+              ) : targetDateField}
               <datalist id="goal-unit-options">
                 {unitSuggestions.map((unit) => <option key={unit} value={unit} />)}
               </datalist>

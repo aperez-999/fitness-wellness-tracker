@@ -80,7 +80,7 @@ export function validateGoal(
   }
 
   // Progress: manual goals only. Optional, blank means 0. Going past the target is allowed.
-  // Tracked goals leave the saved number alone, so switching back to manual restores it.
+  // Tracked goals leave the saved number alone; switching back to manual saves whatever progress is sent.
   if (!tracked) {
     const blankProgress =
       input.currentValue == null ||
