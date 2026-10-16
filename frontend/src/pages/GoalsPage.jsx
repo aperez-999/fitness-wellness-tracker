@@ -24,6 +24,7 @@ function localToday() {
 }
 
 // Turns a saved goal into form values. Form inputs work with text, so numbers become strings.
+// Tracking and start date are included so actions like Mark complete keep a tracked goal tracked.
 function toDraft(goal) {
   return {
     title: goal.title,
@@ -32,6 +33,8 @@ function toDraft(goal) {
     currentValue: String(goal.currentValue ?? 0),
     unit: goal.unit ?? "",
     targetDate: goal.targetDate.slice(0, 10),
+    tracking: goal.tracking ?? "manual",
+    startDate: goal.startDate?.slice(0, 10) ?? "",
   };
 }
 
@@ -390,10 +393,13 @@ function GoalsBoard() {
   );
 }
 
-// One goal in the list: name, type, progress bar, due date, and its buttons.
+// One goal in the list: name, badges, type, progress, due date, and its buttons.
 function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress, onAskDelete, onCancelDelete, onDelete }) {
   const [, typeLabel, typeIcon] = categories.find(([value]) => value === goal.category) ?? categories[2];
   const active = goal.status === "active";
+  // Tracked goals get their progress from workouts, so they show a bar instead of a slider.
+  const tracked = goal.tracking === "workoutCount" || goal.tracking === "workoutMinutes";
+  const reached = active && goal.currentValue >= goal.targetValue;
   const date = goal.targetDate.slice(0, 10);
   const formattedDate = dateFormat.format(new Date(goal.targetDate));
   const overdue = active && date < today;
@@ -407,9 +413,13 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
     <li className={`goal-card${active ? "" : " is-complete"}`}>
       <div className="goal-card-heading">
         <h3>{goal.title}</h3>
-        <span className="goal-type"><Icon name={typeIcon} size={16} />{typeLabel}</span>
+        <div className="goal-badges">
+          {!active && <span className="goal-badge is-complete"><Icon name="check" size={16} />Completed</span>}
+          {reached && <span className="goal-badge is-reached"><Icon name="sparkles" size={16} />Target reached</span>}
+          <span className="goal-type"><Icon name={typeIcon} size={16} />{typeLabel}</span>
+        </div>
       </div>
-      {active ? (
+      {active && !tracked ? (
         <ProgressSlider goal={goal} disabled={busy} onSave={onProgress} />
       ) : (
         <>
@@ -419,6 +429,15 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
             {numberFormat.format(goal.currentValue)} / {numberFormat.format(goal.targetValue)}{goal.unit ? ` ${goal.unit}` : ""}
           </p>
         </>
+      )}
+      {tracked && (
+        <p className="goal-source">
+          <Icon name="activity" size={15} />
+          <span>
+            Counting your {goal.tracking === "workoutMinutes" ? "workout minutes" : "workouts"} from{" "}
+            <time dateTime={goal.startDate.slice(0, 10)}>{dateFormat.format(new Date(goal.startDate))}</time>
+          </span>
+        </p>
       )}
       <p className={`goal-due${overdue ? " is-overdue" : ""}`}>
         <Icon name="calendar" size={15} /><time dateTime={date}>{dueText}</time>
@@ -524,4 +543,3 @@ function ProgressSlider({ goal, disabled, onSave }) {
     </div>
   );
 }
-
