@@ -5,7 +5,7 @@ export const GOAL_TITLE_MAX = 120;
 export const GOAL_UNIT_MAX = 30;
 export const GOAL_VALUE_MAX = 10_000_000;
 // Tracked goals always use these units, so the numbers match what is counted.
-export const TRACKED_GOAL_UNITS = { workoutCount: "workouts", workoutMinutes: "minutes" };
+export const TRACKED_GOAL_UNITS = { workoutCount: "workouts", workoutMinutes: "minutes", workoutHours: "hours" };
 
 // Turns a number or numeric text ("20", "2.5") into a number.
 // Anything else (blank text, "-5", true, [], {}) becomes NaN, which fails the checks below.
@@ -60,7 +60,7 @@ export function validateGoal(
   // tracking existed have no saved value, which means manual.
   const tracking = input.tracking ?? (mode === "update" ? currentTracking ?? "manual" : "manual");
   if (!goalTrackingTypes.includes(tracking)) {
-    errors.tracking = "Choose manual, workout count, or workout minutes.";
+    errors.tracking = "Choose manual, workout count, workout minutes, or workout hours.";
   } else if (tracking !== "manual" && input.category !== "workout") {
     errors.tracking = "Only workout goals can count your workouts.";
   } else {

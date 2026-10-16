@@ -11,7 +11,7 @@ export function progressWindow(goal, today) {
 }
 
 // A tracked goal's progress: how many of the user's workouts fall in its window, or how
-// many minutes they recorded. Workouts saved without a duration add no minutes.
+// many minutes (or hours) they recorded. Workouts saved without a duration add no minutes.
 export function trackedProgress(goal, workouts, today) {
   const { start, end } = progressWindow(goal, today);
   let total = 0;
@@ -22,5 +22,6 @@ export function trackedProgress(goal, workouts, today) {
     else if (typeof workout.durationMinutes === "number") total += workout.durationMinutes;
   }
   // Completed goals show this real count too. Unlike manual goals, nothing is raised to the target.
-  return total;
+  // Hour goals add up the same minutes and convert them.
+  return goal.tracking === "workoutHours" ? total / 60 : total;
 }

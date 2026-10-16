@@ -95,8 +95,8 @@ persistence, the phone layout, and accessibility. Evidence is written to
 
 ## Goal progress checks
 
-The tests named "Goal progress …" in the same file cover goals that count workouts
-or workout minutes: tracked-goal validation, counting only the signed-in user's
+The tests named "Goal progress …" in the same file cover goals that count workouts,
+workout minutes, or workout hours: tracked-goal validation, counting only the signed-in user's
 workouts from the start date through today, workouts without a duration, future
 workouts, the timezone sent by the browser, goals saved before tracking existed,
 adding, editing, and deleting workouts, completion keeping the real count,

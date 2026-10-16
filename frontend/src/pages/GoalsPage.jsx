@@ -16,9 +16,10 @@ const trackingOptions = [
   ["manual", "I'll update it myself"],
   ["workoutCount", "Count my workouts"],
   ["workoutMinutes", "Add up my workout minutes"],
+  ["workoutHours", "Add up my workout hours"],
 ];
 // Tracked goals always use these units; the server sets the same ones.
-const trackedUnits = { workoutCount: "workouts", workoutMinutes: "minutes" };
+const trackedUnits = { workoutCount: "workouts", workoutMinutes: "minutes", workoutHours: "hours" };
 const unitSuggestions = ["miles", "km", "workouts", "minutes", "steps", "lbs", "kg", "cal", "glasses", "hours"];
 const emptyDraft = {
   title: "", category: "workout", targetValue: "", currentValue: "", unit: "", targetDate: "",
@@ -480,7 +481,7 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
   const [, typeLabel, typeIcon] = categories.find(([value]) => value === goal.category) ?? categories[2];
   const active = goal.status === "active";
   // Tracked goals get their progress from workouts, so they show a bar instead of a slider.
-  const tracked = goal.tracking === "workoutCount" || goal.tracking === "workoutMinutes";
+  const tracked = Boolean(trackedUnits[goal.tracking]);
   const reached = active && goal.currentValue >= goal.targetValue;
   const date = goal.targetDate.slice(0, 10);
   const formattedDate = dateFormat.format(new Date(goal.targetDate));
@@ -516,7 +517,7 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
         <p className="goal-source">
           <Icon name="activity" size={15} />
           <span>
-            Counting your {goal.tracking === "workoutMinutes" ? "workout minutes" : "workouts"} from{" "}
+            Counting your {goal.tracking === "workoutCount" ? "workouts" : `workout ${trackedUnits[goal.tracking]}`} from{" "}
             <time dateTime={goal.startDate.slice(0, 10)}>{dateFormat.format(new Date(goal.startDate))}</time>
           </span>
         </p>

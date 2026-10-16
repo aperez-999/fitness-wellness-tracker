@@ -380,7 +380,7 @@ serial("Goal progress API counts only the user's own workouts within each goal's
   // Tracked goals must be workout goals with a start date no later than the target date.
   for (const [overrides, field, message] of [
     [{ category: "nutrition" }, "tracking", "Only workout goals can count your workouts."],
-    [{ tracking: "steps" }, "tracking", "Choose manual, workout count, or workout minutes."],
+    [{ tracking: "steps" }, "tracking", "Choose manual, workout count, workout minutes, or workout hours."],
     [{ startDate: "" }, "startDate", "Choose a start date."],
     [{ startDate: localDay(21) }, "startDate", "Choose a start date on or before the target date."],
   ]) {
@@ -397,6 +397,8 @@ serial("Goal progress API counts only the user's own workouts within each goal's
   assert.equal(count.data.goal.currentValue, 0);
   const minutes = await request("/goals", pat.token, trackedBody({ title: "Move 120 minutes", targetValue: 120, tracking: "workoutMinutes" }));
   assert.equal(minutes.data.goal.unit, "minutes");
+  const hours = await request("/goals", pat.token, trackedBody({ title: "Move 2 hours", targetValue: 2, tracking: "workoutHours" }));
+  assert.equal(hours.data.goal.unit, "hours");
 
   // Only Pat's workouts from the start date through today count. A workout without a
   // duration counts as a workout but adds no minutes.
@@ -408,7 +410,7 @@ serial("Goal progress API counts only the user's own workouts within each goal's
     { userId: pat.user.id, name: "Planned for later", date: localDay(3), durationMinutes: 60 },
     { userId: kim.user.id, name: "Kim's run", date: localDay(-3), durationMinutes: 999 },
   ]);
-  assert.deepEqual(await progressByTitle(pat.token), { "Work out 10 times": 3, "Move 120 minutes": 75.5 });
+  assert.deepEqual(await progressByTitle(pat.token), { "Work out 10 times": 3, "Move 120 minutes": 75.5, "Move 2 hours": 75.5 / 60 });
   // Progress is counted when goals load; nothing is written back to the goal.
   assert.equal((await Goal.findById(count.data.goal._id).lean()).currentValue, 0);
 
@@ -555,7 +557,8 @@ serial("Goal progress page shows counted progress and badges and updates from an
     await page.getByRole("button", { name: "Active", exact: true }).click();
     await card(page, "Move 60 minutes").waitFor();
     await page.getByRole("button", { name: "New goal" }).click();
-    await page.getByLabel("Track progress").selectOption("workoutMinutes");
+    await page.getByLabel("Track progress").selectOption("workoutHours");
+    await page.getByLabel("Target hours").waitFor();
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), false);
     await new AxeBuilder({ page }).analyze().then(({ violations }) => assert.deepEqual(violations.map((v) => v.id), []));
     await page.screenshot({ path: path.join(artifacts, "goal-progress-mobile.png"), fullPage: true });

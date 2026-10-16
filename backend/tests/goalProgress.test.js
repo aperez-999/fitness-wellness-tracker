@@ -32,6 +32,11 @@ test("minute goals add up recorded minutes and skip missing durations", () => {
   assert.equal(trackedProgress(goal({ tracking: "workoutMinutes" }), workouts, today), 75.5);
 });
 
+test("hour goals add up the same minutes in hours", () => {
+  assert.equal(trackedProgress(goal({ tracking: "workoutHours" }), workouts, today), 75.5 / 60);
+  assert.equal(trackedProgress(goal({ tracking: "workoutHours" }), [{ date: day("2026-10-02"), durationMinutes: 90 }], today), 1.5);
+});
+
 test("stops counting at the target date once it has passed", () => {
   const ended = goal({ targetDate: day("2026-10-07") });
   assert.deepEqual(progressWindow(ended, today), { start: "2026-10-01", end: "2026-10-07" });

@@ -145,7 +145,7 @@ test("goals are manual unless a workout goal counts workouts or minutes", () => 
   for (const tracking of ["steps", "", 1, "WorkoutCount"]) {
     assert.equal(
       validateGoal({ ...valid, tracking }, { now }).errors.tracking,
-      "Choose manual, workout count, or workout minutes.",
+      "Choose manual, workout count, workout minutes, or workout hours.",
     );
   }
   for (const category of ["nutrition", "wellness"]) {
@@ -171,6 +171,7 @@ test("tracked goals need a start date and use a fixed unit instead of saved prog
     startDate: "2026-10-01",
   });
   assert.equal(validateGoal({ ...tracked, tracking: "workoutMinutes" }, { now }).goal.unit, "minutes");
+  assert.equal(validateGoal({ ...tracked, tracking: "workoutHours" }, { now }).goal.unit, "hours");
 
   for (const startDate of [undefined, null, ""]) {
     assert.equal(validateGoal({ ...tracked, startDate }, { now }).errors.startDate, "Choose a start date.");

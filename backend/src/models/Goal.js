@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export const goalCategories = ["workout", "nutrition", "wellness"];
 export const goalStatuses = ["active", "completed"];
-export const goalTrackingTypes = ["manual", "workoutCount", "workoutMinutes"];
+export const goalTrackingTypes = ["manual", "workoutCount", "workoutMinutes", "workoutHours"];
 
 const goalSchema = new mongoose.Schema(
   {
