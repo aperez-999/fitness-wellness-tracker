@@ -537,7 +537,13 @@ serial("Goal progress page shows counted progress and badges and updates from an
     await workouts.getByText("3 / 5 workouts").waitFor();
     await card(page, "Move 60 minutes").getByText("95 / 60 minutes").waitFor();
     await workoutsTab.close();
-    assert.ok(listZones.length >= 2);
+
+    // A change nothing announced (say, from a phone) shows up when the user returns to the tab.
+    await Workout.create({ userId: lee.user.id, name: "Phone workout", date: localDay(-1), durationMinutes: 10 });
+    await page.evaluate(() => document.dispatchEvent(new Event("visibilitychange")));
+    await workouts.getByText("4 / 5 workouts").waitFor();
+    await card(page, "Move 60 minutes").getByText("105 / 60 minutes").waitFor();
+    assert.ok(listZones.length >= 3);
     assert.ok(listZones.every((zone) => zone === timeZone), JSON.stringify(listZones));
 
     // Complete: the goal moves to Completed with its badge and real count.
@@ -545,7 +551,7 @@ serial("Goal progress page shows counted progress and badges and updates from an
     await page.getByRole("status").getByText('"Work out 5 times" marked complete.').waitFor();
     await page.getByRole("button", { name: "Completed", exact: true }).click();
     await workouts.getByText("Completed", { exact: true }).waitFor();
-    await workouts.getByText("3 / 5 workouts").waitFor();
+    await workouts.getByText("4 / 5 workouts").waitFor();
     const completed = await Goal.findById(stored._id).lean();
     assert.equal(completed.status, "completed");
     assert.equal(completed.tracking, "workoutCount");
