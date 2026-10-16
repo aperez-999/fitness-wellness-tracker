@@ -161,13 +161,14 @@ function notifyWorkoutsChanged() {
 function userTimeZone() {
   return Intl.DateTimeFormat().resolvedOptions().timeZone;
 }
- 
-// status: "active" (default) or "completed"
+
+// status: "active" (default) or "completed". The timezone decides which day is
+// "today" for goals counted from workouts.
 export function getGoals({ status = "active", ...options } = {}) {
-  const query = new URLSearchParams({ status });
+  const query = new URLSearchParams({ status, timeZone: userTimeZone() });
   return apiFetch(`/goals?${query}`, { cache: "no-store", ...options });
 }
- 
+
 export function createGoal(goal, options = {}) {
   return apiFetch("/goals", {
     ...options,
@@ -175,7 +176,7 @@ export function createGoal(goal, options = {}) {
     body: JSON.stringify({ ...goal, timeZone: userTimeZone() }),
   });
 }
- 
+
 export function updateGoal(id, goal, options = {}) {
   return apiFetch(`/goals/${encodeURIComponent(id)}`, {
     ...options,
@@ -183,7 +184,7 @@ export function updateGoal(id, goal, options = {}) {
     body: JSON.stringify({ ...goal, timeZone: userTimeZone() }),
   });
 }
- 
+
 export async function removeGoal(id, options = {}) {
   try {
     await apiFetch(`/goals/${encodeURIComponent(id)}`, {
