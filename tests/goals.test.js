@@ -30,6 +30,8 @@ const password = "Goals-test-417!";
 const timeZone = "America/New_York";
 // "YYYY-MM-DD" a number of days from now. Far enough from today that timezones never matter.
 const daysFromNow = (days) => new Date(Date.now() + days * 86_400_000).toISOString().slice(0, 10);
+// The same, but in the test timezone: the day the browser and the goal progress count call "today".
+const localDay = (days) => new Intl.DateTimeFormat("en-CA", { timeZone }).format(new Date(Date.now() + days * 86_400_000));
 const goalBody = (overrides = {}) => ({
   title: "Run 20 miles",
   category: "workout",
@@ -39,7 +41,7 @@ const goalBody = (overrides = {}) => ({
   timeZone,
   ...overrides,
 });
-let database, mongoose, apiServer, vite, browser, api, base, accounts, Goal;
+let database, mongoose, apiServer, vite, browser, api, base, accounts, Goal, Workout;
 
 async function request(endpoint, token, body, method) {
   const response = await fetch(api + endpoint, {
@@ -52,6 +54,12 @@ async function request(endpoint, token, body, method) {
   });
   const text = await response.text();
   return { status: response.status, data: text ? JSON.parse(text) : null };
+}
+
+async function signup(email) {
+  const result = await request("/auth/signup", null, { email, password, confirmPassword: password });
+  assert.equal(result.status, 201);
+  return result.data;
 }
 
 async function signedInPage(email, viewport = { width: 1440, height: 1000 }) {
@@ -77,6 +85,7 @@ before(async () => {
   database = await MongoMemoryServer.create();
   await mongoose.connect(database.getUri());
   ({ Goal } = await importLocal("backend/src/models/Goal.js"));
+  ({ Workout } = await importLocal("backend/src/models/Workout.js"));
   const { default: routes } = await importLocal("backend/src/routes/index.js");
   const { errorHandler } = await importLocal("backend/src/middleware/errorHandler.js");
   const app = express();
@@ -340,5 +349,217 @@ serial("goals stay private between accounts and fit a phone screen", async () =>
     await alex.page.screenshot({ path: path.join(artifacts, "goals-mobile.png"), fullPage: true });
   } finally {
     await alex.context.close();
+  }
+});
+
+// ---- Goal progress: workout goals counted from saved workouts ----
+// These run in order after the tests above (see `serial`), so run the whole file:
+// node --test tests/goals.test.js
+
+const withZone = `timeZone=${encodeURIComponent(timeZone)}`;
+// A goal that counts workouts from 10 days ago through 20 days from now.
+const trackedBody = (overrides = {}) => goalBody({
+  title: "Work out 10 times",
+  targetValue: 10,
+  tracking: "workoutCount",
+  startDate: localDay(-10),
+  targetDate: localDay(20),
+  ...overrides,
+});
+// Each goal's title and the progress the API reports for it.
+async function progressByTitle(token, status = "active") {
+  const result = await request(`/goals?status=${status}&${withZone}`, token);
+  assert.equal(result.status, 200);
+  return Object.fromEntries(result.data.goals.map((goal) => [goal.title, goal.currentValue]));
+}
+
+serial("Goal progress API counts only the user's own workouts within each goal's dates", async () => {
+  const pat = await signup("pat.progress@example.test");
+  const kim = await signup("kim.progress@example.test");
+
+  // Tracked goals must be workout goals with a start date no later than the target date.
+  for (const [overrides, field, message] of [
+    [{ category: "nutrition" }, "tracking", "Only workout goals can count your workouts."],
+    [{ tracking: "steps" }, "tracking", "Choose manual, workout count, or workout minutes."],
+    [{ startDate: "" }, "startDate", "Choose a start date."],
+    [{ startDate: localDay(21) }, "startDate", "Choose a start date on or before the target date."],
+  ]) {
+    const rejected = await request("/goals", pat.token, trackedBody(overrides));
+    assert.equal(rejected.status, 400, JSON.stringify(overrides));
+    assert.equal(rejected.data.errors[field], message);
+  }
+  assert.equal(await Goal.countDocuments({ userId: pat.user.id }), 0);
+
+  // The unit is set by the server, and progress sent by the browser is ignored.
+  const count = await request("/goals", pat.token, trackedBody({ unit: "miles", currentValue: 99 }));
+  assert.equal(count.status, 201);
+  assert.equal(count.data.goal.unit, "workouts");
+  assert.equal(count.data.goal.currentValue, 0);
+  const minutes = await request("/goals", pat.token, trackedBody({ title: "Move 120 minutes", targetValue: 120, tracking: "workoutMinutes" }));
+  assert.equal(minutes.data.goal.unit, "minutes");
+
+  // Only Pat's workouts from the start date through today count. A workout without a
+  // duration counts as a workout but adds no minutes.
+  await Workout.insertMany([
+    { userId: pat.user.id, name: "Before the start date", date: localDay(-15), durationMinutes: 50 },
+    { userId: pat.user.id, name: "Run", date: localDay(-6), durationMinutes: 30 },
+    { userId: pat.user.id, name: "Swim", date: localDay(-3), durationMinutes: 45.5 },
+    { userId: pat.user.id, name: "Walk without a duration", date: localDay(-1) },
+    { userId: pat.user.id, name: "Planned for later", date: localDay(3), durationMinutes: 60 },
+    { userId: kim.user.id, name: "Kim's run", date: localDay(-3), durationMinutes: 999 },
+  ]);
+  assert.deepEqual(await progressByTitle(pat.token), { "Work out 10 times": 3, "Move 120 minutes": 75.5 });
+  // Progress is counted when goals load; nothing is written back to the goal.
+  assert.equal((await Goal.findById(count.data.goal._id).lean()).currentValue, 0);
+
+  // Kim sees none of Pat's goals and can't change them.
+  assert.deepEqual(await progressByTitle(kim.token), {});
+  assert.equal((await request(`/goals/${count.data.goal._id}`, kim.token, trackedBody(), "PUT")).status, 404);
+
+  // No timezone falls back to UTC; an invalid one is refused.
+  assert.equal((await request("/goals", pat.token)).status, 200);
+  assert.equal((await request("/goals?timeZone=Not%2FAZone", pat.token)).status, 400);
+
+  // A goal saved before tracking existed loads as manual with its saved progress.
+  await Goal.collection.insertOne({
+    userId: new mongoose.Types.ObjectId(pat.user.id),
+    title: "Goal from before tracking",
+    category: "wellness",
+    targetValue: 8,
+    currentValue: 2,
+    targetDate: new Date(`${localDay(9)}T00:00:00Z`),
+    status: "active",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+  const legacy = (await request(`/goals?${withZone}`, pat.token)).data.goals.find((goal) => goal.title === "Goal from before tracking");
+  assert.equal(legacy.tracking, "manual");
+  assert.equal(legacy.currentValue, 2);
+});
+
+serial("Goal progress API follows workout changes, completion, and switching back to manual", async () => {
+  const ray = await signup("ray.progress@example.test");
+  const count = (await request("/goals", ray.token, trackedBody())).data.goal;
+  const minutes = (await request("/goals", ray.token, trackedBody({ title: "Move 120 minutes", targetValue: 120, tracking: "workoutMinutes" }))).data.goal;
+  await Workout.create({ userId: ray.user.id, name: "Run", date: localDay(-2), durationMinutes: 30 });
+  assert.deepEqual(await progressByTitle(ray.token), { "Work out 10 times": 1, "Move 120 minutes": 30 });
+
+  // Adding, editing, and deleting a workout show up the next time goals load.
+  const workout = { name: "Evening ride", date: localDay(0), durationMinutes: 20, timeZone };
+  const added = await request("/workouts", ray.token, workout);
+  assert.equal(added.status, 201);
+  assert.deepEqual(await progressByTitle(ray.token), { "Work out 10 times": 2, "Move 120 minutes": 50 });
+  const rideId = added.data.workout._id;
+  assert.equal((await request(`/workouts/${rideId}`, ray.token, { ...workout, durationMinutes: 45 }, "PUT")).status, 200);
+  assert.deepEqual(await progressByTitle(ray.token), { "Work out 10 times": 2, "Move 120 minutes": 75 });
+  assert.equal((await request(`/workouts/${rideId}`, ray.token, undefined, "DELETE")).status, 204);
+  assert.deepEqual(await progressByTitle(ray.token), { "Work out 10 times": 1, "Move 120 minutes": 30 });
+
+  // Completing keeps the real count and moves the goal to the completed list.
+  const completed = await request(`/goals/${count._id}`, ray.token, trackedBody({ status: "completed" }), "PUT");
+  assert.equal(completed.status, 200);
+  assert.equal(completed.data.goal.currentValue, 1);
+  assert.deepEqual(await progressByTitle(ray.token), { "Move 120 minutes": 30 });
+  assert.deepEqual(await progressByTitle(ray.token, "completed"), { "Work out 10 times": 1 });
+  const storedCompleted = await Goal.findById(count._id).lean();
+  assert.equal(storedCompleted.status, "completed");
+  assert.equal(storedCompleted.tracking, "workoutCount");
+
+  // An update that leaves out tracking keeps it.
+  const minutesBody = trackedBody({ title: "Move 120 minutes", targetValue: 120, tracking: undefined });
+  const kept = await request(`/goals/${minutes._id}`, ray.token, minutesBody, "PUT");
+  assert.equal(kept.data.goal.tracking, "workoutMinutes");
+  assert.equal(kept.data.goal.currentValue, 30);
+
+  // Switching back to manual saves the progress sent and removes the start date.
+  const manual = await request(`/goals/${minutes._id}`, ray.token, { ...minutesBody, tracking: "manual", currentValue: 50, unit: "minutes" }, "PUT");
+  assert.equal(manual.status, 200);
+  assert.equal(manual.data.goal.currentValue, 50);
+  const storedManual = await Goal.findById(minutes._id).lean();
+  assert.equal(storedManual.tracking, "manual");
+  assert.equal(storedManual.currentValue, 50);
+  assert.equal("startDate" in storedManual, false);
+});
+
+serial("Goal progress page shows counted progress and badges and updates from another tab", async () => {
+  const lee = await signup("lee.progress@example.test");
+  await Workout.insertMany([
+    { userId: lee.user.id, name: "Run", date: localDay(-4), durationMinutes: 30 },
+    { userId: lee.user.id, name: "Ride", date: localDay(-2), durationMinutes: 40 },
+  ]);
+  await request("/goals", lee.token, trackedBody({ title: "Move 60 minutes", targetValue: 60, tracking: "workoutMinutes", startDate: localDay(-7), targetDate: localDay(10) }));
+  await request("/goals", lee.token, goalBody({ title: "Drink 8 glasses", category: "wellness", targetValue: 8, unit: "glasses", currentValue: 3, targetDate: localDay(10) }));
+
+  const { context, page } = await signedInPage("lee.progress@example.test");
+  // Every goal list request should say which timezone "today" is in.
+  const listZones = [];
+  page.on("request", (sent) => {
+    if (sent.url().includes("/api/goals?")) listZones.push(new URL(sent.url()).searchParams.get("timeZone"));
+  });
+  try {
+    // A tracked goal past its target has a badge and no slider; the manual goal keeps its slider.
+    await card(page, "Move 60 minutes").getByText("70 / 60 minutes").waitFor();
+    await card(page, "Move 60 minutes").getByText("Target reached").waitFor();
+    assert.equal(await card(page, "Move 60 minutes").getByRole("slider").count(), 0);
+    assert.equal(await card(page, "Drink 8 glasses").getByRole("slider").count(), 1);
+
+    // Create a goal that counts workouts.
+    await page.getByRole("button", { name: "New goal" }).click();
+    await page.getByLabel("Goal name").fill("Work out 5 times");
+    await page.getByLabel("Track progress").selectOption("workoutCount");
+    assert.equal(await page.getByLabel("Start date").inputValue(), localDay(0));
+    assert.equal(await page.getByLabel("Unit (optional)").count(), 0);
+    await page.getByLabel("Start date").fill(localDay(-7));
+    await page.getByLabel("Target workouts").fill("5");
+    await page.getByLabel("Target date").fill(localDay(14));
+    await page.getByRole("button", { name: "Add goal" }).click();
+    await page.getByRole("status").getByText("Goal added.").waitFor();
+    const workouts = card(page, "Work out 5 times");
+    await workouts.getByText("2 / 5 workouts").waitFor();
+    await workouts.getByText("Counting your workouts from").waitFor();
+    const stored = await Goal.findOne({ title: "Work out 5 times" }).lean();
+    assert.equal(String(stored.userId), lee.user.id);
+    assert.equal(stored.tracking, "workoutCount");
+    assert.equal(stored.unit, "workouts");
+    assert.equal(stored.startDate.toISOString().slice(0, 10), localDay(-7));
+    await new AxeBuilder({ page }).analyze().then(({ violations }) => assert.deepEqual(violations.map((v) => v.id), []));
+    await page.screenshot({ path: path.join(artifacts, "goal-progress-desktop.png"), fullPage: true });
+
+    // Log a workout in another tab: this tab updates without a reload.
+    const workoutsTab = await context.newPage();
+    await workoutsTab.goto(base + "/workouts");
+    await workoutsTab.getByRole("button", { name: "Custom", exact: true }).click();
+    await workoutsTab.getByLabel("Workout name").fill("Evening run");
+    await workoutsTab.getByLabel("Minutes", { exact: false }).fill("25");
+    await workoutsTab.getByRole("button", { name: "Save workout" }).click();
+    await workouts.getByText("3 / 5 workouts").waitFor();
+    await card(page, "Move 60 minutes").getByText("95 / 60 minutes").waitFor();
+    await workoutsTab.close();
+    assert.ok(listZones.length >= 2);
+    assert.ok(listZones.every((zone) => zone === timeZone), JSON.stringify(listZones));
+
+    // Complete: the goal moves to Completed with its badge and real count.
+    await workouts.getByRole("button", { name: "Mark complete" }).click();
+    await page.getByRole("status").getByText('"Work out 5 times" marked complete.').waitFor();
+    await page.getByRole("button", { name: "Completed", exact: true }).click();
+    await workouts.getByText("Completed", { exact: true }).waitFor();
+    await workouts.getByText("3 / 5 workouts").waitFor();
+    const completed = await Goal.findById(stored._id).lean();
+    assert.equal(completed.status, "completed");
+    assert.equal(completed.tracking, "workoutCount");
+    await new AxeBuilder({ page }).analyze().then(({ violations }) => assert.deepEqual(violations.map((v) => v.id), []));
+    await page.screenshot({ path: path.join(artifacts, "goal-progress-completed.png"), fullPage: true });
+
+    // Phone layout: tracked cards and the tracked form fit without sideways scrolling.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.getByRole("button", { name: "Active", exact: true }).click();
+    await card(page, "Move 60 minutes").waitFor();
+    await page.getByRole("button", { name: "New goal" }).click();
+    await page.getByLabel("Track progress").selectOption("workoutMinutes");
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth), false);
+    await new AxeBuilder({ page }).analyze().then(({ violations }) => assert.deepEqual(violations.map((v) => v.id), []));
+    await page.screenshot({ path: path.join(artifacts, "goal-progress-mobile.png"), fullPage: true });
+  } finally {
+    await context.close();
   }
 });

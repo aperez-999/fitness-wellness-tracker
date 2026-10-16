@@ -93,6 +93,19 @@ persistence, the phone layout, and accessibility. Evidence is written to
 `tests/artifacts/goals-{desktop,mobile}.png` and
 `tests/artifacts/goals-api-evidence.json`. No backend `.env` is loaded.
 
+## Goal progress checks
+
+The tests named "Goal progress …" in the same file cover goals that count workouts
+or workout minutes: tracked-goal validation, counting only the signed-in user's
+workouts from the start date through today, workouts without a duration, future
+workouts, the timezone sent by the browser, goals saved before tracking existed,
+adding, editing, and deleting workouts, completion keeping the real count,
+switching back to manual, the goal form, badges, updates from another tab, the
+phone layout, and accessibility. They run with the rest of the file:
+`node --test tests/goals.test.js`. Because the file runs its tests in order,
+`--test-name-pattern` can't pick them out on their own. Screenshots written to
+`tests/artifacts/goal-progress-{desktop,completed,mobile}.png`.
+
 ## Persistent local development database
 
 If MongoDB is not installed/running locally, the existing test tools can start
