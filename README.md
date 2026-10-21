@@ -1,6 +1,66 @@
-# Fitness & Wellness Tracker
+# Dayform — AI-Powered Fitness & Wellness Tracker
 
 Web app for logging workouts and understanding fitness progress in one place. The project began in **FIU Capstone 1** with planning, architecture, and a working React / Express / MongoDB starter (including authentication). It continues in **Capstone 2** with implementation, testing, and deployment of core features.
+
+## Production
+
+Dayform is deployed on two **Vercel Hobby** projects from this repository, with a **MongoDB Atlas M0** cluster. The database name is `dayform_demo`.
+
+| Surface | URL |
+|---|---|
+| Frontend | https://dayform-fitness.vercel.app |
+| Backend API | https://fitness-wellness-tracker.vercel.app/api |
+| Health check | https://fitness-wellness-tracker.vercel.app/api/health |
+
+The frontend project uses the `frontend` directory, the Vite preset, and `dist` as the output. The backend project uses the `backend` directory and Vercel’s Express preset, with no custom build command or output directory. `frontend/vercel.json` sends unknown frontend paths to `index.html`, so routes such as `/dashboard` still load on refresh. API routes stay on the backend host under `/api`.
+
+### Environment variables
+
+Set these in the Vercel project settings. Copy the names only. Do not commit real values, and do not put a database password or `JWT_SECRET` in this file.
+
+**Frontend** (`frontend` project). Vite reads `VITE_API_URL` at build time, so changing it requires a new frontend deployment.
+
+```bash
+VITE_API_URL=https://fitness-wellness-tracker.vercel.app/api
+```
+
+**Backend** (`backend` project). `CLIENT_URL` must be the exact frontend origin: `https`, no path, and no trailing slash.
+
+```bash
+MONGODB_URI=mongodb+srv://YOUR_USER:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/dayform_demo
+JWT_SECRET=replace-with-a-long-random-string
+JWT_EXPIRES_IN=7d
+CLIENT_URL=https://dayform-fitness.vercel.app
+GEMINI_API_KEY=
+GEMINI_MODEL=gemini-3.5-flash-lite
+```
+
+`MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` are required in production. `JWT_EXPIRES_IN` defaults to `7d` when omitted. `GEMINI_API_KEY` is optional. Without it, meal estimates stay unavailable and nutrition values can still be entered by hand. `GEMINI_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. `PORT` is used only for local development.
+
+On the Atlas cluster, allow network access from anywhere. Vercel Hobby does not provide a fixed outbound address. Keep the Atlas user limited to `dayform_demo`.
+
+### Deploy and redeploy
+
+1. Push the branch that each Vercel project tracks. Both projects deploy from this GitHub repository.
+2. Confirm the frontend root directory is `frontend` and the backend root directory is `backend`.
+3. Deploy the backend first. Open `/api/health` and confirm `"status": "ok"`.
+4. Set the frontend `VITE_API_URL` to `https://fitness-wellness-tracker.vercel.app/api`, then deploy the frontend.
+5. Set the backend `CLIENT_URL` to `https://dayform-fitness.vercel.app` and redeploy the backend if that value changed.
+
+Later code changes redeploy when pushed to the tracked branch. A new environment variable on the frontend does not reach the browser until that project is redeployed. Use **Redeploy** in the Vercel dashboard to repeat a deployment without a new commit. Deploy from Git. Do not upload a folder that contains `backend/.env` or `frontend/.env`.
+
+### Production smoke test
+
+- Open https://dayform-fitness.vercel.app and confirm the Dayform home page loads.
+- Refresh `/login` and `/signup` directly. Each refresh should stay on that page.
+- Open https://fitness-wellness-tracker.vercel.app/api/health and confirm `{"status":"ok"}`.
+- Create a demo account, or sign in with an existing demo account, and confirm the dashboard loads.
+- Log a workout and confirm it remains after a refresh.
+- Open Nutrition, save a manual entry, and confirm it remains after a refresh.
+- If `GEMINI_API_KEY` is set, estimate one meal. If it is empty, confirm the page explains that estimates are unavailable and manual entry still saves.
+- Create or view a goal, then open Profile and confirm the signed-in account’s details.
+- Sign out and confirm private workout, nutrition, and goal data is no longer shown.
+- In the browser developer tools, confirm API calls go to `https://fitness-wellness-tracker.vercel.app/api` and that failed responses are not caused by a CORS origin mismatch.
 
 ## Core problem
 
