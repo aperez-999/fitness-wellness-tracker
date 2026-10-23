@@ -20,13 +20,14 @@ const realFetch = globalThis.fetch;
 let providerStatus = 200, providerCalls = 0;
 const portion = "37.5 g dry oats, yogurt and berries; one bowl";
 
-async function request(endpoint, token, body) {
+async function request(endpoint, token, body, method = body === undefined ? "GET" : "POST") {
   const response = await fetch(api + endpoint, {
-    method: body === undefined ? "GET" : "POST",
-    headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    method,
+    headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), ...(body === undefined ? {} : { "Content-Type": "application/json" }) },
     ...(body === undefined ? {} : { body: JSON.stringify(body) }),
   });
-  return { status: response.status, cache: response.headers.get("cache-control"), data: await response.json() };
+  const data = response.status === 204 ? {} : await response.json().catch(() => ({}));
+  return { status: response.status, cache: response.headers.get("cache-control"), data };
 }
 async function openPage(storageState) {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, locale: "en-US", timezoneId: "America/New_York", storageState });
@@ -271,7 +272,7 @@ test("saving cancels stale history reads and blocks duplicate submissions", asyn
 test("inline meal icon fills editable nutrients and preserves estimate provenance", async () => {
   const page = await openPage();
   assert.equal(await page.getByRole("button", { name: "Quick meal estimate", exact: true }).count(), 0);
-  assert.equal(await page.getByRole("combobox").count(), 0);
+  assert.equal(await page.getByRole("combobox", { name: "Meal type", exact: true }).count(), 1);
   await page.locator("#nutrition-foodName").fill("Oatmeal with berries");
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
   await page.getByText("AI estimate applied", { exact: true }).waitFor();
@@ -408,6 +409,114 @@ test("input guardrails stay local and Undo restores manual values and prior AI p
   assert.equal(stored.estimate.provider, "gemini");
   assert.equal(stored.estimate.edited, true);
   assert.equal(stored.protein, 20);
+});
+
+test("updates and deletes require the owner and keep provenance when no new estimate is sent", async () => {
+  for (const method of ["PUT", "DELETE"]) {
+    assert.equal((await request("/nutrition/507f1f77bcf86cd799439011", undefined, method === "PUT" ? valid : undefined, method)).status, 401);
+    assert.equal((await request("/nutrition/not-an-id", accounts.alex.token, method === "PUT" ? valid : undefined, method)).status, 400);
+  }
+  const saved = await request("/nutrition", accounts.alex.token, { ...valid, foodName: "Oatmeal", mealType: "breakfast" });
+  const id = saved.data.entry._id;
+  assert.equal((await request(`/nutrition/${id}`, accounts.alex.token, { ...valid, calories: -1 }, "PUT")).status, 400);
+  assert.equal((await NutritionLog.findById(id)).calories, valid.calories);
+  assert.equal((await request(`/nutrition/${id}`, accounts.sam.token, { ...valid, calories: 10 }, "PUT")).status, 404);
+  assert.equal((await request(`/nutrition/${id}`, accounts.sam.token, undefined, "DELETE")).status, 404);
+  assert.equal((await NutritionLog.findById(id)).calories, valid.calories);
+
+  const updated = await request(`/nutrition/${id}`, accounts.alex.token, { ...valid, calories: 500, foodName: "  " }, "PUT");
+  assert.equal(updated.status, 200);
+  assert.equal(updated.data.entry.calories, 500);
+  assert.equal(updated.data.entry.foodName, undefined);
+  assert.equal(updated.data.entry.mealType, "breakfast");
+  const cleared = await request(`/nutrition/${id}`, accounts.alex.token, { ...valid, calories: 500, foodName: "Oatmeal", mealType: "" }, "PUT");
+  assert.equal(cleared.status, 200);
+  assert.equal(cleared.data.entry.mealType, undefined);
+  assert.equal(cleared.data.entry.foodName, "Oatmeal");
+  assert.equal(updated.data.entry.createdAt, saved.data.entry.createdAt);
+  assert.equal(updated.data.entry.userId, accounts.alex.user.id);
+
+  const ai = await NutritionLog.create({
+    ...valid, userId: accounts.alex.user.id, foodName: "Soup",
+    estimate: { provider: "gemini", model: "gemini-3.5-flash-lite", portion: "one bowl", edited: false },
+  });
+  const unchanged = await request(`/nutrition/${ai._id}`, accounts.alex.token, { ...valid, foodName: "Soup" }, "PUT");
+  assert.equal(unchanged.data.entry.estimate.edited, false);
+  assert.equal(unchanged.data.entry.estimate.portion, "one bowl");
+  const adjusted = await request(`/nutrition/${ai._id}`, accounts.alex.token, { ...valid, foodName: "Soup", protein: 21 }, "PUT");
+  assert.equal(adjusted.status, 200);
+  assert.equal(adjusted.data.entry.estimate.provider, "gemini");
+  assert.equal(adjusted.data.entry.estimate.model, "gemini-3.5-flash-lite");
+  assert.equal(adjusted.data.entry.estimate.portion, "one bowl");
+  assert.equal(adjusted.data.entry.estimate.edited, true);
+  assert.equal(String((await NutritionLog.findById(ai._id)).userId), accounts.alex.user.id);
+  assert.equal((await NutritionLog.findById(ai._id)).createdAt.toISOString(), ai.createdAt.toISOString());
+
+  assert.equal((await request(`/nutrition/${id}`, accounts.alex.token, undefined, "DELETE")).status, 204);
+  assert.equal(await NutritionLog.findById(id), null);
+  assert.equal((await request(`/nutrition/${id}`, accounts.alex.token, undefined, "DELETE")).status, 404);
+  assert.equal(await NutritionLog.countDocuments({ _id: ai._id }), 1);
+});
+
+test("meal type is saved, kept while editing another field, and can be cleared", async () => {
+  const page = await openPage();
+  await fillEntry(page);
+  await page.getByLabel("Meal type").selectOption("lunch");
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  assert.equal((await NutritionLog.findOne()).mealType, "lunch");
+  await page.getByRole("button", { name: `Edit ${valid.foodName}`, exact: true }).click();
+  assert.equal(await page.getByLabel("Meal type").inputValue(), "lunch");
+  await page.locator("#nutrition-calories").fill("501");
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await page.getByText("Entry updated.", { exact: true }).waitFor();
+  const kept = await NutritionLog.findOne().lean();
+  assert.equal(kept.mealType, "lunch");
+  assert.equal(kept.calories, 501);
+  await page.getByRole("button", { name: `Edit ${valid.foodName}`, exact: true }).click();
+  await page.getByLabel("Meal type").selectOption("");
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await page.getByText("Entry updated.", { exact: true }).waitFor();
+  assert.equal((await NutritionLog.findOne().lean()).mealType, undefined);
+});
+
+test("editing survives refresh, and deletion waits for confirmation", async () => {
+  const page = await openPage();
+  await fillEntry(page);
+  await page.getByRole("button", { name: "Save entry", exact: true }).click();
+  await page.getByText("Entry saved.", { exact: true }).waitFor();
+  const edit = page.getByRole("button", { name: `Edit ${valid.foodName}`, exact: true });
+  await edit.click();
+  await page.getByRole("heading", { name: "Edit an entry", exact: true }).waitFor();
+  await page.locator("#nutrition-calories").fill("500");
+  await page.getByRole("button", { name: "Cancel", exact: true }).click();
+  await page.getByRole("heading", { name: "Add an entry", exact: true }).waitFor();
+  assert.equal(await page.locator("#nutrition-calories").inputValue(), "");
+  await page.getByRole("heading", { name: valid.foodName, exact: true }).waitFor();
+  assert.equal((await NutritionLog.findOne()).calories, valid.calories);
+
+  await page.getByRole("button", { name: `Edit ${valid.foodName}`, exact: true }).click();
+  await page.locator("#nutrition-calories").fill("500");
+  await page.locator("#nutrition-foodName").fill("Berry oatmeal");
+  await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await page.getByText("Entry updated.", { exact: true }).waitFor();
+  await page.reload();
+  await page.getByRole("heading", { name: "Berry oatmeal", exact: true }).waitFor();
+  assert.match(await page.locator(".nutrition-entry").innerText(), /500/);
+  assert.equal((await NutritionLog.findOne()).calories, 500);
+
+  await page.getByRole("button", { name: "Delete Berry oatmeal", exact: true }).click();
+  await page.getByRole("button", { name: "Keep entry", exact: true }).click();
+  await page.getByRole("heading", { name: "Berry oatmeal", exact: true }).waitFor();
+  assert.equal(await NutritionLog.countDocuments(), 1);
+
+  await page.getByRole("button", { name: "Delete Berry oatmeal", exact: true }).click();
+  await page.getByRole("button", { name: "Delete entry", exact: true }).click();
+  await page.getByText("Entry deleted.", { exact: true }).waitFor();
+  await page.getByText("Your nutrition journal starts here.").waitFor();
+  await page.reload();
+  await page.getByText("Your nutrition journal starts here.").waitFor();
+  assert.equal(await NutritionLog.countDocuments(), 0);
 });
 
 test("provider quota errors return a retry delay and block further requests server-side", async () => {

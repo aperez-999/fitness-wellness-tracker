@@ -34,8 +34,9 @@ export function validateNutrition(body, { userId } = {}) {
       entry.foodName = input.foodName.trim();
     }
   }
-  if (input.mealType != null) {
-    if (!mealTypes.includes(input.mealType)) errors.mealType = "Choose a valid meal type.";
+  if (Object.prototype.hasOwnProperty.call(input, "mealType")) {
+    if (input.mealType == null || input.mealType === "") entry.mealType = null;
+    else if (!mealTypes.includes(input.mealType)) errors.mealType = "Choose a valid meal type.";
     else entry.mealType = input.mealType;
   }
   if (input.estimate?.receipt != null) {

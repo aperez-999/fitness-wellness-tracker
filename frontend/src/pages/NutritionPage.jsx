@@ -18,10 +18,18 @@ const nutrients = [
 ];
 const numberFormat = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
 const dateFormat = new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+const mealTypeOptions = [
+  ["", "No meal type"],
+  ["breakfast", "Breakfast"],
+  ["lunch", "Lunch"],
+  ["dinner", "Dinner"],
+  ["snack", "Snack"],
+];
+
 function emptyDraft() {
   const now = new Date();
   const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-  return { date, foodName: "", calories: "", protein: "", carbohydrates: "", fat: "" };
+  return { date, foodName: "", mealType: "", calories: "", protein: "", carbohydrates: "", fat: "" };
 }
 
 export default function NutritionPage() {
@@ -38,7 +46,12 @@ function NutritionJournal() {
   const [loadError, setLoadError] = useState("");
   const [errors, setErrors] = useState({});
   const [saveError, setSaveError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [status, setStatus] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [confirmingId, setConfirmingId] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteError, setDeleteError] = useState("");
+  const [listNotice, setListNotice] = useState("");
   const [estimate, setEstimate] = useState(null);
   const [previousEstimate, setPreviousEstimate] = useState(null);
   const [retrySeconds, setRetrySeconds] = useState(0);
@@ -91,7 +104,7 @@ function NutritionJournal() {
     if (field === "foodName") setEstimate(null);
     setDraft((current) => ({ ...current, [field]: value }));
     setErrors((current) => ({ ...current, [field]: undefined }));
-    setSaved(false);
+    setStatus("");
   }
 
   function applyEstimate(values, provenance) {
@@ -100,8 +113,38 @@ function NutritionJournal() {
     setEstimate(provenance);
     setErrors({});
     setSaveError("");
-    setSaved(false);
+    setStatus("");
     requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
+  }
+
+  function resetComposer() {
+    estimateRequest.current?.abort();
+    estimateRequest.current = null;
+    setEstimating(false);
+    setEditingId(null);
+    setDraft(emptyDraft());
+    setEstimate(null);
+    setPreviousEstimate(null);
+    setErrors({});
+    setSaveError("");
+  }
+
+  function beginEdit(entry) {
+    resetComposer();
+    setConfirmingId(null);
+    setDeleteError("");
+    setStatus("");
+    setEditingId(entry._id);
+    setDraft({
+      date: entry.date.slice(0, 10),
+      foodName: entry.foodName || "",
+      mealType: entry.mealType || "",
+      calories: String(entry.calories),
+      protein: String(entry.protein),
+      carbohydrates: String(entry.carbohydrates),
+      fat: String(entry.fat),
+    });
+    requestAnimationFrame(() => form.current?.querySelector("#nutrition-date")?.focus());
   }
 
   function undoEstimate() {
@@ -111,6 +154,7 @@ function NutritionJournal() {
     setPreviousEstimate(null);
     setErrors({});
     setSaveError("");
+    setStatus("");
     requestAnimationFrame(() => form.current?.querySelector("#nutrition-calories")?.focus());
   }
 
@@ -154,35 +198,69 @@ function NutritionJournal() {
     if (writeRequest.current || estimateRequest.current) return;
     setErrors({});
     setSaveError("");
-    setSaved(false);
+    setStatus("");
     setSaving(true);
     const controller = new AbortController();
     writeRequest.current = controller;
     const token = getToken();
+    const wasEditing = Boolean(editingId);
+    const payload = estimate ? { ...draft, estimate } : draft;
     try {
-      const { entry } = await apiFetch("/nutrition", {
-        method: "POST", signal: controller.signal, body: JSON.stringify({ ...draft, estimate }),
+      const { entry } = await apiFetch(wasEditing ? `/nutrition/${encodeURIComponent(editingId)}` : "/nutrition", {
+        method: wasEditing ? "PUT" : "POST", signal: controller.signal, body: JSON.stringify(payload),
       });
       if (controller.signal.aborted || token !== getToken()) return;
-      setEntries((current) => [entry, ...current]
+      setEntries((current) => (wasEditing ? current.map((item) => item._id === entry._id ? entry : item) : [entry, ...current])
         .sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt) || b._id.localeCompare(a._id))
         .slice(0, 30));
+      setEditingId(null);
       setDraft((current) => ({ ...emptyDraft(), date: current.date }));
       setEstimate(null);
       setPreviousEstimate(null);
-      setSaved(true);
+      setStatus(wasEditing ? "Entry updated." : "Entry saved.");
       void loadEntries();
     } catch (error) {
       if (controller.signal.aborted || token !== getToken()) return;
       if (error.status === 401) logout();
       else {
         setErrors(error.fields || {});
-        setSaveError(error.status === 400 ? (error.fields?.estimate || "Check the highlighted fields and save again.") : "Could not save your entry. Your details are still here; try again.");
+        setSaveError(error.status === 404
+          ? "This entry is no longer available."
+          : error.status === 400
+            ? (error.fields?.estimate || "Check the highlighted fields and save again.")
+            : "Could not save your entry. Your details are still here; try again.");
         requestAnimationFrame(() => form.current?.querySelector('[aria-invalid="true"]')?.focus());
       }
     } finally {
       writeRequest.current = null;
       if (!controller.signal.aborted && token === getToken()) setSaving(false);
+    }
+  }
+
+  async function removeEntry(entry) {
+    if (writeRequest.current) return;
+    setDeleteError("");
+    setStatus("");
+    setDeletingId(entry._id);
+    const controller = new AbortController();
+    writeRequest.current = controller;
+    const token = getToken();
+    try {
+      await apiFetch(`/nutrition/${encodeURIComponent(entry._id)}`, { method: "DELETE", signal: controller.signal });
+      if (controller.signal.aborted || token !== getToken()) return;
+      if (editingId === entry._id) resetComposer();
+      setConfirmingId(null);
+      setEntries((current) => current.filter((item) => item._id !== entry._id));
+      setStatus("");
+      setListNotice("Entry deleted.");
+      void loadEntries();
+    } catch (error) {
+      if (controller.signal.aborted || token !== getToken()) return;
+      if (error.status === 401) logout();
+      else setDeleteError(error.status === 404 ? "This entry is no longer available." : "Could not delete this entry. Try again.");
+    } finally {
+      writeRequest.current = null;
+      if (!controller.signal.aborted && token === getToken()) setDeletingId(null);
     }
   }
 
@@ -194,8 +272,8 @@ function NutritionJournal() {
       </header>
       <div className="nutrition-layout">
         <section className="nutrition-composer" aria-labelledby="nutrition-add-title">
-          <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><img src={saladBowl} alt="" width="56" height="42" /></span>Add an entry</h2>
-          <p>Record calories and macros for a food, meal, or day.</p>
+          <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><img src={saladBowl} alt="" width="56" height="42" /></span>{editingId ? "Edit an entry" : "Add an entry"}</h2>
+          <p>{editingId ? "Update this meal, then save or cancel." : "Record calories and macros for a food, meal, or day."}</p>
           <form ref={form} onSubmit={save} noValidate>
             <fieldset disabled={saving}>
               <FormField id="nutrition-date" label="Date" type="date" value={draft.date} error={errors.date} onChange={(event) => update("date", event.target.value)} />
@@ -205,6 +283,19 @@ function NutritionJournal() {
                 onEstimate={estimateFromFood} estimating={estimating} retrySeconds={retrySeconds}
                 hasValues={nutrientControls.some(({ field }) => draft[field] !== "")}
               />
+              <div className="form-field">
+                <label htmlFor="nutrition-mealType">Meal type</label>
+                <select
+                  id="nutrition-mealType"
+                  value={draft.mealType}
+                  aria-invalid={Boolean(errors.mealType)}
+                  aria-describedby={errors.mealType ? "nutrition-mealType-error" : undefined}
+                  onChange={(event) => update("mealType", event.target.value)}
+                >
+                  {mealTypeOptions.map(([value, label]) => <option key={value || "none"} value={value}>{label}</option>)}
+                </select>
+                {errors.mealType && <p id="nutrition-mealType-error" className="field-error">{errors.mealType}</p>}
+              </div>
               {estimate && <div className="inline-meal-estimate" role="status">
                 <div className="estimate-note-heading">
                   <span className="estimate-note-label"><Icon name="sparkles" size={15} />AI estimate applied</span>
@@ -227,10 +318,13 @@ function NutritionJournal() {
                 ))}
               </div>
               <p className="nutrition-hint">All nutrition values are required. Enter 0 when there is none.</p>
-              <button className="progress-button" type="submit" disabled={estimating}><Icon name="plus" size={18} />{saving ? "Saving…" : "Save entry"}</button>
+              <div className="nutrition-form-actions">
+                <button className="progress-button" type="submit" disabled={estimating}><Icon name={editingId ? "check" : "plus"} size={18} />{saving ? "Saving…" : editingId ? "Save changes" : "Save entry"}</button>
+                {editingId && <button className="secondary-button" type="button" onClick={() => { resetComposer(); setStatus(""); setListNotice(""); }}>Cancel</button>}
+              </div>
             </fieldset>
             {saveError && <p className="nutrition-error" role="alert">{saveError}</p>}
-            {saved && <p className="nutrition-success" role="status">Entry saved.</p>}
+            {status && <p className="nutrition-success" role="status">{status}</p>}
           </form>
         </section>
         <section className="nutrition-history" aria-labelledby="nutrition-recent-title">
@@ -241,6 +335,8 @@ function NutritionJournal() {
             </div>
             <button className="text-link" type="button" onClick={loadEntries} disabled={loading}>{loading ? "Loading…" : "Refresh"}</button>
           </header>
+          {listNotice && <p className="nutrition-success" role="status">{listNotice}</p>}
+          {deleteError && <p className="nutrition-error" role="alert">{deleteError}</p>}
           {loadError && <div className="nutrition-error" role="alert">{loadError} <button className="text-link" type="button" onClick={loadEntries}>Try again</button></div>}
           {loading && entries.length === 0 && <p role="status" className="nutrition-empty">Loading your entries…</p>}
           {!loading && !loadError && entries.length === 0 && <div className="nutrition-empty"><h3>Your nutrition journal starts here.</h3><p>Add your first entry to keep your calories and macros in one place.</p></div>}
@@ -249,12 +345,32 @@ function NutritionJournal() {
               <li key={entry._id} className="nutrition-entry">
                 <div className="nutrition-entry-heading">
                   <h3><Icon name={mealReferences.find((meal) => meal.id === entry.estimate?.referenceId)?.icon || "plate"} size={20} />{entry.foodName || "Nutrition entry"}</h3>
-                  <time dateTime={entry.date.slice(0, 10)}>{dateFormat.format(new Date(entry.date))}</time>
+                  <time dateTime={entry.date.slice(0, 10)}>{dateFormat.format(new Date(entry.date))}{entry.mealType ? ` · ${mealTypeOptions.find(([value]) => value === entry.mealType)?.[1]}` : ""}</time>
                 </div>
                 {entry.estimate && <p className="nutrition-estimate-label">{entry.estimate.edited ? "Estimate, adjusted" : "Estimated"} · {entry.estimate.provider === "gemini" ? `AI · ${entry.estimate.portion}` : `${entry.estimate.servings} × ${mealReferences.find((meal) => meal.id === entry.estimate.referenceId)?.name}`}</p>}
                 <dl className="nutrition-values">
                   {nutrients.map(([field, label, unit]) => <div key={field}><dt>{label}</dt><dd>{entry[field] == null ? "—" : <>{numberFormat.format(entry[field])} <span>{unit}</span></>}</dd></div>)}
                 </dl>
+                {confirmingId === entry._id ? (
+                  <div className="nutrition-confirm" role="group" aria-label={`Delete ${entry.foodName || "Nutrition entry"}`}>
+                    <p>Delete this entry? This can't be undone.</p>
+                    <button className="nutrition-delete-button" type="button" onClick={() => removeEntry(entry)} disabled={Boolean(deletingId)}>
+                      {deletingId === entry._id ? "Deleting…" : "Delete entry"}
+                    </button>
+                    <button className="secondary-button" type="button" onClick={() => setConfirmingId(null)} disabled={Boolean(deletingId)} autoFocus>
+                      Keep entry
+                    </button>
+                  </div>
+                ) : (
+                  <div className="nutrition-actions">
+                    <button className="secondary-button" type="button" onClick={() => beginEdit(entry)} disabled={saving || Boolean(deletingId)} aria-label={`Edit ${entry.foodName || "Nutrition entry"}`}>
+                      <Icon name="edit" size={16} />Edit
+                    </button>
+                    <button className="secondary-button nutrition-delete-start" type="button" onClick={() => { setConfirmingId(entry._id); setDeleteError(""); setListNotice(""); }} disabled={saving || Boolean(deletingId)} aria-label={`Delete ${entry.foodName || "Nutrition entry"}`}>
+                      <Icon name="trash" size={16} />Delete
+                    </button>
+                  </div>
+                )}
               </li>
             ))}
           </ul>

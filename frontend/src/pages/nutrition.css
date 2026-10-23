@@ -72,7 +72,7 @@
   font-weight: 750;
 }
 
-.nutrition-composer input {
+.nutrition-composer :is(input, select) {
   width: 100%;
   min-width: 0;
   min-height: 48px;
@@ -88,7 +88,7 @@
   color: var(--muted);
 }
 
-.nutrition-composer input[aria-invalid="true"] {
+.nutrition-composer :is(input, select)[aria-invalid="true"] {
   border-color: #973d56;
 }
 
@@ -199,6 +199,70 @@
   flex-shrink: 0;
   color: var(--muted);
   font-size: 12px;
+}
+
+.nutrition-form-actions,
+.nutrition-actions,
+.nutrition-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.nutrition-form-actions {
+  margin-top: 8px;
+}
+
+.nutrition-actions,
+.nutrition-confirm {
+  margin-top: 18px;
+}
+
+.nutrition-actions .secondary-button,
+.nutrition-confirm :is(.secondary-button, .nutrition-delete-button),
+.nutrition-form-actions .secondary-button {
+  min-height: 44px;
+  padding: 8px 14px;
+}
+
+.nutrition-delete-start {
+  color: #973d56;
+}
+
+.nutrition-confirm {
+  padding: 14px;
+  border: 1px solid #e7c8cd;
+  border-radius: 14px;
+  background: #fcf2f1;
+}
+
+.nutrition-confirm p {
+  flex-basis: 100%;
+  color: #733b4e;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nutrition-delete-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: #973d56;
+  color: var(--paper);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.nutrition-delete-button:hover:not(:disabled) {
+  background: #7f3248;
+}
+
+.nutrition-delete-button:disabled,
+.nutrition-actions button:disabled,
+.nutrition-confirm button:disabled {
+  opacity: .6;
 }
 
 .nutrition-values {

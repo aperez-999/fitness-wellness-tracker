@@ -33,6 +33,10 @@ test("nutrition rejects missing bodies, impossible dates, timestamps and invalid
   }
   assert.ok(validateNutrition({ ...valid, foodName: "a".repeat(121) }).errors.foodName);
   assert.ok(validateNutrition({ ...valid, mealType: "invalid" }).errors.mealType);
+  assert.equal(validateNutrition(valid).entry.mealType, undefined);
+  assert.equal(validateNutrition({ ...valid, mealType: "" }).entry.mealType, null);
+  assert.equal(validateNutrition({ ...valid, mealType: null }).entry.mealType, null);
+  assert.equal(validateNutrition({ ...valid, mealType: "lunch" }).entry.mealType, "lunch");
   assert.ok(validateNutrition({ ...valid, date: "2024-02-29" }).entry);
 });
 
