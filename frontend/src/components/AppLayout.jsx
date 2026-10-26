@@ -3,6 +3,7 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import Icon from "./Icon.jsx";
 import Brand from "./Brand.jsx";
+import walk from "../assets/activities/walk.svg";
 import "./app-layout.css";
 
 // Desktop and mobile navigation share the same routes and active state.
@@ -55,6 +56,11 @@ export default function AppLayout() {
             </NavLink>
           ))}
         </nav>
+
+        <div className="sidebar-note" aria-hidden="true">
+          <img src={walk} alt="" width="120" height="88" />
+          <p>Small steps count.</p>
+        </div>
 
         <div className="app-account">
           <span className="account-avatar" aria-hidden="true">

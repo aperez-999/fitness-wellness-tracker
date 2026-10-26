@@ -7,6 +7,7 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import "./index.css";
 import "./styles/theme.css";
 import "./styles/motion.css";
+import "./styles/experience.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

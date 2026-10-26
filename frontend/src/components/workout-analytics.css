@@ -17,7 +17,7 @@
   border-radius: 12px;
 }
 .analytics-switch button {
-  min-height: 38px;
+  min-height: 44px;
   padding: 8px 12px;
   border-radius: 9px;
   color: var(--plum);
@@ -29,8 +29,10 @@
   color: var(--plum);
   box-shadow: 0 1px 4px #59384914;
 }
-.analytics-switch button:hover:not([aria-pressed="true"]) {
-  background: #e9dedc;
+@media (hover: hover) and (pointer: fine) {
+  .analytics-switch button:hover:not([aria-pressed="true"]) {
+    background: #e9dedc;
+  }
 }
 .analytics-comparison {
   display: grid;
@@ -138,8 +140,10 @@
   font-size: 12px;
   padding: 8px 3px;
 }
-.paired-bars button:not(:disabled):hover {
-  background: #f4eeeb;
+@media (hover: hover) and (pointer: fine) {
+  .paired-bars button:not(:disabled):hover {
+    background: #f4eeeb;
+  }
 }
 .paired-bars button[aria-pressed="true"] {
   background: #eee2e5;
@@ -249,7 +253,7 @@
 .analytics-table summary {
   width: fit-content;
   cursor: pointer;
-  min-height: 36px;
+  min-height: 44px;
   padding-block: 8px;
   color: var(--plum);
   font-size: 12px;
@@ -283,7 +287,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  min-height: 40px;
+  min-height: 44px;
   padding: 9px 14px;
   border: 1px solid #cbb9c0;
   border-radius: 13px;
@@ -291,11 +295,18 @@
   font-size: 12px;
   font-weight: 750;
 }
-.insight-button[aria-expanded="true"],
-.insight-button:hover {
+.insight-button[aria-expanded="true"] {
   background: var(--plum);
   color: var(--paper);
   border-color: var(--plum);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .insight-button:hover {
+    background: var(--plum);
+    color: var(--paper);
+    border-color: var(--plum);
+  }
 }
 .insight-view {
   display: grid;

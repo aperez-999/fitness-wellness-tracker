@@ -53,13 +53,16 @@
   font-weight: 600;
 }
 
-.app-nav-link:hover {
-  background: var(--linen);
+@media (hover: hover) and (pointer: fine) {
+  .app-nav-link:hover {
+    background: var(--linen);
+  }
 }
 
 .app-nav-link.is-active {
   color: var(--plum);
   background: #f1e5e4;
+  box-shadow: inset 3px 0 0 var(--plum);
   font-weight: 800;
 }
 
@@ -136,8 +139,10 @@
   color: var(--muted);
 }
 
-.logout-button:hover {
-  background: var(--linen);
+@media (hover: hover) and (pointer: fine) {
+  .logout-button:hover {
+    background: var(--linen);
+  }
 }
 
 .app-content {
@@ -146,6 +151,7 @@
   min-width: 0;
   margin: 0;
   padding: 40px clamp(24px, 3vw, 48px);
+  padding-bottom: max(40px, env(safe-area-inset-bottom));
 }
 
 @media (max-width: 1000px) {
@@ -159,6 +165,7 @@
 
   .app-content {
     padding: 32px 24px;
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
   }
 }
 
@@ -173,7 +180,7 @@
     grid-template-columns: minmax(0, 1fr) auto;
     height: auto;
     overflow: visible;
-    padding: 18px 20px 0;
+    padding: max(18px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
@@ -212,7 +219,7 @@
     gap: 4px;
     overflow-x: auto;
     margin-top: 18px;
-    padding: 4px 0 12px;
+    padding: 4px 0 max(12px, env(safe-area-inset-bottom));
   }
 
   .app-nav-link {
@@ -227,6 +234,7 @@
 
   .app-content {
     padding: 30px 20px;
+    padding-bottom: max(30px, env(safe-area-inset-bottom));
   }
 }
 

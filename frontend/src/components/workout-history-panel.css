@@ -53,7 +53,7 @@
   background: var(--linen);
 }
 .history-period button {
-  min-height: 38px;
+  min-height: 44px;
   padding: 7px 12px;
   border-radius: 9px;
   color: var(--muted);
@@ -85,7 +85,7 @@
   color: #c0adae;
 }
 .history-overview .text-link {
-  min-height: 32px;
+  min-height: 44px;
 }
 .history-date-heading {
   display: flex;
@@ -133,7 +133,7 @@
   gap: 6px;
 }
 .session-repeat {
-  min-height: 38px;
+  min-height: 44px;
   padding: 8px 11px;
   border: 1px solid #d8c9c5;
   border-radius: 11px;
@@ -142,11 +142,13 @@
   font-weight: 650;
   white-space: nowrap;
 }
-.session-repeat:hover {
-  background: var(--linen);
+@media (hover: hover) and (pointer: fine) {
+  .session-repeat:hover {
+    background: var(--linen);
+  }
 }
 .session-repeat:disabled {
-  opacity: 0.5;
+  opacity: 0.72;
 }
 .history-empty {
   padding: 30px 0 10px;

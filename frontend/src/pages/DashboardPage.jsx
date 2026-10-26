@@ -305,6 +305,14 @@ export default function DashboardPage() {
                         : "Your week has room for movement."}
                     </p>
                   </div>
+                  <div className="active-dots" aria-hidden="true">
+                    {Array.from({ length: 7 }, (_, index) => (
+                      <span
+                        key={index}
+                        className={index < progress.activeDays ? "is-on" : ""}
+                      />
+                    ))}
+                  </div>
                 </section>
               </div>
             </div>

@@ -1,6 +1,9 @@
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 
+import cycle from "../assets/activities/cycle.svg";
+import mobility from "../assets/activities/mobility.svg";
+import run from "../assets/activities/run.svg";
 import AuthLayout from "../components/AuthLayout.jsx";
 import FormField from "../components/FormField.jsx";
 import PasswordChecklist, { passwordChecks } from "../components/PasswordChecklist.jsx";
@@ -81,7 +84,19 @@ export default function SignupPage() {
   }
 
   return (
-    <AuthLayout title="Create your account" description="Keep a record of the days you move.">
+    <AuthLayout
+      tone="start"
+      title="Create your account"
+      description="A few details, and your week has a place to land."
+      buddy={(
+        <div className="auth-buddy-row" aria-hidden="true">
+          <span className="auth-path" />
+          <img src={mobility} alt="" width="120" height="88" />
+          <img src={cycle} alt="" width="120" height="88" />
+          <img src={run} alt="" width="120" height="88" />
+        </div>
+      )}
+    >
       <form ref={form} className="auth-form" onSubmit={handleSubmit} noValidate>
         <fieldset disabled={submitting}>
           <FormField
@@ -105,7 +120,7 @@ export default function SignupPage() {
             autoComplete="new-password"
           />
           {error && <p className="auth-error" role="alert">{error}</p>}
-          <button type="submit" className="progress-button">
+          <button type="submit" className="progress-button" aria-busy={submitting}>
             {submitting ? "Creating account…" : "Sign up"}
           </button>
         </fieldset>
@@ -113,6 +128,7 @@ export default function SignupPage() {
       <p className="auth-footer">
         Already have an account?{" "}
         <Link to="/login" state={location.state} className="text-link">Log in</Link>
+        <Link to="/" className="text-link">Back to Dayform</Link>
       </p>
     </AuthLayout>
   );

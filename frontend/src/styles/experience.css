@@ -1,0 +1,1105 @@
+/* Shared surfaces, page banners, and choreography for the signed-in app and auth pages.
+   Loaded last so it can layer on top of page styles. */
+
+@property --fill {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+.dayform-theme {
+  --shadow-card: 0 1px 2px #5938490f, 0 16px 34px -26px #59384973;
+  --shadow-lift: 0 2px 4px #59384914, 0 26px 44px -26px #5938499e;
+  --shadow-plum: 0 30px 50px -32px #593849f0;
+}
+
+/* ---------- Surfaces ---------- */
+
+.wellness-app :is(
+  .minutes-widget,
+  .recent-workouts,
+  .workout-form-panel,
+  .workout-history,
+  .nutrition-composer,
+  .goals-form,
+  .goal-card,
+  .profile-section
+) {
+  box-shadow: var(--shadow-card);
+}
+
+.wellness-app .weekly-widget {
+  background-image: radial-gradient(circle at 100% 0, #efc77e2b, transparent 46%);
+  box-shadow: var(--shadow-plum);
+}
+
+.wellness-app .nutrition-history,
+.wellness-app .goals-list {
+  min-width: 0;
+}
+
+/* ---------- Page banners ---------- */
+
+.wellness-app .page-banner {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  padding: 28px 32px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 88% 30%, var(--banner-glow, #efc77e55), transparent 34%),
+    radial-gradient(circle at 60% 140%, #edcfca8c, transparent 46%),
+    var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.wellness-app .page-banner::before,
+.wellness-app .page-banner::after {
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.wellness-app .page-banner::before {
+  top: 18px;
+  right: 34%;
+  width: 12px;
+  height: 12px;
+  background: var(--honey);
+}
+
+.wellness-app .page-banner::after {
+  right: -40px;
+  bottom: -60px;
+  width: 180px;
+  height: 180px;
+  border: 2px dashed #dfcdc6;
+}
+
+.wellness-app .page-banner > div:first-child {
+  display: grid;
+  justify-items: start;
+  min-width: 0;
+}
+
+.wellness-app .page-banner > div:first-child > p:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.wellness-app .page-banner > div:first-child > p:first-child::before {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--banner-dot, var(--honey));
+  content: "";
+}
+
+.wellness-app .page-banner h1 {
+  margin-top: 8px;
+  font-size: clamp(30px, 4.2vw, 44px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -1.5px;
+}
+
+.wellness-app .page-banner > div:first-child > p:not(:first-child) {
+  max-width: 44ch;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.wellness-app .page-banner :is(.text-link, .progress-button) {
+  margin-top: 16px;
+}
+
+.wellness-app .banner-art {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-end;
+  padding-inline: 8px;
+}
+
+.wellness-app .banner-art::before {
+  position: absolute;
+  z-index: -1;
+  inset: auto 4px -6px;
+  height: 18px;
+  border-radius: 50%;
+  background: #5938491a;
+  content: "";
+}
+
+.wellness-app .banner-art img {
+  width: clamp(96px, 12vw, 150px);
+  height: auto;
+}
+
+.wellness-app .banner-art img + img {
+  width: clamp(72px, 9vw, 112px);
+  margin-left: -18px;
+}
+
+.banner-nutrition { --banner-glow: #c6d3b880; --banner-dot: #326b63; }
+.banner-goals { --banner-glow: #efc77e66; }
+.banner-profile { --banner-glow: #edcfcacc; --banner-dot: var(--plum); }
+
+@media (max-width: 600px) {
+  .wellness-app .page-banner {
+    padding: 22px 20px;
+    border-radius: 24px;
+    gap: 12px;
+  }
+
+  .wellness-app .page-banner::before {
+    right: 18px;
+    top: 14px;
+  }
+
+  .wellness-app .banner-art img {
+    width: 84px;
+  }
+
+  .wellness-app .banner-art img + img {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .wellness-app .banner-art img {
+    width: 64px;
+  }
+
+  .wellness-app .page-banner h1 {
+    font-size: 28px;
+  }
+}
+
+/* ---------- Navigation ---------- */
+
+.wellness-app .app-nav-link {
+  position: relative;
+}
+
+.wellness-app .app-nav-link svg {
+  transition: transform 220ms var(--ease-soft);
+}
+
+.wellness-app .app-nav-link.is-active {
+  background: var(--plum);
+  color: var(--paper);
+  box-shadow: 0 12px 22px -14px #593849e6;
+}
+
+.wellness-app .app-nav-link.is-active::after {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  background: var(--honey);
+  content: "";
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wellness-app .app-nav-link:not(.is-active):hover svg {
+    transform: translateX(2px) rotate(-6deg);
+  }
+}
+
+.sidebar-note {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  margin-top: auto;
+  padding: 14px 12px 14px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 80% 0, #efc77e4d, transparent 60%),
+    #f6ebe6;
+  color: var(--plum);
+  font-size: 13px;
+  font-weight: 750;
+  text-align: center;
+}
+
+.sidebar-note img {
+  width: 88px;
+  height: auto;
+}
+
+.sidebar-note + .app-account {
+  margin-top: 16px;
+}
+
+@media (max-width: 760px), (max-height: 720px) {
+  .sidebar-note {
+    display: none;
+  }
+
+  .sidebar-note + .app-account {
+    margin-top: auto;
+  }
+}
+
+@media (max-width: 760px) {
+  .sidebar-note + .app-account {
+    margin-top: 0;
+  }
+
+  .wellness-app .app-nav-link.is-active::after {
+    display: none;
+  }
+}
+
+/* ---------- Shared feedback ---------- */
+
+.dayform-theme .progress-button[aria-busy="true"]::after {
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fffcf866;
+  border-top-color: var(--paper);
+  border-radius: 50%;
+  content: "";
+}
+
+.wellness-app .notice-success,
+.wellness-app .goals-success,
+.wellness-app .nutrition-success {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #c9dcc8;
+  border-radius: 14px;
+  background: #e9f2e7;
+  color: #2f5a3d;
+}
+
+.wellness-app .goals-error,
+.wellness-app .nutrition-error {
+  padding: 10px 14px;
+  border: 1px solid #e7c8cd;
+  border-radius: 14px;
+  background: #fcf2f1;
+}
+
+.wellness-app :is(.nutrition-composer, .goals-form, .profile-section, .workout-form-panel) :is(input, select, textarea):focus-visible:not([aria-invalid="true"]) {
+  border-color: var(--plum);
+  background: #fffaf6;
+  box-shadow: 0 0 0 4px #59384917;
+}
+
+.wellness-app :is(.nutrition-composer, .goals-form, .profile-section, .workout-form-panel) :is(input, select, textarea) {
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+/* ---------- Dashboard ---------- */
+
+.wellness-app .dashboard-hero {
+  min-height: 220px;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+}
+
+.wellness-app .dashboard-hero::after {
+  position: absolute;
+  z-index: -1;
+  top: 22px;
+  left: 46%;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f6d796, #efc77e);
+  box-shadow: 0 0 0 10px #efc77e33, 0 0 0 22px #efc77e1a;
+  content: "";
+}
+
+.wellness-app .dashboard-hero h1 {
+  font-size: clamp(32px, 4.4vw, 46px);
+}
+
+.wellness-app .day-button[aria-pressed="true"] .day-count {
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--plum);
+}
+
+.wellness-app .minutes-widget {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 84% 58%, #efc77e40, transparent 36%),
+    var(--paper);
+}
+
+.wellness-app .active-widget {
+  flex-wrap: wrap;
+  background:
+    radial-gradient(circle at 100% 0, #fffcf880, transparent 50%),
+    #eeddd3;
+  box-shadow: var(--shadow-card);
+}
+
+.active-dots {
+  display: flex;
+  flex-basis: 100%;
+  gap: 8px;
+  padding-left: 2px;
+}
+
+.active-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #dcc3b8;
+}
+
+.active-dots span.is-on {
+  background: var(--plum);
+  box-shadow: 0 0 0 3px #59384926;
+}
+
+.wellness-app .session-row {
+  transition: background-color 160ms ease;
+}
+
+.wellness-app .insight-button {
+  box-shadow: 0 10px 20px -16px #593849cc;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wellness-app .movement-trail .session-row:hover,
+  .wellness-app .journal-list .session-row:hover {
+    background-color: #fbf4ef;
+  }
+
+  .wellness-app :is(.minutes-widget, .active-widget, .recent-workouts, .goal-card, .nutrition-entry) {
+    transition: transform 220ms var(--ease-soft), border-color 180ms ease;
+  }
+
+  .wellness-app :is(.minutes-widget, .active-widget):hover,
+  .wellness-app .goal-card:hover,
+  .wellness-app .nutrition-entry:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* ---------- Workouts ---------- */
+
+.wellness-app .workout-form-panel > .section-heading {
+  margin: -4px -4px 18px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 100% 0, #efc77e40, transparent 60%),
+    #f6eee6;
+}
+
+.wellness-app .workout-form-panel > .section-heading h2::before,
+.wellness-app .workout-date > span:first-child::before,
+.wellness-app #duration-title::before {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--plum);
+  color: var(--paper);
+  font-size: 12px;
+  font-weight: 800;
+  vertical-align: 1px;
+}
+
+.wellness-app .workout-form-panel > .section-heading h2::before { content: "1" / ""; }
+.wellness-app .workout-date > span:first-child::before { content: "2" / ""; }
+.wellness-app #duration-title::before { content: "3" / ""; }
+
+.wellness-app .activity-choice {
+  transition:
+    transform 200ms var(--ease-soft),
+    background-color 160ms ease,
+    border-color 160ms ease,
+    box-shadow 200ms ease;
+}
+
+.wellness-app .activity-choice[aria-pressed="true"] {
+  box-shadow: 0 0 0 4px #efc77e3d, 0 14px 24px -18px #a87826;
+}
+
+.wellness-app .activity-art {
+  transition: transform 260ms var(--ease-soft);
+}
+
+.wellness-app .choice-chip {
+  transition: transform 160ms var(--ease-soft), box-shadow 160ms ease;
+}
+
+.wellness-app .choice-chip[aria-pressed="true"] {
+  box-shadow: 0 10px 18px -12px #593849e6;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .wellness-app .activity-choice:hover .activity-art {
+    transform: translateY(-2px) rotate(-3deg) scale(1.04);
+  }
+
+  .wellness-app .activity-choice:not([aria-pressed="true"]):hover {
+    box-shadow: 0 14px 22px -18px #59384999;
+  }
+}
+
+.wellness-app .journal-date-heading .journal-date::before {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--honey);
+  vertical-align: 1px;
+  content: "";
+}
+
+.wellness-app .journal-group .journal-list {
+  background: #fffdfa;
+}
+
+.wellness-app .workout-history .history-heading {
+  margin-bottom: 6px;
+}
+
+/* ---------- Nutrition ---------- */
+
+.composer-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--plum);
+  color: var(--paper);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.wellness-app .nutrition-composer.is-editing {
+  background:
+    linear-gradient(180deg, #f6ebe6, transparent 120px),
+    var(--paper);
+  box-shadow: 0 0 0 4px #59384914, var(--shadow-lift);
+}
+
+.wellness-app :is(.nutrition-composer, .goals-form) select {
+  appearance: none;
+  padding-right: 40px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23593849' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m1 1.5 5 5 5-5'/%3E%3C/svg%3E")
+      no-repeat right 14px center,
+    var(--paper);
+}
+
+.wellness-app .inline-meal-estimate {
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 100% 0, #efc77e33, transparent 55%),
+    #fbf4ec;
+}
+
+.wellness-app .nutrition-history > header {
+  border-bottom: 0;
+  padding-bottom: 6px;
+}
+
+.wellness-app .nutrition-entries {
+  display: grid;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.wellness-app .nutrition-entry {
+  position: relative;
+  overflow: hidden;
+  padding: 20px 22px 20px 26px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow-card);
+}
+
+.wellness-app .nutrition-entry::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--meal-accent, var(--rose));
+  content: "";
+}
+
+.wellness-app .nutrition-entry[data-meal="breakfast"] { --meal-accent: var(--honey); }
+.wellness-app .nutrition-entry[data-meal="lunch"] { --meal-accent: #a6baa2; }
+.wellness-app .nutrition-entry[data-meal="dinner"] { --meal-accent: var(--plum); }
+.wellness-app .nutrition-entry[data-meal="snack"] { --meal-accent: #d99678; }
+
+.wellness-app .nutrition-entry h3 svg {
+  box-sizing: content-box;
+  padding: 7px;
+  border-radius: 12px;
+  background: #f4ebe6;
+}
+
+.wellness-app .nutrition-values {
+  gap: 10px;
+}
+
+.wellness-app .nutrition-values > div {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: var(--value-tint, #fff3e8);
+}
+
+.wellness-app .nutrition-values > div:nth-child(2) { --value-tint: #f4edf8; }
+.wellness-app .nutrition-values > div:nth-child(3) { --value-tint: #faf3dc; }
+.wellness-app .nutrition-values > div:nth-child(4) { --value-tint: #eaf3ed; }
+
+.wellness-app .nutrition-values dt {
+  color: #6b5c61;
+  font-weight: 700;
+}
+
+.wellness-app .nutrition-confirm,
+.wellness-app .goal-confirm {
+  border-radius: 16px;
+}
+
+.wellness-app div.nutrition-empty,
+.wellness-app div.goals-empty {
+  max-width: none;
+  margin-top: 16px;
+  padding: 120px 24px 28px;
+  border: 2px dashed #e3d3cd;
+  border-radius: 24px;
+  background: no-repeat center 22px / 120px 88px;
+  text-align: center;
+}
+
+.wellness-app div.nutrition-empty {
+  background-image: url("../assets/nutrition/salad-bowl.svg");
+}
+
+.wellness-app div.goals-empty {
+  background-image: url("../assets/activities/run.svg");
+}
+
+/* ---------- Goals ---------- */
+
+.wellness-app .goals-form {
+  position: relative;
+  overflow: hidden;
+  border-top: 6px solid var(--honey);
+}
+
+.wellness-app .goals-tabs button {
+  transition: box-shadow 180ms ease;
+}
+
+.wellness-app .goals-tabs button[aria-pressed="true"] {
+  box-shadow: 0 8px 16px -10px #593849e6;
+}
+
+.wellness-app .goal-card {
+  --goal-accent: var(--plum);
+  --goal-tint: #f4e6e2;
+  position: relative;
+  overflow: hidden;
+  padding-left: 28px;
+}
+
+.wellness-app .goal-card::before {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 6px;
+  background: var(--goal-accent);
+  content: "";
+}
+
+.wellness-app .goal-card[data-category="nutrition"] { --goal-accent: #c4963e; --goal-tint: #faf0d8; }
+.wellness-app .goal-card[data-category="wellness"] { --goal-accent: #6f8f6c; --goal-tint: #e6efe3; }
+
+.wellness-app .goal-type {
+  background: var(--goal-tint);
+}
+
+.wellness-app .goal-card.is-complete {
+  background:
+    radial-gradient(circle at 100% 0, #efc77e40, transparent 40%),
+    var(--paper);
+}
+
+.wellness-app .goal-card.is-complete::before {
+  background: var(--honey);
+}
+
+.wellness-app .goal-progress {
+  height: 12px;
+}
+
+.wellness-app .goal-slider::-webkit-slider-runnable-track {
+  height: 12px;
+}
+
+.wellness-app .goal-slider::-webkit-slider-thumb {
+  margin-top: -5px;
+  transition: transform 160ms var(--ease-soft), box-shadow 160ms ease;
+}
+
+.wellness-app .goal-slider:active::-webkit-slider-thumb {
+  transform: scale(1.18);
+  box-shadow: 0 0 0 6px #5938491f;
+}
+
+/* ---------- Profile ---------- */
+
+.profile-identity {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 100% 0, #efc77e40, transparent 50%),
+    #f6ebe6;
+}
+
+.profile-avatar {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  border-radius: 22px;
+  background: var(--plum);
+  color: var(--paper);
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: 0 14px 24px -14px #593849;
+  transform: rotate(-4deg);
+}
+
+.wellness-app .profile-section > h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wellness-app .profile-section > h2::before {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--honey);
+  content: "";
+}
+
+.wellness-app .profile-section + .profile-section > h2::before {
+  background: var(--rose);
+}
+
+.wellness-app .profile-activity {
+  transition: transform 160ms var(--ease-soft), box-shadow 160ms ease;
+}
+
+.wellness-app .profile-activity[aria-pressed="true"] {
+  box-shadow: 0 10px 18px -12px #593849e6;
+}
+
+@media (max-width: 420px) {
+  .profile-identity {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Auth ---------- */
+
+.auth-page .auth-card {
+  position: relative;
+  box-shadow: 0 2px 4px #5938490d, 0 40px 60px -40px #593849b3;
+}
+
+.auth-page .auth-card::before {
+  position: absolute;
+  inset: 0 28px auto;
+  height: 5px;
+  border-radius: 0 0 6px 6px;
+  background: linear-gradient(90deg, var(--honey), var(--rose));
+  content: "";
+}
+
+.auth-start .auth-card::before {
+  background: linear-gradient(90deg, #a6baa2, var(--honey));
+}
+
+.auth-scene {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 28px 12px 18px;
+}
+
+.auth-scene .auth-buddy {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-scene p {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--plum);
+  font-size: 13px;
+  font-weight: 750;
+  box-shadow: var(--shadow-card);
+}
+
+.auth-sun {
+  position: absolute;
+  z-index: -1;
+  top: -14px;
+  left: 4%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #f6d796, #efc77e);
+  box-shadow: 0 0 0 12px #efc77e2e, 0 0 0 26px #efc77e14;
+}
+
+.auth-leaf {
+  position: absolute;
+  z-index: -1;
+  right: 6%;
+  bottom: 52px;
+  width: 34px;
+  height: 22px;
+  border-radius: 0 100% 0 100%;
+  background: #a6baa2;
+}
+
+.auth-buddy-row {
+  position: relative;
+  isolation: isolate;
+  align-items: end;
+  padding: 8px 8px 0;
+}
+
+.auth-path {
+  position: absolute;
+  z-index: -1;
+  inset: auto 4% 6px;
+  height: 22px;
+  border-bottom: 3px dashed #d9c6bf;
+  border-radius: 0 0 50% 50%;
+}
+
+.auth-form input:focus-visible:not([aria-invalid="true"]) {
+  border-color: var(--plum);
+  background: #fffaf6;
+  box-shadow: 0 0 0 4px #59384917;
+}
+
+.auth-start .auth-form fieldset {
+  counter-reset: signup-field;
+}
+
+.auth-start .auth-form .form-field > label::before {
+  display: inline-grid;
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f3e4df;
+  color: var(--plum);
+  font-size: 11px;
+  counter-increment: signup-field;
+  content: counter(signup-field) / "";
+}
+
+.auth-page .progress-button {
+  box-shadow: 0 14px 26px -16px #593849cc;
+}
+
+@media (max-width: 720px) {
+  .auth-scene {
+    padding-top: 18px;
+  }
+
+  .auth-sun {
+    top: 14px;
+    left: calc(50% - 110px);
+  }
+
+  .auth-leaf {
+    right: calc(50% - 110px);
+  }
+}
+
+/* ---------- Choreography ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .dayform-theme .progress-button[aria-busy="true"]::after {
+    animation: busy-spin 700ms linear infinite;
+  }
+
+  .wellness-app .banner-art img {
+    animation:
+      banner-buddy-in 560ms var(--ease-soft) 120ms both,
+      banner-buddy-idle 5s ease-in-out 900ms 4;
+  }
+
+  .wellness-app .banner-art img + img {
+    animation-delay: 220ms, 1500ms;
+    animation-duration: 560ms, 6s;
+  }
+
+  .wellness-app .page-banner::before {
+    animation: banner-dot 8s ease-in-out 3;
+  }
+
+  .sidebar-note img {
+    animation: banner-buddy-idle 6s ease-in-out 3;
+  }
+
+  .wellness-app .app-nav-link.is-active::after {
+    animation: dot-in 320ms var(--ease-soft);
+  }
+
+  .wellness-app .app-nav-link.is-active svg {
+    animation: nav-icon-pop 360ms var(--ease-soft);
+  }
+
+  .wellness-app .day-fill {
+    transform-origin: bottom;
+    animation: fill-grow 620ms var(--ease-soft) backwards;
+  }
+
+  .wellness-app .activity-week > :nth-child(1) .day-fill { animation-delay: 140ms; }
+  .wellness-app .activity-week > :nth-child(2) .day-fill { animation-delay: 190ms; }
+  .wellness-app .activity-week > :nth-child(3) .day-fill { animation-delay: 240ms; }
+  .wellness-app .activity-week > :nth-child(4) .day-fill { animation-delay: 290ms; }
+  .wellness-app .activity-week > :nth-child(5) .day-fill { animation-delay: 340ms; }
+  .wellness-app .activity-week > :nth-child(6) .day-fill { animation-delay: 390ms; }
+  .wellness-app .activity-week > :nth-child(7) .day-fill { animation-delay: 440ms; }
+
+  .wellness-app .day-button[aria-pressed="true"] .day-count {
+    animation: chip-pop 280ms var(--ease-soft);
+  }
+
+  .wellness-app .dashboard-hero::after {
+    animation: sun-rise 900ms var(--ease-soft) 100ms backwards, sun-glow 6s ease-in-out 1s 3;
+  }
+
+  .active-dots span {
+    animation: dot-in 360ms var(--ease-soft) backwards;
+  }
+
+  .active-dots span:nth-child(2) { animation-delay: 40ms; }
+  .active-dots span:nth-child(3) { animation-delay: 80ms; }
+  .active-dots span:nth-child(4) { animation-delay: 120ms; }
+  .active-dots span:nth-child(5) { animation-delay: 160ms; }
+  .active-dots span:nth-child(6) { animation-delay: 200ms; }
+  .active-dots span:nth-child(7) { animation-delay: 240ms; }
+
+  .wellness-app .activity-choice[aria-pressed="true"] .activity-art {
+    animation: art-pop 460ms var(--ease-soft);
+  }
+
+  .wellness-app .activity-choice[aria-pressed="true"] .activity-check {
+    animation: dot-in 300ms var(--ease-soft);
+  }
+
+  .wellness-app .choice-chip[aria-pressed="true"],
+  .wellness-app .profile-activity[aria-pressed="true"],
+  .wellness-app .goals-tabs button[aria-pressed="true"] {
+    animation: chip-pop 280ms var(--ease-soft);
+  }
+
+  .composer-mode {
+    animation: dot-in 300ms var(--ease-soft);
+  }
+
+  .wellness-app .nutrition-entry {
+    animation: card-in 300ms var(--ease-soft);
+  }
+
+  .wellness-app .nutrition-entry:nth-child(2) { animation-delay: 50ms; }
+  .wellness-app .nutrition-entry:nth-child(3) { animation-delay: 100ms; }
+  .wellness-app .nutrition-entry:nth-child(4) { animation-delay: 150ms; }
+
+  .wellness-app .goal-progress span {
+    transform-origin: left;
+    animation: bar-grow 760ms var(--ease-soft) 220ms backwards;
+  }
+
+  .wellness-app .goal-slider {
+    animation: fill-reveal 760ms var(--ease-soft) 220ms backwards;
+  }
+
+  .wellness-app :is(.notice-success, .goals-success, .nutrition-success) {
+    animation: success-in 320ms var(--ease-soft);
+  }
+
+  @keyframes success-in {
+    0% { transform: translateY(8px) scale(0.96); }
+    60% { transform: translateY(-2px) scale(1.01); }
+    100% { transform: none; }
+  }
+
+  .wellness-app :is(.notice-success, .goals-success) svg,
+  .wellness-app .goal-card.is-complete .goal-badge.is-complete {
+    animation: dot-in 360ms var(--ease-soft);
+  }
+
+  .wellness-app div.nutrition-empty,
+  .wellness-app div.goals-empty {
+    animation: rise-in 320ms var(--ease-soft);
+  }
+
+  .profile-avatar {
+    animation: avatar-in 520ms var(--ease-soft) 120ms backwards;
+  }
+
+  .auth-sun {
+    animation: sun-rise 900ms var(--ease-soft) backwards, sun-glow 6s ease-in-out 1s 3;
+  }
+
+  .auth-leaf {
+    animation: leaf-sway 5s ease-in-out 4;
+  }
+
+  .auth-scene p {
+    animation: dot-in 380ms var(--ease-soft) 420ms backwards;
+  }
+
+  .auth-path {
+    transform-origin: left;
+    animation: bar-grow 700ms var(--ease-soft) 200ms backwards;
+  }
+
+  .auth-buddy-row img {
+    animation:
+      buddy-arrive 420ms var(--ease-soft) both,
+      banner-buddy-idle 5s ease-in-out 700ms 4;
+  }
+
+  .auth-buddy-row img:nth-of-type(2) { animation-delay: 70ms, 1400ms; }
+  .auth-buddy-row img:nth-of-type(3) { animation-delay: 140ms, 2100ms; }
+
+  .auth-page .auth-error,
+  .auth-page .field-error {
+    animation: error-in 260ms var(--ease-soft);
+  }
+
+  .auth-page .password-checklist .is-met .password-checkmark {
+    animation: chip-pop 260ms var(--ease-soft);
+  }
+
+  @keyframes busy-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  @keyframes banner-buddy-in {
+    from { opacity: 0; transform: translateY(20px) scale(0.85) rotate(-8deg); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @keyframes banner-buddy-idle {
+    50% { transform: translateY(-6px) rotate(-2deg); }
+  }
+
+  @keyframes banner-dot {
+    50% { transform: translate(-14px, 10px); }
+  }
+
+  @keyframes nav-icon-pop {
+    40% { transform: scale(1.25) rotate(-8deg); }
+  }
+
+  @keyframes fill-grow {
+    from { transform: scaleY(0); }
+  }
+
+  @keyframes bar-grow {
+    from { transform: scaleX(0); }
+  }
+
+  @keyframes fill-reveal {
+    from { --fill: 0%; }
+  }
+
+  @keyframes chip-pop {
+    0% { transform: scale(0.92); }
+    55% { transform: scale(1.06); }
+    100% { transform: none; }
+  }
+
+  @keyframes dot-in {
+    from { transform: scale(0); }
+  }
+
+  @keyframes art-pop {
+    0% { transform: scale(1); }
+    40% { transform: scale(1.14) rotate(-5deg) translateY(-4px); }
+    70% { transform: scale(0.98) rotate(2deg); }
+    100% { transform: none; }
+  }
+
+  @keyframes sun-rise {
+    from { transform: translateY(40px) scale(0.6); }
+  }
+
+  @keyframes sun-glow {
+    50% { transform: scale(1.06); }
+  }
+
+  @keyframes avatar-in {
+    from { transform: rotate(-16deg) scale(0.7); }
+  }
+
+  @keyframes leaf-sway {
+    50% { transform: rotate(14deg) translateY(-3px); }
+  }
+
+  @keyframes error-in {
+    0% { transform: translateX(-6px); }
+    40% { transform: translateX(4px); }
+    100% { transform: none; }
+  }
+}

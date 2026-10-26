@@ -58,13 +58,19 @@
   .workout-remove-dialog[open] {
     animation: removal-open 180ms var(--ease-soft);
   }
-  @keyframes removal-open {
+  .workout-remove-dialog::backdrop {
+    animation: backdrop-in 180ms ease;
+  }
+  @keyframes backdrop-in {
     from {
       opacity: 0;
+    }
+  }
+  @keyframes removal-open {
+    from {
       transform: translateY(8px) scale(0.98);
     }
     to {
-      opacity: 1;
       transform: none;
     }
   }

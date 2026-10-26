@@ -1,15 +1,47 @@
+.profile-page {
+  max-width: 760px;
+}
+
 .profile-section {
   display: grid;
   gap: 16px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
 }
 
 .profile-section + .profile-section {
-  margin-top: 28px;
+  margin-top: 18px;
 }
 
 .profile-section h2 {
   font-size: 15px;
   font-weight: 750;
+}
+
+.profile-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.profile-facts dt {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-facts dd {
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+  font-weight: 650;
+}
+
+.profile-page .notice-success {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #e7f0e6;
 }
 
 .profile-activities {
@@ -19,7 +51,7 @@
 }
 
 .profile-activity {
-  min-height: 40px;
+  min-height: 44px;
   padding: 8px 14px;
   border: 1px solid #cdbfbb;
   border-radius: 999px;
@@ -33,4 +65,10 @@
   border-color: var(--plum);
   color: var(--paper);
   background: var(--plum);
+}
+
+@media (max-width: 560px) {
+  .profile-facts {
+    grid-template-columns: 1fr;
+  }
 }

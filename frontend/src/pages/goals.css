@@ -4,26 +4,6 @@
   margin: 0 auto;
 }
 
-.goals-heading {
-  display: flex;
-  gap: 20px;
-  align-items: end;
-  justify-content: space-between;
-  margin-bottom: 32px;
-}
-
-.goals-heading h1 {
-  font-size: clamp(30px, 4vw, 40px);
-  font-weight: 800;
-  letter-spacing: -1.5px;
-}
-
-.goals-heading p {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 15px;
-}
-
 .goals-page h2 {
   font-size: 21px;
   font-weight: 800;
@@ -158,9 +138,11 @@
   color: var(--paper);
 }
 
-.goals-tabs button[aria-pressed="false"]:hover {
-  background: #f1e5e4;
-  color: var(--plum);
+@media (hover: hover) and (pointer: fine) {
+  .goals-tabs button[aria-pressed="false"]:hover {
+    background: #f1e5e4;
+    color: var(--plum);
+  }
 }
 
 .goals-empty {
@@ -190,6 +172,14 @@
   border: 1px solid var(--line);
   border-radius: 20px;
   background: var(--paper);
+  transition: transform 180ms var(--ease-soft), border-color 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .goal-card:hover {
+    transform: translateY(-3px);
+    border-color: #ddcfc8;
+  }
 }
 
 .goal-card-heading {
@@ -276,7 +266,7 @@
 }
 
 .goal-slider:disabled {
-  opacity: 0.6;
+  opacity: 0.72;
 }
 
 .goal-slider::-webkit-slider-runnable-track {
@@ -392,20 +382,17 @@
   font-weight: 700;
 }
 
-.goal-delete-button:hover:not(:disabled) {
-  background: #7f3248;
+@media (hover: hover) and (pointer: fine) {
+  .goal-delete-button:hover:not(:disabled) {
+    background: #7f3248;
+  }
 }
 
 .goal-card button:disabled {
-  opacity: 0.6;
+  opacity: 0.72;
 }
 
 @media (max-width: 600px) {
-  .goals-heading {
-    flex-direction: column;
-    align-items: start;
-  }
-
   .goals-form {
     padding: 20px;
   }

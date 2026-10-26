@@ -21,7 +21,7 @@
 }
 
 .workout-form fieldset:disabled {
-  opacity: 0.65;
+  opacity: 0.72;
 }
 
 .workout-field {
@@ -112,8 +112,15 @@
   height: 70px;
   object-fit: contain;
 }
-.activity-choice:hover {
-  background: #f1e6da;
+@media (hover: hover) and (pointer: fine) {
+  .activity-choice:hover,
+  .choice-chip:hover {
+    transform: translateY(-3px);
+  }
+
+  .activity-choice:hover {
+    background: #f1e6da;
+  }
 }
 .activity-choice[aria-pressed="true"] {
   border-color: #a87826;
@@ -193,8 +200,10 @@
   font-size: 13px;
   font-weight: 700;
 }
-.choice-chip:hover {
-  background: var(--linen);
+@media (hover: hover) and (pointer: fine) {
+  .choice-chip:hover {
+    background: var(--linen);
+  }
 }
 .choice-chip[aria-pressed="true"] {
   border-color: var(--plum);
@@ -232,11 +241,11 @@
     transition:
       background-color 150ms ease,
       border-color 150ms ease,
-      transform 150ms var(--ease-soft);
+      transform 120ms var(--ease-soft);
   }
   .activity-choice:active:not(:disabled),
   .choice-chip:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: scale(0.98);
   }
 }
 

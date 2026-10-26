@@ -1,18 +1,21 @@
 import Brand from "./Brand.jsx";
 import "./auth-layout.css";
 
-export default function AuthLayout({ title, description, children }) {
+export default function AuthLayout({ title, description, children, buddy, tone = "return" }) {
   return (
-    <main className="dayform-theme auth-page">
+    <main className={`dayform-theme auth-page auth-${tone}`}>
       <div className="auth-shell">
         <Brand to="/" />
-        <section className="auth-card" aria-labelledby="auth-title">
-          <header>
-            <h1 id="auth-title">{title}</h1>
-            <p>{description}</p>
-          </header>
-          {children}
-        </section>
+        <div className="auth-stage">
+          {buddy}
+          <section className="auth-card" aria-labelledby="auth-title">
+            <header>
+              <h1 id="auth-title">{title}</h1>
+              <p>{description}</p>
+            </header>
+            {children}
+          </section>
+        </div>
       </div>
     </main>
   );

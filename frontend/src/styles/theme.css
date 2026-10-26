@@ -27,11 +27,15 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.dayform-theme button:not(:disabled) {
+.dayform-theme :is(button, select):not(:disabled) {
   cursor: pointer;
 }
 
-.dayform-theme :is(a, button, input, textarea, summary):focus-visible {
+.dayform-theme :is(button, input, select, textarea):disabled {
+  cursor: not-allowed;
+}
+
+.dayform-theme :is(a, button, input, select, textarea, summary):focus-visible {
   outline: 3px solid var(--plum);
   outline-offset: 4px;
 }
@@ -77,12 +81,9 @@
   background: var(--plum);
 }
 
-.progress-button:hover {
-  background: #70495d;
-}
-
-.progress-button:disabled {
-  opacity: 0.65;
+.progress-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.72;
 }
 
 .secondary-button {
@@ -91,8 +92,55 @@
   background: transparent;
 }
 
-.secondary-button:hover {
-  background: #f1e5e4;
+@media (hover: hover) and (pointer: fine) {
+  .progress-button:hover:not(:disabled) {
+    background: #70495d;
+  }
+
+  .secondary-button:hover:not(:disabled) {
+    background: #f1e5e4;
+  }
+
+  .text-link:hover {
+    color: #70495d;
+  }
+}
+
+.notice-success {
+  margin-top: 16px;
+  color: #345c42;
+  font-weight: 700;
+}
+
+.list-skeleton {
+  display: grid;
+  gap: 10px;
+}
+
+.list-skeleton span {
+  display: block;
+  height: 72px;
+  border-radius: 16px;
+  background: #eee3e1;
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .list-skeleton span {
+    animation: skeleton-in 1ms linear 150ms forwards;
+  }
+
+  @keyframes skeleton-in {
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list-skeleton span {
+    opacity: 1;
+  }
 }
 
 .text-link {

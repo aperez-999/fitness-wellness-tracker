@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
 body {
-  @apply min-h-screen bg-slate-50 text-slate-900 antialiased;
+  min-height: 100vh;
+  background: #f8f3ed;
+  color: #342b30;
+  -webkit-font-smoothing: antialiased;
 }

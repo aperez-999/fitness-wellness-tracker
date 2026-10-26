@@ -362,7 +362,7 @@ export default function WorkoutComposer({
               {errors.form}
             </p>
           )}
-          <button type="submit" className="progress-button">
+          <button type="submit" className="progress-button" aria-busy={saving}>
             <Icon name="check" />
             {saving ? "Saving…" : "Save workout"}
           </button>

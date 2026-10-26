@@ -266,12 +266,19 @@ function NutritionJournal() {
 
   return (
     <div className="nutrition-page">
-      <header className="nutrition-heading">
-        <h1>Nutrition</h1>
-        <p>A simple record of what fuels your day.</p>
+      <header className="nutrition-heading page-banner banner-nutrition">
+        <div>
+          <p className="banner-eyebrow">Fuel for the day</p>
+          <h1>Nutrition</h1>
+          <p>A simple record of what fuels your day.</p>
+        </div>
+        <div className="banner-art" aria-hidden="true">
+          <img src={saladBowl} alt="" width="112" height="84" />
+        </div>
       </header>
       <div className="nutrition-layout">
-        <section className="nutrition-composer" aria-labelledby="nutrition-add-title">
+        <section className={`nutrition-composer${editingId ? " is-editing" : ""}`} aria-labelledby="nutrition-add-title">
+          {editingId && <p className="composer-mode" aria-hidden="true"><Icon name="edit" size={14} />Editing</p>}
           <h2 id="nutrition-add-title"><span className="nutrition-title-icon"><img src={saladBowl} alt="" width="56" height="42" /></span>{editingId ? "Edit an entry" : "Add an entry"}</h2>
           <p>{editingId ? "Update this meal, then save or cancel." : "Record calories and macros for a food, meal, or day."}</p>
           <form ref={form} onSubmit={save} noValidate>
@@ -319,7 +326,7 @@ function NutritionJournal() {
               </div>
               <p className="nutrition-hint">All nutrition values are required. Enter 0 when there is none.</p>
               <div className="nutrition-form-actions">
-                <button className="progress-button" type="submit" disabled={estimating}><Icon name={editingId ? "check" : "plus"} size={18} />{saving ? "Saving…" : editingId ? "Save changes" : "Save entry"}</button>
+                <button className="progress-button" type="submit" disabled={estimating} aria-busy={saving}><Icon name={editingId ? "check" : "plus"} size={18} />{saving ? "Saving…" : editingId ? "Save changes" : "Save entry"}</button>
                 {editingId && <button className="secondary-button" type="button" onClick={() => { resetComposer(); setStatus(""); setListNotice(""); }}>Cancel</button>}
               </div>
             </fieldset>
@@ -338,11 +345,18 @@ function NutritionJournal() {
           {listNotice && <p className="nutrition-success" role="status">{listNotice}</p>}
           {deleteError && <p className="nutrition-error" role="alert">{deleteError}</p>}
           {loadError && <div className="nutrition-error" role="alert">{loadError} <button className="text-link" type="button" onClick={loadEntries}>Try again</button></div>}
-          {loading && entries.length === 0 && <p role="status" className="nutrition-empty">Loading your entries…</p>}
+          {loading && entries.length === 0 && (
+            <div className="list-skeleton">
+              <p role="status" className="nutrition-empty">Loading your entries…</p>
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+              <span aria-hidden="true" />
+            </div>
+          )}
           {!loading && !loadError && entries.length === 0 && <div className="nutrition-empty"><h3>Your nutrition journal starts here.</h3><p>Add your first entry to keep your calories and macros in one place.</p></div>}
           <ul className="nutrition-entries" aria-label="Nutrition entries">
             {entries.map((entry) => (
-              <li key={entry._id} className="nutrition-entry">
+              <li key={entry._id} className="nutrition-entry" data-meal={entry.mealType || undefined}>
                 <div className="nutrition-entry-heading">
                   <h3><Icon name={mealReferences.find((meal) => meal.id === entry.estimate?.referenceId)?.icon || "plate"} size={20} />{entry.foodName || "Nutrition entry"}</h3>
                   <time dateTime={entry.date.slice(0, 10)}>{dateFormat.format(new Date(entry.date))}{entry.mealType ? ` · ${mealTypeOptions.find(([value]) => value === entry.mealType)?.[1]}` : ""}</time>

@@ -92,6 +92,7 @@ const paths = {
     </>
   ),
   check: <path d="m5 12 4 4L19 6" />,
+  arrow: <path d="M5 12h14m-5-5 5 5-5 5" />,
   calendar: (
     <>
       <rect x="3" y="5" width="18" height="16" rx="3" />

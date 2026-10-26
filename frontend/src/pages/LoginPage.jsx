@@ -1,6 +1,7 @@
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import walk from "../assets/activities/walk.svg";
 import AuthLayout from "../components/AuthLayout.jsx";
 import FormField from "../components/FormField.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -37,8 +38,17 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      title="Log in"
-      description="Your workouts, right where you left them."
+      tone="return"
+      title="Welcome back"
+      description="Your workouts, meals, and goals are right where you left them."
+      buddy={(
+        <div className="auth-scene" aria-hidden="true">
+          <span className="auth-sun" />
+          <span className="auth-leaf" />
+          <img className="auth-buddy" src={walk} alt="" width="160" height="118" />
+          <p>Good to see you again.</p>
+        </div>
+      )}
     >
       <form className="auth-form" onSubmit={handleSubmit}>
         <fieldset disabled={submitting}>
@@ -66,7 +76,7 @@ export default function LoginPage() {
               {error}
             </p>
           )}
-          <button type="submit" className="progress-button">
+          <button type="submit" className="progress-button" aria-busy={submitting}>
             {submitting ? "Signing in…" : "Log in"}
           </button>
         </fieldset>
@@ -76,6 +86,7 @@ export default function LoginPage() {
         <Link to="/signup" state={location.state} className="text-link">
           Sign up
         </Link>
+        <Link to="/" className="text-link">Back to Dayform</Link>
       </p>
     </AuthLayout>
   );

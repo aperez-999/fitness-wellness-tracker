@@ -1,7 +1,8 @@
 import { useState } from "react";
 
+import mobility from "../assets/activities/mobility.svg";
 import FormField from "../components/FormField.jsx";
-import PageCard from "../components/PageCard.jsx";
+import Icon from "../components/Icon.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import "./profile.css";
 
@@ -111,25 +112,44 @@ export default function ProfilePage() {
     }
   }
 
+  const name = user?.displayName || user?.email?.split("@")[0] || "there";
+  const initials = name
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
+
   return (
-    <PageCard
-      title="Profile"
-      description="Account details for the signed-in user."
-    >
+    <div className="profile-page">
+      <header className="profile-intro page-banner banner-profile">
+        <div>
+          <p className="banner-eyebrow">Your corner of Dayform</p>
+          <h1>Profile</h1>
+          <p>Hello, {name}. These details stay with your account.</p>
+        </div>
+        <div className="banner-art" aria-hidden="true">
+          <img src={mobility} alt="" width="120" height="88" />
+        </div>
+      </header>
       <form onSubmit={handleSubmit} noValidate>
         <fieldset disabled={submitting}>
           <section className="profile-section" aria-labelledby="profile-account">
             <h2 id="profile-account">Account</h2>
-            <dl className="grid gap-3 text-sm sm:grid-cols-2">
+            <div className="profile-identity">
+              <span className="profile-avatar" aria-hidden="true">{initials}</span>
+              <dl className="profile-facts">
               <div>
-                <dt className="font-medium text-slate-500">Email</dt>
-                <dd className="text-slate-800">{user?.email}</dd>
+                <dt>Email</dt>
+                <dd>{user?.email}</dd>
               </div>
               <div>
-                <dt className="font-medium text-slate-500">Member since</dt>
-                <dd className="text-slate-800">{formatJoined(user?.createdAt)}</dd>
+                <dt>Member since</dt>
+                <dd>{formatJoined(user?.createdAt)}</dd>
               </div>
-            </dl>
+              </dl>
+            </div>
           </section>
           <section className="profile-section" aria-labelledby="profile-about-heading">
             <h2 id="profile-about-heading">About you</h2>
@@ -211,14 +231,14 @@ export default function ProfilePage() {
               </p>
             )}
             {saved && (
-              <p role="status">Profile saved.</p>
+              <p className="notice-success" role="status"><Icon name="check" size={16} />Profile saved.</p>
             )}
-            <button type="submit" className="progress-button">
+            <button type="submit" className="progress-button" aria-busy={submitting}>
               {submitting ? "Saving…" : "Save profile"}
             </button>
           </section>
         </fieldset>
       </form>
-    </PageCard>
+    </div>
   );
 }

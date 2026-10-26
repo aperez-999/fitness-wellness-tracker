@@ -28,7 +28,7 @@
 
 .session-notes summary {
   width: fit-content;
-  min-height: 32px;
+  min-height: 44px;
   padding-block: 5px;
   color: var(--plum);
   cursor: pointer;
@@ -109,9 +109,11 @@
   border-radius: 10px;
   color: var(--muted);
 }
-.session-remove:hover {
-  color: #973d56;
-  background: #f5e7e5;
+@media (hover: hover) and (pointer: fine) {
+  .session-remove:hover {
+    color: #973d56;
+    background: #f5e7e5;
+  }
 }
 
 .session-saved-reveal {
@@ -128,20 +130,13 @@
   font-weight: 750;
   text-align: center;
   pointer-events: none;
-  animation: saved-row-reveal 1500ms var(--ease-soft) both;
+  animation: saved-row-reveal 180ms var(--ease-soft);
 }
 @keyframes saved-row-reveal {
-  0% {
-    opacity: 0;
+  from {
     transform: scale(0.98);
   }
-  14%,
-  66% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
+  to {
     transform: scale(1);
   }
 }
@@ -151,7 +146,7 @@
   }
 }
 .session-remove:disabled {
-  opacity: 0.5;
+  opacity: 0.72;
 }
 .journal-group-minutes {
   color: var(--muted);
@@ -180,7 +175,7 @@
   gap: 12px;
   width: fit-content;
   max-width: 100%;
-  min-height: 32px;
+  min-height: 44px;
   color: var(--muted);
 }
 .journal-list .session-notes summary::-webkit-details-marker {

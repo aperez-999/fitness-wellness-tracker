@@ -4,22 +4,6 @@
   margin: 0 auto;
 }
 
-.nutrition-heading {
-  margin-bottom: 32px;
-}
-
-.nutrition-heading h1 {
-  font-size: clamp(30px, 4vw, 40px);
-  font-weight: 800;
-  letter-spacing: -1.5px;
-}
-
-.nutrition-heading p {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 15px;
-}
-
 .nutrition-layout {
   display: grid;
   grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
@@ -33,11 +17,22 @@
   letter-spacing: -.6px;
 }
 
+.nutrition-composer,
+.nutrition-history {
+  min-width: 0;
+}
+
 .nutrition-composer {
   padding: 26px;
   border: 1px solid var(--line);
   border-radius: 24px;
   background: var(--paper);
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.nutrition-composer.is-editing {
+  border-color: var(--plum);
+  box-shadow: 0 0 0 4px #59384914;
 }
 
 .nutrition-composer > p, .nutrition-history header p {
@@ -161,7 +156,7 @@
 }
 
 .nutrition-history button:disabled {
-  opacity: .6;
+  opacity: .72;
 }
 
 .nutrition-empty {
@@ -255,8 +250,10 @@
   font-weight: 700;
 }
 
-.nutrition-delete-button:hover:not(:disabled) {
-  background: #7f3248;
+@media (hover: hover) and (pointer: fine) {
+  .nutrition-delete-button:hover:not(:disabled) {
+    background: #7f3248;
+  }
 }
 
 .nutrition-delete-button:disabled,
@@ -317,6 +314,13 @@
 }
 
 @media (max-width: 420px) {
+  .nutrition-composer {
+    padding: 16px;
+  }
+  .nutrition-inputs {
+    aspect-ratio: auto;
+    max-width: 100%;
+  }
   .nutrition-values {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -387,7 +391,9 @@
   font-variant-numeric: tabular-nums;
 }
 
-.nutrition-composer .nutrient-number input:hover { background: #ffffff38; }
+@media (hover: hover) and (pointer: fine) {
+  .nutrition-composer .nutrient-number input:hover { background: #ffffff38; }
+}
 .nutrition-composer .nutrient-number input:focus-visible {
   outline: 2px solid var(--nutrient-color);
   outline-offset: 2px;
@@ -443,8 +449,10 @@
   background: #f3e7e6;
   transition: background-color 160ms ease;
 }
-.meal-estimate-trigger:hover { background: #e9d5d8; }
-.meal-estimate-trigger:disabled { opacity: .5; }
+@media (hover: hover) and (pointer: fine) {
+  .meal-estimate-trigger:hover { background: #e9d5d8; }
+}
+.meal-estimate-trigger:disabled { opacity: .72; }
 /* A portion note: the assumption takes priority over the success message. */
 .inline-meal-estimate {
   overflow: hidden;
@@ -475,14 +483,16 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
-  min-height: 36px;
+  min-height: 44px;
   padding: 5px 8px;
   border-radius: 7px;
   color: var(--plum);
   font-size: 11px;
   font-weight: 650;
 }
-.estimate-undo:hover { background: #e9dbd8; }
+@media (hover: hover) and (pointer: fine) {
+  .estimate-undo:hover { background: #e9dbd8; }
+}
 .estimate-undo:focus-visible { outline: 2px solid var(--plum); outline-offset: 2px; }
 .estimate-portion {
   display: grid;

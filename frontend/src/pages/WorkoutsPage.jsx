@@ -1,6 +1,8 @@
 import { useCallback, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
+import strength from "../assets/activities/strength.svg";
+import walk from "../assets/activities/walk.svg";
 import { activities } from "../components/ActivityArt.jsx";
 import WorkoutComposer from "../components/WorkoutComposer.jsx";
 import WorkoutHistoryPanel from "../components/WorkoutHistoryPanel.jsx";
@@ -61,14 +63,18 @@ function WorkoutHistory() {
 
   return (
     <div className="progress-dashboard workouts-page">
-      <header className="progress-heading">
+      <header className="progress-heading page-banner banner-workouts">
         <div>
           <p>A record of your movement</p>
           <h1>Your workouts</h1>
+          <Link className="text-link" to="/dashboard">
+            View progress
+          </Link>
         </div>
-        <Link className="text-link" to="/dashboard">
-          View progress
-        </Link>
+        <div className="banner-art" aria-hidden="true">
+          <img src={strength} alt="" width="120" height="88" />
+          <img src={walk} alt="" width="120" height="88" />
+        </div>
       </header>
       <div className="workouts-layout">
         <WorkoutComposer

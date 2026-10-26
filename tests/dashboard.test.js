@@ -2070,6 +2070,97 @@ test("illustrated recent sessions, first-walk invitation, and account controls p
 });
 
 
+test("landing page welcomes visitors and opens signup and login", async () => {
+  const context = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  contexts.push(context);
+  const page = await context.newPage();
+  page.setDefaultTimeout(8_000);
+  await page.goto(base + "/");
+  await page.getByRole("heading", { name: "A kinder place to keep your week." }).waitFor();
+  await page.getByRole("heading", { name: "What you can keep here" }).waitFor();
+  for (const width of [320, 375, 390, 768, 1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    assert(
+      await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
+      `Landing overflow at ${width}px`,
+    );
+  }
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  assert.equal(
+    await page.locator(".welcome-buddy").first().evaluate((element) => getComputedStyle(element).animationName),
+    "none",
+  );
+  assert.deepEqual(
+    (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations.map((item) => item.id),
+    [],
+  );
+  await page.getByRole("link", { name: "Get started", exact: true }).click();
+  await page.waitForURL("**/signup");
+  await page.getByRole("heading", { name: "Create your account" }).waitFor();
+  await page.goto(base + "/");
+  await page.locator(".welcome-actions").getByRole("link", { name: "Log in", exact: true }).click();
+  await page.waitForURL("**/login");
+  await page.getByRole("heading", { name: "Welcome back" }).waitFor();
+  assert.equal((await new AxeBuilder({ page }).analyze()).violations.length, 0);
+});
+
+test("signed-in pages share illustrated banners, a clear active route, and decorative-only motion", async () => {
+  const page = await openPage("/workouts");
+  const banners = [
+    ["/workouts", "Your workouts"],
+    ["/nutrition", "Nutrition"],
+    ["/goals", "Goals"],
+    ["/profile", "Profile"],
+  ];
+  for (const [route, heading] of banners) {
+    await page.goto(base + route);
+    const banner = page.locator(".page-banner");
+    await banner.getByRole("heading", { level: 1, name: heading, exact: true }).waitFor();
+    assert.equal(await banner.locator(".banner-art").getAttribute("aria-hidden"), "true");
+    assert(await banner.locator(".banner-art img").count() >= 1);
+    const active = page.locator(".app-nav-link.is-active");
+    assert.equal(await active.count(), 1);
+    assert.equal(await active.getAttribute("href"), route);
+    assert.equal(
+      await active.evaluate((element) => getComputedStyle(element).backgroundColor),
+      "rgb(89, 56, 73)",
+    );
+  }
+
+  await page.goto(base + "/workouts");
+  const walk = page.locator(".activity-choice", { hasText: "Walk" });
+  await walk.click();
+  assert.equal(await walk.getAttribute("aria-pressed"), "true");
+  assert.equal(
+    await walk.locator(".activity-art").evaluate((element) => getComputedStyle(element).animationName),
+    "art-pop",
+  );
+  assert.equal(
+    await page.locator(".banner-art img").first().evaluate((element) => getComputedStyle(element).animationName),
+    "banner-buddy-in, banner-buddy-idle",
+  );
+
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  for (const selector of [".banner-art img", ".activity-choice[aria-pressed=\"true\"] .activity-art"]) {
+    assert.equal(
+      await page.locator(selector).first().evaluate((element) => getComputedStyle(element).animationName),
+      "none",
+    );
+  }
+  await page.goto(base + "/dashboard");
+  await page.locator(".day-fill").first().waitFor();
+  assert.equal(
+    await page.locator(".day-fill").first().evaluate((element) => getComputedStyle(element).animationName),
+    "none",
+  );
+  assert.equal(await page.locator(".active-dots").getAttribute("aria-hidden"), "true");
+  assert.deepEqual(
+    (await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze()).violations.map((item) => item.id),
+    [],
+  );
+});
+
 test("signup shows connection errors, retains values, and recovers on retry", async () => {
   const context = await browser.newContext({ viewport: { width: 390, height: 950 } });
   contexts.push(context);

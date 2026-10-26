@@ -146,5 +146,6 @@ export default function useWorkouts({
   }, [key, refresh]);
 
   const current = state.key === key ? state : initialState;
-  return { ...current, workouts: current.data?.workouts || [], refresh };
+  const { key: _scopeKey, ...view } = current;
+  return { ...view, workouts: current.data?.workouts || [], refresh };
 }

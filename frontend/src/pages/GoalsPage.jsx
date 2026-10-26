@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import { createGoal, getGoals, removeGoal, updateGoal, WORKOUTS_CHANGED } from "../lib/api.js";
 import FormField from "../components/FormField.jsx";
 import Icon from "../components/Icon.jsx";
+import run from "../assets/activities/run.svg";
 import "./goals.css";
 
 // [value saved in the database, label shown to the user, icon name]
@@ -325,14 +326,18 @@ function GoalsBoard() {
 
   return (
     <div className="goals-page">
-      <header className="goals-heading">
+      <header className="goals-heading page-banner banner-goals">
         <div>
+          <p className="banner-eyebrow">Small targets, steady steps</p>
           <h1>Goals</h1>
           <p>Set a target and a date, then track your progress toward it.</p>
+          <button ref={newButton} className="progress-button" type="button" onClick={() => openForm()} disabled={busy}>
+            <Icon name="plus" size={18} />New goal
+          </button>
         </div>
-        <button ref={newButton} className="progress-button" type="button" onClick={() => openForm()} disabled={busy}>
-          <Icon name="plus" size={18} />New goal
-        </button>
+        <div className="banner-art" aria-hidden="true">
+          <img src={run} alt="" width="120" height="88" />
+        </div>
       </header>
 
       {editing && (
@@ -408,7 +413,7 @@ function GoalsBoard() {
                 {unitSuggestions.map((unit) => <option key={unit} value={unit} />)}
               </datalist>
               <div className="goals-form-actions">
-                <button className="progress-button" type="submit">
+                <button className="progress-button" type="submit" aria-busy={busy}>
                   {busy ? "Saving…" : isNew ? "Add goal" : "Save changes"}
                 </button>
                 <button className="secondary-button" type="button" onClick={closeForm}>Cancel</button>
@@ -440,7 +445,13 @@ function GoalsBoard() {
             {loadError} <button className="text-link" type="button" onClick={() => loadGoals()}>Try again</button>
           </div>
         )}
-        {loading && goals.length === 0 && <p className="goals-empty" role="status">Loading your goals…</p>}
+        {loading && goals.length === 0 && (
+          <div className="list-skeleton">
+            <p className="goals-empty" role="status">Loading your goals…</p>
+            <span aria-hidden="true" />
+            <span aria-hidden="true" />
+          </div>
+        )}
         {!loading && !loadError && goals.length === 0 && (
           <div className="goals-empty">
             {view === "active" ? (
@@ -493,7 +504,7 @@ function GoalCard({ goal, today, busy, confirming, onEdit, onStatus, onProgress,
   const percent = Math.min(100, (goal.currentValue / goal.targetValue) * 100);
 
   return (
-    <li className={`goal-card${active ? "" : " is-complete"}`}>
+    <li className={`goal-card${active ? "" : " is-complete"}`} data-category={goal.category}>
       <div className="goal-card-heading">
         <h3>{goal.title}</h3>
         <div className="goal-badges">

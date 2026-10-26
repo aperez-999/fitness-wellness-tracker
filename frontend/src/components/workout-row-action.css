@@ -40,7 +40,7 @@
   overflow-wrap: anywhere;
 }
 .row-action-buttons :is(.progress-button, .secondary-button) {
-  min-height: 38px;
+  min-height: 44px;
   padding: 9px 12px;
   border-radius: 11px;
   font-size: 12px;
