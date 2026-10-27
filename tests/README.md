@@ -106,6 +106,16 @@ phone layout, and accessibility. They run with the rest of the file:
 `--test-name-pattern` can't pick them out on their own. Screenshots written to
 `tests/artifacts/goal-progress-{desktop,completed,mobile}.png`.
 
+## Wellness insight checks
+
+Run only insight integration tests with `node --test tests/insights.test.js` from
+the repository root. They use the actual API router, a disposable MongoDB database,
+Playwright, and a mocked Gemini reply. They cover authentication, owner spoofing,
+what the server sends to Gemini, limited-data messages, rejected invented numbers,
+missing configuration, provider outages and rate limits, meal estimates, phone
+layouts, and accessibility. Screenshots are written to
+`tests/artifacts/insights-*.png`.
+
 ## Persistent local development database
 
 If MongoDB is not installed/running locally, the existing test tools can start
