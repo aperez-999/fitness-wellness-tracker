@@ -1,0 +1,227 @@
+{
+  "verifiedOn": "2026-10-27",
+  "kind": "Live Gemini request through the real dashboard, API route and insight service; synthetic data in a throwaway database",
+  "model": "gemini-3.5-flash-lite",
+  "providerRequests": [
+    {
+      "summary": {
+        "periodDays": 28,
+        "workouts": {
+          "sessions": 8,
+          "activeDays": 8,
+          "minutesRecorded": 255,
+          "sessionsWithoutDuration": 0,
+          "sessionsPerWeek": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "minutesPerWeek": [
+            40,
+            30,
+            45,
+            140
+          ],
+          "daysSinceLastWorkout": 0,
+          "topActivities": [
+            {
+              "name": "Walk",
+              "sessions": 4
+            },
+            {
+              "name": "Cycle",
+              "sessions": 1
+            },
+            {
+              "name": "Run",
+              "sessions": 1
+            }
+          ]
+        },
+        "nutrition": {
+          "entries": 8,
+          "daysLogged": 4,
+          "daysSinceLastEntry": 1,
+          "averagePerLoggedDay": {
+            "calories": 1163,
+            "protein": 58,
+            "carbohydrates": 136,
+            "fat": 38
+          }
+        },
+        "goals": {
+          "active": [
+            {
+              "title": "Move 16 times this month",
+              "category": "workout",
+              "current": 8,
+              "target": 16,
+              "unit": "workouts",
+              "progressPercent": 50,
+              "trackedFromWorkouts": true,
+              "daysLeft": 6
+            },
+            {
+              "title": "Drink 8 glasses of water",
+              "category": "wellness",
+              "current": 5,
+              "target": 8,
+              "unit": "glasses",
+              "progressPercent": 63,
+              "trackedFromWorkouts": false,
+              "daysLeft": 20
+            }
+          ],
+          "completed": 1
+        }
+      },
+      "providerStatus": 200
+    },
+    {
+      "summary": {
+        "periodDays": 28,
+        "workouts": {
+          "sessions": 8,
+          "activeDays": 8,
+          "minutesRecorded": 255,
+          "sessionsWithoutDuration": 0,
+          "sessionsPerWeek": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "minutesPerWeek": [
+            40,
+            30,
+            45,
+            140
+          ],
+          "daysSinceLastWorkout": 0,
+          "topActivities": [
+            {
+              "name": "Walk",
+              "sessions": 4
+            },
+            {
+              "name": "Cycle",
+              "sessions": 1
+            },
+            {
+              "name": "Run",
+              "sessions": 1
+            }
+          ]
+        },
+        "nutrition": {
+          "entries": 8,
+          "daysLogged": 4,
+          "daysSinceLastEntry": 1,
+          "averagePerLoggedDay": {
+            "calories": 1163,
+            "protein": 58,
+            "carbohydrates": 136,
+            "fat": 38
+          }
+        },
+        "goals": {
+          "active": [
+            {
+              "title": "Move 16 times this month",
+              "category": "workout",
+              "current": 8,
+              "target": 16,
+              "unit": "workouts",
+              "progressPercent": 50,
+              "trackedFromWorkouts": true,
+              "daysLeft": 6
+            },
+            {
+              "title": "Drink 8 glasses of water",
+              "category": "wellness",
+              "current": 5,
+              "target": 8,
+              "unit": "glasses",
+              "progressPercent": 63,
+              "trackedFromWorkouts": false,
+              "daysLeft": 20
+            }
+          ],
+          "completed": 1
+        }
+      },
+      "providerStatus": 200
+    }
+  ],
+  "responses": {
+    "desktop": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "headline": "You logged 4 sessions this past week to cap off a steady month of progress!",
+        "observations": [
+          {
+            "topic": "consistency",
+            "text": "You recorded 8 active days with a total of 8 sessions over the last twenty-eight days."
+          },
+          {
+            "topic": "trends",
+            "text": "Your workout minutes across the four weeks went from 40, to 30, to 45, and reached 140 this past week."
+          },
+          {
+            "topic": "nutrition",
+            "text": "You logged meals on 4 days, with an average per logged day of 1163 calories, 58 grams of protein, 136 grams of carbohydrates, and 38 grams of fat."
+          },
+          {
+            "topic": "goals",
+            "text": "You have 8 workouts completed out of your target of 16 for your active goal, with 6 days left."
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "basedOn": {
+          "periodDays": 28,
+          "workouts": 8,
+          "nutritionEntries": 8,
+          "activeGoals": 2,
+          "completedGoals": 1
+        }
+      }
+    },
+    "mobile": {
+      "status": 200,
+      "body": {
+        "status": "ready",
+        "headline": "You stepped up your workout sessions to four this past week!",
+        "observations": [
+          {
+            "topic": "consistency",
+            "text": "You recorded 8 active days with 8 workout sessions total over this four week period."
+          },
+          {
+            "topic": "trends",
+            "text": "Your workout sessions per week went from 1, 1, and 2 in the earlier weeks up to 4 this past week, and your minutes per week changed from 40, 30, and 45 to 140."
+          },
+          {
+            "topic": "nutrition",
+            "text": "You logged 4 days of nutrition with averages per logged day of 1163 calories, 58 grams of protein, 136 grams of carbohydrates, and 38 grams of fat."
+          },
+          {
+            "topic": "goals",
+            "text": "For your active goals, you have reached 8 out of 16 workouts with 6 days left, and 5 out of 8 glasses of water with 20 days left."
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "basedOn": {
+          "periodDays": 28,
+          "workouts": 8,
+          "nutritionEntries": 8,
+          "activeGoals": 2,
+          "completedGoals": 1
+        }
+      }
+    }
+  }
+}

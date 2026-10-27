@@ -1,0 +1,104 @@
+{
+  "environment": "Disposable MongoDB; generated test accounts; mocked Gemini reply built from the summary",
+  "checkedAt": "2026-10-27T22:53:37.017Z",
+  "summarySentToGemini": {
+    "periodDays": 28,
+    "workouts": {
+      "sessions": 3,
+      "activeDays": 3,
+      "minutesRecorded": 95,
+      "sessionsWithoutDuration": 0,
+      "sessionsPerWeek": [
+        0,
+        0,
+        1,
+        2
+      ],
+      "minutesPerWeek": [
+        0,
+        0,
+        40,
+        55
+      ],
+      "daysSinceLastWorkout": 0,
+      "topActivities": [
+        {
+          "name": "Walk",
+          "sessions": 2
+        },
+        {
+          "name": "Yoga",
+          "sessions": 1
+        }
+      ]
+    },
+    "nutrition": {
+      "entries": 2,
+      "daysLogged": 1,
+      "daysSinceLastEntry": 1,
+      "averagePerLoggedDay": {
+        "calories": 1060,
+        "protein": 60,
+        "carbohydrates": 132,
+        "fat": 29
+      }
+    },
+    "goals": {
+      "active": [
+        {
+          "title": "Move 12 times",
+          "category": "workout",
+          "current": 3,
+          "target": 12,
+          "unit": "workouts",
+          "progressPercent": 25,
+          "trackedFromWorkouts": true,
+          "daysLeft": 10
+        }
+      ],
+      "completed": 0
+    }
+  },
+  "insightResponse": {
+    "status": "ready",
+    "headline": "You moved on 3 different days over the last 28 days.",
+    "observations": [
+      {
+        "topic": "consistency",
+        "text": "You logged 3 workouts, most often Walk (2 sessions)."
+      },
+      {
+        "topic": "trends",
+        "text": "The most recent week had 2 sessions, up from 1 the week before."
+      },
+      {
+        "topic": "nutrition",
+        "text": "You logged 2 meals on 1 day, averaging 1060 kcal on the days you logged."
+      },
+      {
+        "topic": "goals",
+        "text": "Move 12 times is 25% complete with 10 days to go."
+      }
+    ],
+    "provider": "gemini",
+    "model": "gemini-3.5-flash-lite",
+    "basedOn": {
+      "periodDays": 28,
+      "workouts": 3,
+      "nutritionEntries": 2,
+      "activeGoals": 1,
+      "completedGoals": 0
+    }
+  },
+  "otherUserResponse": {
+    "status": "limited",
+    "message": "You have 1 saved record from the last 28 days. Add a few more workouts, meals, or goals so your insight reflects real patterns.",
+    "basedOn": {
+      "periodDays": 28,
+      "workouts": 1,
+      "nutritionEntries": 0,
+      "activeGoals": 0,
+      "completedGoals": 0
+    }
+  }
+}
