@@ -16,7 +16,7 @@ const soonestFirst = { targetDate: 1, createdAt: 1, _id: 1 };
 
 // Fills in progress for tracked goals from the user's own workouts, so currentValue
 // in every response is the number to show. Manual goals keep their saved progress.
-async function withProgress(goals, userId, today) {
+export async function withProgress(goals, userId, today) {
   for (const goal of goals) {
     // Goals saved before tracking existed have no value; they're manual.
     goal.tracking ??= "manual";
