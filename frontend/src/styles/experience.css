@@ -54,34 +54,8 @@
   border-radius: 30px;
   background:
     radial-gradient(circle at 88% 30%, var(--banner-glow, #efc77e55), transparent 34%),
-    radial-gradient(circle at 60% 140%, #edcfca8c, transparent 46%),
     var(--paper);
   box-shadow: var(--shadow-card);
-}
-
-.wellness-app .page-banner::before,
-.wellness-app .page-banner::after {
-  position: absolute;
-  z-index: -1;
-  border-radius: 50%;
-  content: "";
-  pointer-events: none;
-}
-
-.wellness-app .page-banner::before {
-  top: 18px;
-  right: 34%;
-  width: 12px;
-  height: 12px;
-  background: var(--honey);
-}
-
-.wellness-app .page-banner::after {
-  right: -40px;
-  bottom: -60px;
-  width: 180px;
-  height: 180px;
-  border: 2px dashed #dfcdc6;
 }
 
 .wellness-app .page-banner > div:first-child {
@@ -90,35 +64,21 @@
   min-width: 0;
 }
 
-.wellness-app .page-banner > div:first-child > p:first-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
+.wellness-app .page-banner .banner-eyebrow {
+  margin: 0 0 6px;
   color: var(--plum);
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.wellness-app .page-banner > div:first-child > p:first-child::before {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--banner-dot, var(--honey));
-  content: "";
+  font-size: 13px;
+  font-weight: 750;
 }
 
 .wellness-app .page-banner h1 {
-  margin-top: 8px;
   font-size: clamp(30px, 4.2vw, 44px);
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -1.5px;
 }
 
-.wellness-app .page-banner > div:first-child > p:not(:first-child) {
+.wellness-app .page-banner > div:first-child > p:not(.banner-eyebrow) {
   max-width: 44ch;
   margin-top: 10px;
   color: var(--muted);
@@ -158,20 +118,15 @@
   margin-left: -18px;
 }
 
-.banner-nutrition { --banner-glow: #c6d3b880; --banner-dot: #326b63; }
+.banner-nutrition { --banner-glow: #c6d3b880; }
 .banner-goals { --banner-glow: #efc77e66; }
-.banner-profile { --banner-glow: #edcfcacc; --banner-dot: var(--plum); }
+.banner-profile { --banner-glow: #edcfcacc; }
 
 @media (max-width: 600px) {
   .wellness-app .page-banner {
     padding: 22px 20px;
     border-radius: 24px;
     gap: 12px;
-  }
-
-  .wellness-app .page-banner::before {
-    right: 18px;
-    top: 14px;
   }
 
   .wellness-app .banner-art img {
@@ -195,10 +150,6 @@
 
 /* ---------- Navigation ---------- */
 
-.wellness-app .app-nav-link {
-  position: relative;
-}
-
 .wellness-app .app-nav-link svg {
   transition: transform 220ms var(--ease-soft);
 }
@@ -209,67 +160,9 @@
   box-shadow: 0 12px 22px -14px #593849e6;
 }
 
-.wellness-app .app-nav-link.is-active::after {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  width: 7px;
-  height: 7px;
-  margin-top: -3.5px;
-  border-radius: 50%;
-  background: var(--honey);
-  content: "";
-}
-
 @media (hover: hover) and (pointer: fine) {
   .wellness-app .app-nav-link:not(.is-active):hover svg {
     transform: translateX(2px) rotate(-6deg);
-  }
-}
-
-.sidebar-note {
-  position: relative;
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  margin-top: auto;
-  padding: 14px 12px 14px;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at 80% 0, #efc77e4d, transparent 60%),
-    #f6ebe6;
-  color: var(--plum);
-  font-size: 13px;
-  font-weight: 750;
-  text-align: center;
-}
-
-.sidebar-note img {
-  width: 88px;
-  height: auto;
-}
-
-.sidebar-note + .app-account {
-  margin-top: 16px;
-}
-
-@media (max-width: 760px), (max-height: 720px) {
-  .sidebar-note {
-    display: none;
-  }
-
-  .sidebar-note + .app-account {
-    margin-top: auto;
-  }
-}
-
-@media (max-width: 760px) {
-  .sidebar-note + .app-account {
-    margin-top: 0;
-  }
-
-  .wellness-app .app-nav-link.is-active::after {
-    display: none;
   }
 }
 
@@ -323,19 +216,6 @@
   min-height: 220px;
   border: 1px solid var(--line);
   box-shadow: var(--shadow-card);
-}
-
-.wellness-app .dashboard-hero::after {
-  position: absolute;
-  z-index: -1;
-  top: 22px;
-  left: 46%;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #f6d796, #efc77e);
-  box-shadow: 0 0 0 10px #efc77e33, 0 0 0 22px #efc77e1a;
-  content: "";
 }
 
 .wellness-app .dashboard-hero h1 {
@@ -476,17 +356,6 @@
   }
 }
 
-.wellness-app .journal-date-heading .journal-date::before {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  border-radius: 50%;
-  background: var(--honey);
-  vertical-align: 1px;
-  content: "";
-}
-
 .wellness-app .journal-group .journal-list {
   background: #fffdfa;
 }
@@ -566,13 +435,6 @@
 .wellness-app .nutrition-entry[data-meal="lunch"] { --meal-accent: #a6baa2; }
 .wellness-app .nutrition-entry[data-meal="dinner"] { --meal-accent: var(--plum); }
 .wellness-app .nutrition-entry[data-meal="snack"] { --meal-accent: #d99678; }
-
-.wellness-app .nutrition-entry h3 svg {
-  box-sizing: content-box;
-  padding: 7px;
-  border-radius: 12px;
-  background: #f4ebe6;
-}
 
 .wellness-app .nutrition-values {
   gap: 10px;
@@ -713,24 +575,6 @@
   transform: rotate(-4deg);
 }
 
-.wellness-app .profile-section > h2 {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.wellness-app .profile-section > h2::before {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--honey);
-  content: "";
-}
-
-.wellness-app .profile-section + .profile-section > h2::before {
-  background: var(--rose);
-}
-
 .wellness-app .profile-activity {
   transition: transform 160ms var(--ease-soft), box-shadow 160ms ease;
 }
@@ -779,28 +623,6 @@
   z-index: 1;
 }
 
-.auth-scene p {
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--plum);
-  font-size: 13px;
-  font-weight: 750;
-  box-shadow: var(--shadow-card);
-}
-
-.auth-sun {
-  position: absolute;
-  z-index: -1;
-  top: -14px;
-  left: 4%;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #f6d796, #efc77e);
-  box-shadow: 0 0 0 12px #efc77e2e, 0 0 0 26px #efc77e14;
-}
-
 .auth-leaf {
   position: absolute;
   z-index: -1;
@@ -834,24 +656,6 @@
   box-shadow: 0 0 0 4px #59384917;
 }
 
-.auth-start .auth-form fieldset {
-  counter-reset: signup-field;
-}
-
-.auth-start .auth-form .form-field > label::before {
-  display: inline-grid;
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  place-items: center;
-  border-radius: 50%;
-  background: #f3e4df;
-  color: var(--plum);
-  font-size: 11px;
-  counter-increment: signup-field;
-  content: counter(signup-field) / "";
-}
-
 .auth-page .progress-button {
   box-shadow: 0 14px 26px -16px #593849cc;
 }
@@ -859,11 +663,6 @@
 @media (max-width: 720px) {
   .auth-scene {
     padding-top: 18px;
-  }
-
-  .auth-sun {
-    top: 14px;
-    left: calc(50% - 110px);
   }
 
   .auth-leaf {
@@ -881,24 +680,12 @@
   .wellness-app .banner-art img {
     animation:
       banner-buddy-in 560ms var(--ease-soft) 120ms both,
-      banner-buddy-idle 5s ease-in-out 900ms 4;
+      banner-buddy-idle 3.6s ease-in-out 900ms;
   }
 
   .wellness-app .banner-art img + img {
     animation-delay: 220ms, 1500ms;
-    animation-duration: 560ms, 6s;
-  }
-
-  .wellness-app .page-banner::before {
-    animation: banner-dot 8s ease-in-out 3;
-  }
-
-  .sidebar-note img {
-    animation: banner-buddy-idle 6s ease-in-out 3;
-  }
-
-  .wellness-app .app-nav-link.is-active::after {
-    animation: dot-in 320ms var(--ease-soft);
+    animation-duration: 560ms, 3.2s;
   }
 
   .wellness-app .app-nav-link.is-active svg {
@@ -920,10 +707,6 @@
 
   .wellness-app .day-button[aria-pressed="true"] .day-count {
     animation: chip-pop 280ms var(--ease-soft);
-  }
-
-  .wellness-app .dashboard-hero::after {
-    animation: sun-rise 900ms var(--ease-soft) 100ms backwards, sun-glow 6s ease-in-out 1s 3;
   }
 
   .active-dots span {
@@ -996,16 +779,8 @@
     animation: avatar-in 520ms var(--ease-soft) 120ms backwards;
   }
 
-  .auth-sun {
-    animation: sun-rise 900ms var(--ease-soft) backwards, sun-glow 6s ease-in-out 1s 3;
-  }
-
   .auth-leaf {
-    animation: leaf-sway 5s ease-in-out 4;
-  }
-
-  .auth-scene p {
-    animation: dot-in 380ms var(--ease-soft) 420ms backwards;
+    animation: leaf-sway 4.6s ease-in-out;
   }
 
   .auth-path {
@@ -1016,11 +791,11 @@
   .auth-buddy-row img {
     animation:
       buddy-arrive 420ms var(--ease-soft) both,
-      banner-buddy-idle 5s ease-in-out 700ms 4;
+      banner-buddy-idle 3.6s ease-in-out 700ms;
   }
 
-  .auth-buddy-row img:nth-of-type(2) { animation-delay: 70ms, 1400ms; }
-  .auth-buddy-row img:nth-of-type(3) { animation-delay: 140ms, 2100ms; }
+  .auth-buddy-row img:nth-of-type(2) { animation-delay: 70ms, 1000ms; }
+  .auth-buddy-row img:nth-of-type(3) { animation-delay: 140ms, 1300ms; }
 
   .auth-page .auth-error,
   .auth-page .field-error {
@@ -1042,10 +817,6 @@
 
   @keyframes banner-buddy-idle {
     50% { transform: translateY(-6px) rotate(-2deg); }
-  }
-
-  @keyframes banner-dot {
-    50% { transform: translate(-14px, 10px); }
   }
 
   @keyframes nav-icon-pop {
@@ -1079,14 +850,6 @@
     40% { transform: scale(1.14) rotate(-5deg) translateY(-4px); }
     70% { transform: scale(0.98) rotate(2deg); }
     100% { transform: none; }
-  }
-
-  @keyframes sun-rise {
-    from { transform: translateY(40px) scale(0.6); }
-  }
-
-  @keyframes sun-glow {
-    50% { transform: scale(1.06); }
   }
 
   @keyframes avatar-in {

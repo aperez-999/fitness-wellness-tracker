@@ -11,10 +11,10 @@ import { useAuth } from "../context/AuthContext.jsx";
 import "./welcome.css";
 
 const capabilities = [
-  { icon: "workout", title: "Workouts", text: "Log a walk, a lift, or whatever you did today.", art: walk },
-  { icon: "nutrition", title: "Nutrition", text: "Keep calories and meals in one quiet journal.", art: saladBowl },
-  { icon: "goals", title: "Goals", text: "Set a target and watch the progress add up.", art: run },
-  { icon: "activity", title: "Progress", text: "See the week you actually moved.", art: strength },
+  { title: "Workouts", text: "Log a walk, a lift, or whatever you did today.", art: walk },
+  { title: "Nutrition", text: "Record calories and macros for each meal, or estimate them from a short description.", art: saladBowl },
+  { title: "Goals", text: "Set a target and a date. Workout goals can count your sessions or minutes for you.", art: run },
+  { title: "Progress", text: "See your week by day, with minutes moved and active days.", art: strength },
 ];
 
 const previewDays = ["M", "T", "W", "T", "F", "S", "S"];
@@ -33,9 +33,6 @@ export default function HomePage() {
       </header>
       <section className="welcome-hero">
         <div className="welcome-copy">
-          <p className="welcome-kicker">
-            <span aria-hidden="true" />A fitness and wellness companion
-          </p>
           <h1>A kinder place to keep your week.</h1>
           <p>
             Dayform is where workouts, meals, and goals live together, so you can see the days you showed up.
@@ -50,9 +47,6 @@ export default function HomePage() {
           <p className="welcome-note">Everything you log stays private to your account.</p>
         </div>
         <div className="welcome-preview" aria-hidden="true">
-          <span className="welcome-dot welcome-dot-a" />
-          <span className="welcome-dot welcome-dot-b" />
-          <span className="welcome-dot welcome-dot-c" />
           <div className="preview-rhythm">
             <p>Your weekly rhythm</p>
             <div className="preview-bars">
@@ -78,7 +72,6 @@ export default function HomePage() {
         <ul>
           {capabilities.map((item) => (
             <li key={item.title}>
-              <span className="capability-icon"><Icon name={item.icon} /></span>
               <h3>{item.title}</h3>
               <p>{item.text}</p>
               <img src={item.art} alt="" width="120" height="88" />

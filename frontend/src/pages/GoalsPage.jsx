@@ -328,7 +328,6 @@ function GoalsBoard() {
     <div className="goals-page">
       <header className="goals-heading page-banner banner-goals">
         <div>
-          <p className="banner-eyebrow">Small targets, steady steps</p>
           <h1>Goals</h1>
           <p>Set a target and a date, then track your progress toward it.</p>
           <button ref={newButton} className="progress-button" type="button" onClick={() => openForm()} disabled={busy}>

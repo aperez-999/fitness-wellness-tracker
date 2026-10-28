@@ -276,7 +276,7 @@
   .auth-buddy {
     animation:
       buddy-arrive 420ms var(--ease-soft) both,
-      buddy-rest 4.6s ease-in-out 460ms 4;
+      buddy-rest 4.4s ease-in-out 460ms;
   }
 
   @keyframes auth-card-in {

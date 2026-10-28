@@ -268,7 +268,6 @@ function NutritionJournal() {
     <div className="nutrition-page">
       <header className="nutrition-heading page-banner banner-nutrition">
         <div>
-          <p className="banner-eyebrow">Fuel for the day</p>
           <h1>Nutrition</h1>
           <p>A simple record of what fuels your day.</p>
         </div>

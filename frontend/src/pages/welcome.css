@@ -57,40 +57,17 @@
   margin-top: 56px;
 }
 
-.welcome-kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 7px 14px 7px 10px;
-  border: 1px solid #ead9cf;
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--plum);
-  font-size: 13px;
-  font-weight: 750;
-  box-shadow: 0 6px 16px -12px #59384966;
-}
-
-.welcome-kicker > span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--honey);
-  box-shadow: 0 0 0 4px #efc77e40;
-}
-
 .welcome-copy h1 {
   max-width: 12ch;
-  margin-top: 18px;
   font-size: clamp(40px, 6vw, 66px);
   font-weight: 800;
   line-height: 0.98;
   letter-spacing: -2px;
 }
 
-.welcome-copy > p:nth-of-type(2) {
+.welcome-copy > h1 + p {
   max-width: 42ch;
-  margin-top: 18px;
+  margin-top: 22px;
   color: var(--muted);
   font-size: 17px;
   line-height: 1.7;
@@ -230,35 +207,6 @@
   width: 104px;
 }
 
-.welcome-dot {
-  position: absolute;
-  border-radius: 50%;
-}
-
-.welcome-dot-a {
-  top: 6px;
-  left: 8%;
-  width: 18px;
-  height: 18px;
-  background: var(--honey);
-}
-
-.welcome-dot-b {
-  right: -8px;
-  bottom: 120px;
-  width: 12px;
-  height: 12px;
-  background: var(--rose);
-}
-
-.welcome-dot-c {
-  bottom: 8px;
-  right: 30%;
-  width: 26px;
-  height: 26px;
-  border: 3px solid #e4d3dc;
-}
-
 .welcome-capabilities {
   margin-top: 56px;
 }
@@ -283,7 +231,7 @@
   position: relative;
   min-width: 0;
   overflow: hidden;
-  padding: 22px 20px 92px;
+  padding: 26px 22px 104px;
   border: 1px solid var(--line);
   border-radius: 26px;
   background: var(--paper);
@@ -294,27 +242,16 @@
     border-color 220ms ease;
 }
 
-.capability-icon {
-  display: grid;
-  width: 44px;
-  height: 44px;
-  place-items: center;
-  border-radius: 14px;
-  background: #f4e6e2;
-  color: var(--plum);
-  transition: background-color 200ms ease, color 200ms ease, transform 220ms var(--ease-soft);
-}
-
 .welcome-capabilities h3 {
-  margin-top: 16px;
-  font-size: 16px;
-  font-weight: 750;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
 }
 
 .welcome-capabilities p {
-  margin-top: 6px;
+  margin-top: 8px;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
@@ -373,12 +310,6 @@
     transform: translateY(-6px);
     border-color: #dcc8c0;
     box-shadow: 0 2px 4px #5938491a, 0 26px 40px -24px #59384999;
-  }
-
-  .welcome-capabilities li:hover .capability-icon {
-    background: var(--plum);
-    color: var(--paper);
-    transform: rotate(-6deg);
   }
 
   .welcome-capabilities li:hover img {
@@ -496,28 +427,17 @@
   .welcome-buddy {
     animation:
       buddy-pop 520ms var(--ease-soft) 520ms both,
-      buddy-float 4.6s ease-in-out 1100ms infinite;
+      buddy-float 3.6s ease-in-out 1100ms;
   }
 
   .preview-buddy-run {
     animation-delay: 620ms, 1300ms;
-    animation-duration: 520ms, 5.2s;
+    animation-duration: 520ms, 3.4s;
   }
 
   .preview-buddy-strength {
     animation-delay: 720ms, 1500ms;
-    animation-duration: 520ms, 4s;
-  }
-
-  .welcome-dot {
-    animation: dot-drift 7s ease-in-out infinite;
-  }
-
-  .welcome-dot-b { animation-duration: 9s; animation-delay: -2s; }
-  .welcome-dot-c { animation-duration: 11s; animation-delay: -4s; }
-
-  .welcome-glow {
-    animation: glow-breathe 12s ease-in-out infinite;
+    animation-duration: 520ms, 3.2s;
   }
 
   .welcome-capabilities li {
@@ -569,13 +489,5 @@
 
   @keyframes buddy-float {
     50% { transform: translateY(-8px) rotate(-2deg); }
-  }
-
-  @keyframes dot-drift {
-    50% { transform: translate(8px, -12px); }
-  }
-
-  @keyframes glow-breathe {
-    50% { transform: scale(1.08) translate(-12px, 10px); }
   }
 }

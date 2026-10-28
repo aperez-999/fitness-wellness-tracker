@@ -43,10 +43,8 @@ export default function LoginPage() {
       description="Your workouts, meals, and goals are right where you left them."
       buddy={(
         <div className="auth-scene" aria-hidden="true">
-          <span className="auth-sun" />
           <span className="auth-leaf" />
           <img className="auth-buddy" src={walk} alt="" width="160" height="118" />
-          <p>Good to see you again.</p>
         </div>
       )}
     >

@@ -65,7 +65,7 @@ function WorkoutHistory() {
     <div className="progress-dashboard workouts-page">
       <header className="progress-heading page-banner banner-workouts">
         <div>
-          <p>A record of your movement</p>
+          <p className="banner-eyebrow">A record of your movement</p>
           <h1>Your workouts</h1>
           <Link className="text-link" to="/dashboard">
             View progress

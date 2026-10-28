@@ -125,7 +125,6 @@ export default function ProfilePage() {
     <div className="profile-page">
       <header className="profile-intro page-banner banner-profile">
         <div>
-          <p className="banner-eyebrow">Your corner of Dayform</p>
           <h1>Profile</h1>
           <p>Hello, {name}. These details stay with your account.</p>
         </div>
