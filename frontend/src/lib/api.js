@@ -197,4 +197,12 @@ export async function removeGoal(id, options = {}) {
   }
 }
 
+export function getWellnessInsight(options = {}) {
+  return apiFetch("/insights", {
+    ...options,
+    method: "POST",
+    body: JSON.stringify({ timeZone: userTimeZone() }),
+  });
+}
+
 export { API_URL };

@@ -8,6 +8,7 @@ import WorkoutList from "../components/WorkoutList.jsx";
 import WorkoutStatus from "../components/WorkoutStatus.jsx";
 import WorkoutAnalytics from "../components/WorkoutAnalytics.jsx";
 import InsightView from "../components/InsightView.jsx";
+import WellnessInsight from "../components/WellnessInsight.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import useWorkouts from "../hooks/useWorkouts.js";
 import {
@@ -316,6 +317,7 @@ export default function DashboardPage() {
                 </section>
               </div>
             </div>
+            <WellnessInsight key={`insight-${user.id}`} />
             <RecentWorkouts
               key={user.id}
               workouts={progress.recent}

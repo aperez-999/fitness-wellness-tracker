@@ -1,0 +1,146 @@
+.wellness-insight {
+  margin-top: 28px;
+  padding: 28px 30px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 100% 0, #efc77e33, transparent 45%),
+    var(--paper);
+}
+
+.insight-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 24px;
+}
+
+.insight-heading > div {
+  min-width: 0;
+}
+
+.insight-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.insight-heading h2 {
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.6px;
+}
+
+.insight-heading p:not(.insight-eyebrow) {
+  margin-top: 5px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.insight-headline {
+  margin-top: 22px;
+  color: var(--plum);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.insight-observations {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.insight-observations li {
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #f5eeea;
+}
+
+.insight-topic {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--plum);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.insight-observations p {
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.insight-limited {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  background: #f5eeea;
+  font-size: 13px;
+}
+
+.insight-footnote {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.insight-limited .insight-footnote {
+  margin-top: 6px;
+}
+
+.insight-error {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px solid #e7c8cd;
+  border-radius: 14px;
+  color: #733b4e;
+  background: #fcf2f1;
+  font-size: 13px;
+}
+
+@media (max-width: 1100px) {
+  .insight-observations {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .wellness-insight {
+    margin-top: 20px;
+    padding: 22px 20px;
+    border-radius: 24px;
+  }
+
+  .insight-heading {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .insight-heading h2 {
+    font-size: 17px;
+  }
+
+  .insight-headline {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 380px) {
+  .wellness-insight {
+    padding-inline: 16px;
+  }
+
+  .insight-observations li {
+    padding: 14px;
+  }
+}

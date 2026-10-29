@@ -35,7 +35,7 @@ GEMINI_API_KEY=
 GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
-`MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` are required in production. `JWT_EXPIRES_IN` defaults to `7d` when omitted. `GEMINI_API_KEY` is optional. Without it, meal estimates stay unavailable and nutrition values can still be entered by hand. `GEMINI_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. `PORT` is used only for local development.
+`MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` are required in production. `JWT_EXPIRES_IN` defaults to `7d` when omitted. `GEMINI_API_KEY` is optional. Without it, meal estimates and wellness insights stay unavailable, and nutrition values can still be entered by hand. `GEMINI_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. `PORT` is used only for local development.
 
 On the Atlas cluster, allow network access from anywhere. Vercel Hobby does not provide a fixed outbound address. Keep the Atlas user limited to `dayform_demo`.
 
@@ -74,6 +74,7 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Recent workout display / end-to-end walking skeleton
 - Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 - Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
+- AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days
 
 ## Planned features
 
@@ -180,4 +181,5 @@ See [CHANGELOG.md](./CHANGELOG.md).
 
 See [LICENSE](./LICENSE).
 
-For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md).
+For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md). Wellness insights use the
+same key; see [wellness insight evidence](docs/evidence/wellness-insights/README.md).
