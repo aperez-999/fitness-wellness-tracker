@@ -116,6 +116,22 @@ missing configuration, provider outages and rate limits, meal estimates, phone
 layouts, and accessibility. Screenshots are written to
 `tests/artifacts/insights-*.png`.
 
+## Dashboard summary checks
+
+Run only the dashboard meals and goals tests with
+`node --test tests/dashboard-summary.test.js` from the repository root. They use
+the actual auth, workout, nutrition, goal, and dashboard routes, a disposable
+MongoDB database, and Playwright, with "now" fixed at Thursday, October 29, 2026,
+in New York. They cover authentication, weekly meal and calorie totals across the
+Monday, Sunday-night, and timezone edges, the soonest three active goals and their
+order, completed goals left out, tracked progress, other users' data and spoofed
+IDs, empty states, updates after saving on the Nutrition and Goals pages, in
+another tab, on Refresh, on the once-a-minute check, and after removing or saving
+a workout, error and expired-session states, phone layouts, and accessibility.
+Evidence is written to
+`tests/artifacts/dashboard-summary-{desktop,mobile,empty-mobile}.png` and
+`tests/artifacts/dashboard-summary-api-evidence.json`.
+
 ## Persistent local development database
 
 If MongoDB is not installed/running locally, the existing test tools can start

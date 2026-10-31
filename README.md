@@ -8,9 +8,9 @@ Dayform is deployed on two **Vercel Hobby** projects from this repository, with 
 
 | Surface | URL |
 |---|---|
-| Frontend | https://dayform-fitness.vercel.app |
-| Backend API | https://fitness-wellness-tracker.vercel.app/api |
-| Health check | https://fitness-wellness-tracker.vercel.app/api/health |
+| Frontend | <https://dayform-fitness.vercel.app> |
+| Backend API | <https://fitness-wellness-tracker.vercel.app/api> |
+| Health check | <https://fitness-wellness-tracker.vercel.app/api/health> |
 
 The frontend project uses the `frontend` directory, the Vite preset, and `dist` as the output. The backend project uses the `backend` directory and Vercel’s Express preset, with no custom build command or output directory. `frontend/vercel.json` sends unknown frontend paths to `index.html`, so routes such as `/dashboard` still load on refresh. API routes stay on the backend host under `/api`.
 
@@ -51,9 +51,9 @@ Later code changes redeploy when pushed to the tracked branch. A new environment
 
 ### Production smoke test
 
-- Open https://dayform-fitness.vercel.app and confirm the Dayform home page loads.
+- Open <https://dayform-fitness.vercel.app> and confirm the Dayform home page loads.
 - Refresh `/login` and `/signup` directly. Each refresh should stay on that page.
-- Open https://fitness-wellness-tracker.vercel.app/api/health and confirm `{"status":"ok"}`.
+- Open <https://fitness-wellness-tracker.vercel.app/api/health> and confirm `{"status":"ok"}`.
 - Create a demo account, or sign in with an existing demo account, and confirm the dashboard loads.
 - Log a workout and confirm it remains after a refresh.
 - Open Nutrition, save a manual entry, and confirm it remains after a refresh.
@@ -75,6 +75,7 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 - Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
 - AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days
+- Dashboard summary of the week's meals and calories and the three soonest active goals
 
 ## Planned features
 

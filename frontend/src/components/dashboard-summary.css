@@ -1,0 +1,203 @@
+/* Same columns as the workout widgets above, so the cards line up. */
+.summary-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.85fr) minmax(240px, 1fr);
+  align-items: start;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.summary-card {
+  min-width: 0;
+  padding: 24px 28px;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--paper);
+}
+
+.summary-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+  flex-wrap: wrap;
+}
+
+.summary-heading h2 {
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.6px;
+}
+
+.summary-heading .text-link {
+  font-size: 13px;
+}
+
+.summary-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  margin-top: 18px;
+}
+
+.summary-metrics p {
+  display: grid;
+  gap: 2px;
+}
+
+.summary-metrics strong {
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-metrics span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summary-caption {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.summary-goals {
+  display: grid;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.summary-goal-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.summary-goal-heading h3 {
+  flex: 1 1 12ch;
+  min-width: 0;
+  font-size: 15px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.summary-badge {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  color: var(--plum);
+  background: #f4e8e6;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.summary-badge.is-reached {
+  color: #345c42;
+  background: #e6f0e8;
+}
+
+.summary-goal-bar {
+  height: 8px;
+  margin-top: 10px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #efe6e1;
+}
+
+.summary-goal-bar span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--plum);
+  transition: width 0.4s var(--ease-soft);
+}
+
+.summary-goal-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px 16px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.summary-goal-meta time {
+  color: var(--muted);
+}
+
+.summary-goal-meta time.is-overdue {
+  color: #973d56;
+  font-weight: 700;
+}
+
+.summary-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  margin-top: 18px;
+}
+
+.summary-empty p {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.summary-loading {
+  grid-column: 1 / -1;
+  min-height: 150px;
+  padding: 24px 28px;
+  border-radius: 28px;
+  color: var(--plum);
+  background: #eee3e1;
+}
+
+.summary-error {
+  margin: 20px 0 0;
+}
+
+@media (max-width: 1100px) {
+  .summary-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 760px) {
+  .summary-row {
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .summary-card {
+    padding: 20px;
+    border-radius: 22px;
+  }
+
+  .summary-heading h2 {
+    font-size: 17px;
+  }
+
+  .summary-metrics strong {
+    font-size: 36px;
+  }
+}
+
+@media (max-width: 380px) {
+  .summary-card {
+    padding: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary-goal-bar span {
+    transition: none;
+  }
+}
