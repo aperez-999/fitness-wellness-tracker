@@ -129,6 +129,9 @@ before(
     const { createWorkoutRouter } = await importLocal(
       "backend/src/routes/workouts.js",
     );
+    const { createDashboardRouter } = await importLocal(
+      "backend/src/routes/dashboard.js",
+    );
     const { errorHandler } = await importLocal(
       "backend/src/middleware/errorHandler.js",
     );
@@ -137,6 +140,7 @@ before(
     app.use(express.json());
     app.use("/api/auth", auth);
     app.use("/api/workouts", createWorkoutRouter({ now: () => now }));
+    app.use("/api/dashboard", createDashboardRouter({ now: () => now }));
     app.use(errorHandler);
     apiServer = await new Promise((resolve) => {
       const server = app.listen(0, "127.0.0.1", () => resolve(server));
@@ -1121,7 +1125,7 @@ test("logging has labels, validation, feedback, and survives an older in-flight 
         started.resolve();
         await gate.promise;
       }
-      await route.fulfill({ response: result }).catch(() => {});
+      await route.fulfill({ response: result }).catch(() => { });
     });
   });
   await started.promise;
@@ -1201,7 +1205,7 @@ test("stalled saves time out, preserve the draft, and allow a deliberate retry",
     writes += 1;
     started.resolve();
     await gate.promise;
-    await route.abort().catch(() => {});
+    await route.abort().catch(() => { });
   });
   await page.getByRole("button", { name: "Custom", exact: true }).click();
   await page.getByLabel("Workout name").fill("Timeout recovery walk");
@@ -1332,7 +1336,7 @@ test("cross-tab switches discard old responses and logout removes private conten
       started.resolve();
       await gate.promise;
     }
-    await route.fulfill({ response: result }).catch(() => {});
+    await route.fulfill({ response: result }).catch(() => { });
   });
   await page.getByRole("button", { name: "Refresh", exact: true }).click();
   await started.promise;
@@ -1377,7 +1381,7 @@ test("initial failures and timed-out refreshes recover without showing invented 
     const result = await route.fetch();
     started.resolve();
     await gate.promise;
-    await route.fulfill({ response: result }).catch(() => {});
+    await route.fulfill({ response: result }).catch(() => { });
   });
   await page.getByRole("button", { name: "Refresh", exact: true }).click();
   await started.promise;

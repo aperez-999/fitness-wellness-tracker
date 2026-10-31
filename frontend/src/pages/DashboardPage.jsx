@@ -9,8 +9,10 @@ import WorkoutStatus from "../components/WorkoutStatus.jsx";
 import WorkoutAnalytics from "../components/WorkoutAnalytics.jsx";
 import InsightView from "../components/InsightView.jsx";
 import WellnessInsight from "../components/WellnessInsight.jsx";
+import DashboardSummary from "../components/DashboardSummary.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import useWorkouts from "../hooks/useWorkouts.js";
+import useDashboardSummary from "../hooks/useDashboardSummary.js";
 import {
   formatWorkoutDate,
   getWorkoutProgress,
@@ -208,6 +210,7 @@ export default function DashboardPage() {
   const { user } = useAuth();
   const resource = useWorkouts({ summary: true });
   const { data, loading, pending, refreshing, updatedAt, refresh } = resource;
+  const summary = useDashboardSummary();
   const [selectedDate, setSelectedDate] = useState(null);
   const name = user?.displayName || user?.email?.split("@")[0] || "there";
   const progress = getWorkoutProgress(data);
@@ -242,7 +245,10 @@ export default function DashboardPage() {
         </span>
         <button
           className="refresh-button"
-          onClick={() => refresh()}
+          onClick={() => {
+            refresh();
+            summary.refresh();
+          }}
           disabled={pending}
         >
           <Icon name="refresh" size={16} />
@@ -317,6 +323,7 @@ export default function DashboardPage() {
                 </section>
               </div>
             </div>
+            <DashboardSummary {...summary} />
             <WellnessInsight key={`insight-${user.id}`} />
             <RecentWorkouts
               key={user.id}
