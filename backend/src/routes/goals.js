@@ -12,7 +12,7 @@ import { todayInZone } from "../utils/workoutValidation.js";
 const fields =
   "title category targetValue currentValue unit tracking startDate targetDate status createdAt updatedAt userId";
 // Soonest deadline first; ties broken by which goal was created first.
-const soonestFirst = { targetDate: 1, createdAt: 1, _id: 1 };
+export const soonestFirst = { targetDate: 1, createdAt: 1, _id: 1 };
 
 // Fills in progress for tracked goals from the user's own workouts, so currentValue
 // in every response is the number to show. Manual goals keep their saved progress.
