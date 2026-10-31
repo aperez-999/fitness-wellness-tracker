@@ -205,4 +205,10 @@ export function getWellnessInsight(options = {}) {
   });
 }
 
+// This week's meals and the soonest active goals. The timezone decides which week it is.
+export function getDashboardSummary(options = {}) {
+  const query = new URLSearchParams({ timeZone: userTimeZone() });
+  return apiFetch(`/dashboard/summary?${query}`, { cache: "no-store", ...options });
+}
+
 export { API_URL };
