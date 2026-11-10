@@ -58,6 +58,7 @@ Later code changes redeploy when pushed to the tracked branch. A new environment
 - Log a workout and confirm it remains after a refresh.
 - Open Nutrition, save a manual entry, and confirm it remains after a refresh.
 - If `GEMINI_API_KEY` is set, estimate one meal. If it is empty, confirm the page explains that estimates are unavailable and manual entry still saves.
+- If `GEMINI_API_KEY` is set, select **Get my insight** on the dashboard. An account with fewer than three records should see a "not enough data" message instead of an insight.
 - Create or view a goal, then open Profile and confirm the signed-in account’s details.
 - Sign out and confirm private workout, nutrition, and goal data is no longer shown.
 - In the browser developer tools, confirm API calls go to `https://fitness-wellness-tracker.vercel.app/api` and that failed responses are not caused by a CORS origin mismatch.
@@ -74,7 +75,7 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Recent workout display / end-to-end walking skeleton
 - Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 - Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
-- AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days
+- AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days (the summary includes activity names and goal titles)
 - Dashboard summary of the week's meals and calories and the three soonest active goals
 
 ## Planned features
@@ -183,4 +184,5 @@ See [CHANGELOG.md](./CHANGELOG.md).
 See [LICENSE](./LICENSE).
 
 For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md). Wellness insights use the
-same key; see [wellness insight evidence](docs/evidence/wellness-insights/README.md).
+same key; see [wellness insight evidence](docs/evidence/wellness-insights/README.md) and the
+[production validation and privacy review](docs/evidence/wellness-insights/production/README.md).
