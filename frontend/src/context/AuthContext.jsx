@@ -12,6 +12,7 @@ import {
   getToken,
   TOKEN_KEY,
   login as apiLogin,
+  loginWithGoogle as apiLoginWithGoogle,
   logout as apiLogout,
   setToken,
   signup as apiSignup,
@@ -69,6 +70,13 @@ export function AuthProvider({ children }) {
     return loggedInUser;
   }, []);
 
+  const loginWithGoogle = useCallback(async (credential) => {
+    const { token, user: googleUser } = await apiLoginWithGoogle(credential);
+    setToken(token);
+    setUser(googleUser);
+    return googleUser;
+  }, []);
+
   const signup = useCallback(async (payload) => {
     const { token, user: newUser } = await apiSignup(payload);
     setToken(token);
@@ -97,11 +105,12 @@ export function AuthProvider({ children }) {
       loading,
       isAuthenticated: Boolean(user),
       login,
+      loginWithGoogle,
       signup,
       logout,
       updateProfile,
     }),
-    [user, loading, login, signup, logout, updateProfile],
+    [user, loading, login, loginWithGoogle, signup, logout, updateProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

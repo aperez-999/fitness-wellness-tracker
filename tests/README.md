@@ -116,6 +116,20 @@ missing configuration, provider outages and rate limits, meal estimates, phone
 layouts, and accessibility. Screenshots are written to
 `tests/artifacts/insights-*.png`.
 
+## Google sign-in checks
+
+Run only the Google sign-in tests with `node --test tests/google-signin.test.js` from
+the repository root. They use the actual auth routes, a disposable MongoDB database,
+and Playwright. ID tokens are signed with a key pair made for the run, and the backend's
+request for Google's signing keys is answered with that key, so the real verification
+code runs without contacting Google. In the browser, Google's script is replaced by a
+stand-in button. The tests cover account creation, returning users, tokens with the
+wrong audience, issuer, signature, or expiry, unverified emails, missing configuration,
+refusing to take over a password account, password login for Google accounts, the login
+and signup pages, the phone layout, and accessibility. Screenshots are written to
+`tests/artifacts/google-signin-*.png`. Google's real button and consent screen are not
+exercised; check those by hand with a real client ID.
+
 ## Dashboard summary checks
 
 Run only the dashboard meals and goals tests with

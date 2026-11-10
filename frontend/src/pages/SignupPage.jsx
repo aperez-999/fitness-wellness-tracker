@@ -6,6 +6,7 @@ import mobility from "../assets/activities/mobility.svg";
 import run from "../assets/activities/run.svg";
 import AuthLayout from "../components/AuthLayout.jsx";
 import FormField from "../components/FormField.jsx";
+import GoogleSignIn from "../components/GoogleSignIn.jsx";
 import PasswordChecklist, { passwordChecks } from "../components/PasswordChecklist.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -125,6 +126,7 @@ export default function SignupPage() {
           </button>
         </fieldset>
       </form>
+      <GoogleSignIn />
       <p className="auth-footer">
         Already have an account?{" "}
         <Link to="/login" state={location.state} className="text-link">Log in</Link>

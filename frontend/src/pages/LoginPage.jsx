@@ -4,6 +4,7 @@ import { useState } from "react";
 import walk from "../assets/activities/walk.svg";
 import AuthLayout from "../components/AuthLayout.jsx";
 import FormField from "../components/FormField.jsx";
+import GoogleSignIn from "../components/GoogleSignIn.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function LoginPage() {
@@ -79,6 +80,7 @@ export default function LoginPage() {
           </button>
         </fieldset>
       </form>
+      <GoogleSignIn />
       <p className="auth-footer">
         New to Dayform?{" "}
         <Link to="/signup" state={location.state} className="text-link">

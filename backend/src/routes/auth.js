@@ -3,6 +3,7 @@ import { Router } from "express";
 
 import { requireAuth } from "../middleware/auth.js";
 import { User } from "../models/User.js";
+import { verifyGoogleCredential } from "../utils/googleIdentity.js";
 import { signToken } from "../utils/jwt.js";
 import { validateEmail, validatePassword } from "../utils/password.js";
 import { validateProfileUpdate } from "../utils/profileValidation.js";
@@ -86,7 +87,7 @@ router.post("/login", async (req, res, next) => {
     }
 
     const user = await User.findOne({ email: email.trim().toLowerCase() });
-    const valid = user && (await bcrypt.compare(password, user.passwordHash));
+    const valid = user?.passwordHash && (await bcrypt.compare(password, user.passwordHash));
 
     if (!valid) {
       return res.status(401).json({ message: "Invalid email or password" });
@@ -99,6 +100,53 @@ router.post("/login", async (req, res, next) => {
       user: toPublicUser(user),
     });
   } catch (error) {
+    next(error);
+  }
+});
+
+// POST /api/auth/google -> sign in, or create an account, with a Google ID token.
+router.post("/google", async (req, res, next) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    return res.status(503).json({ message: "Google sign-in is not configured yet." });
+  }
+
+  const { credential } = req.body ?? {};
+  if (typeof credential !== "string" || !credential || credential.length > 4096) {
+    return res.status(400).json({ message: "A Google credential is required" });
+  }
+
+  let account;
+  try {
+    account = await verifyGoogleCredential(credential);
+  } catch {
+    return res.status(401).json({ message: "Google sign-in could not be verified. Try again." });
+  }
+
+  try {
+    let user = await User.findOne({ googleId: account.googleId });
+    let status = 200;
+
+    if (!user) {
+      // Emails are not verified at signup, so a password account is never linked
+      // automatically: whoever created it would keep access through its password.
+      if (await User.exists({ email: account.email })) {
+        return res.status(409).json({
+          message: "An account with this email already exists. Log in with your password.",
+        });
+      }
+
+      user = await User.create(account);
+      status = 201;
+    }
+
+    return res.status(status).json({
+      token: signToken(user._id.toString()),
+      user: toPublicUser(user),
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({ message: "An account with this email already exists" });
+    }
     next(error);
   }
 });
