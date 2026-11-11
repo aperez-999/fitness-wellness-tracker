@@ -22,6 +22,7 @@ Set these in the Vercel project settings. Copy the names only. Do not commit rea
 
 ```bash
 VITE_API_URL=https://fitness-wellness-tracker.vercel.app/api
+VITE_GOOGLE_CLIENT_ID=
 ```
 
 **Backend** (`backend` project). `CLIENT_URL` must be the exact frontend origin: `https`, no path, and no trailing slash.
@@ -33,9 +34,20 @@ JWT_EXPIRES_IN=7d
 CLIENT_URL=https://dayform-fitness.vercel.app
 GEMINI_API_KEY=
 GEMINI_MODEL=gemini-3.5-flash-lite
+GOOGLE_CLIENT_ID=
 ```
 
 `MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` are required in production. `JWT_EXPIRES_IN` defaults to `7d` when omitted. `GEMINI_API_KEY` is optional. Without it, meal estimates and wellness insights stay unavailable, and nutrition values can still be entered by hand. `GEMINI_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. `PORT` is used only for local development.
+
+#### Google sign-in (optional)
+
+The login and signup pages show a **Continue with Google** button when a Google OAuth client ID is set. Without one the button is hidden and email and password still work.
+
+1. In the [Google Cloud console](https://console.cloud.google.com/apis/credentials), create an **OAuth client ID** of type **Web application**. Configure the consent screen first if asked.
+2. Under **Authorized JavaScript origins**, add `https://dayform-fitness.vercel.app`, and `http://localhost:5173` and `http://localhost` for local development. No redirect URI is needed.
+3. Set the client ID as `VITE_GOOGLE_CLIENT_ID` in the frontend and `GOOGLE_CLIENT_ID` in the backend, then redeploy both. The values must be identical. A client ID is public; there is no client secret to store.
+
+The backend checks each Google ID token's signature, audience, issuer, and expiry, and requires a verified email. A first Google sign-in creates an account with no password. If a password account already uses that email, Google sign-in is refused and the user logs in with the password: signup does not verify email addresses, so linking the two automatically would let whoever registered the address first keep access.
 
 On the Atlas cluster, allow network access from anywhere. Vercel Hobby does not provide a fixed outbound address. Keep the Atlas user limited to `dayform_demo`.
 
@@ -55,6 +67,7 @@ Later code changes redeploy when pushed to the tracked branch. A new environment
 - Refresh `/login` and `/signup` directly. Each refresh should stay on that page.
 - Open <https://fitness-wellness-tracker.vercel.app/api/health> and confirm `{"status":"ok"}`.
 - Create a demo account, or sign in with an existing demo account, and confirm the dashboard loads.
+- If `VITE_GOOGLE_CLIENT_ID` is set, sign out, select **Continue with Google** on the login page, and confirm the dashboard loads.
 - Log a workout and confirm it remains after a refresh.
 - Open Nutrition, save a manual entry, and confirm it remains after a refresh.
 - If `GEMINI_API_KEY` is set, estimate one meal. If it is empty, confirm the page explains that estimates are unavailable and manual entry still saves.
@@ -69,7 +82,7 @@ A college student wants to log workouts and understand weekly fitness progress w
 
 ## Current implemented features
 
-- Authentication (signup, login, logout, session via JWT)
+- Authentication (signup, login, logout, session via JWT), with optional Google sign-in
 - Workout logging
 - Workout persistence (MongoDB)
 - Recent workout display / end-to-end walking skeleton

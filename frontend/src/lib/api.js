@@ -73,6 +73,13 @@ export function login({ email, password }) {
   });
 }
 
+export function loginWithGoogle(credential) {
+  return apiFetch("/auth/google", {
+    method: "POST",
+    body: JSON.stringify({ credential }),
+  });
+}
+
 export function logout() {
   return apiFetch("/auth/logout", { method: "POST" });
 }
