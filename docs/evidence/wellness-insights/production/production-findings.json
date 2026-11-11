@@ -1,0 +1,167 @@
+{
+  "checkedAt": "2026-11-10T17:28:45.079Z",
+  "site": "https://dayform-fitness.vercel.app",
+  "api": "https://fitness-wellness-tracker.vercel.app/api",
+  "demoAccounts": {
+    "a": "dayform-insights-demo-736322@example.com",
+    "b": "dayform-insights-other-736322@example.com"
+  },
+  "checks": {
+    "authentication": {
+      "noToken": 401,
+      "garbageToken": 401,
+      "tamperedToken": 401,
+      "badTimeZone": 400
+    },
+    "eligibleUser": {
+      "attempts": [
+        {
+          "attempt": 1,
+          "status": 200,
+          "milliseconds": 1302
+        }
+      ],
+      "status": 200,
+      "cacheControl": "no-store",
+      "body": {
+        "status": "ready",
+        "headline": "Your workout sessions increased from zero to two across the four weeks.",
+        "observations": [
+          {
+            "topic": "consistency",
+            "text": "You recorded 4 active days over the last 28 days, with 0 days since your last workout."
+          },
+          {
+            "topic": "trends",
+            "text": "Your workout sessions per week went from 0 to 1, then 1, and finished at 2. Your minutes per week changed from 0 to 20, then 40, and reached 55."
+          },
+          {
+            "topic": "nutrition",
+            "text": "You have logged 1 day of nutrition, with an average per logged day of 1060 calories, 60 protein, 132 carbohydrates, and 29 fat."
+          },
+          {
+            "topic": "goals",
+            "text": "For your active goal to Move 12 times, you have reached 4 workouts with 10 days left."
+          }
+        ],
+        "provider": "gemini",
+        "model": "gemini-3.5-flash-lite",
+        "basedOn": {
+          "periodDays": 28,
+          "workouts": 4,
+          "nutritionEntries": 2,
+          "activeGoals": 1,
+          "completedGoals": 0
+        }
+      },
+      "leaks": {
+        "Zzyzx": false,
+        "PRIVATE-NOTE-do-not-share": false,
+        "Oatmeal": false,
+        "Chicken bowl": false,
+        "dayform-insights-demo-736322@example.com": false,
+        "6af353adf80fa6132a8f9395": false,
+        "AIza": false
+      }
+    },
+    "insufficientData": {
+      "status": 200,
+      "body": {
+        "status": "limited",
+        "message": "You have 1 saved record from the last 28 days. Add a few more workouts, meals, or goals so your insight reflects real patterns.",
+        "basedOn": {
+          "periodDays": 28,
+          "workouts": 1,
+          "nutritionEntries": 0,
+          "activeGoals": 0,
+          "completedGoals": 0
+        }
+      },
+      "dashboardText": "You have 1 saved record from the last 28 days. Add a few more workouts, meals, or goals so your insight reflects real patterns.Based on 1 workout, 0 nutrition entries, and 0 goals from the last 28 days."
+    },
+    "dashboard": {
+      "attempts": [
+        {
+          "state": "error",
+          "alert": "AI insights are unavailable right now. Try again later."
+        },
+        {
+          "state": "ready"
+        }
+      ],
+      "headline": "Your workout sessions increased from zero to two this past week",
+      "footnote": "Based on 4 workouts, 2 nutrition entries, and 1 goal from the last 28 days. Written by Google Gemini. General wellness information, not medical advice."
+    },
+    "credentials": {
+      "hostsContactedByBrowser": [
+        "dayform-fitness.vercel.app",
+        "fitness-wellness-tracker.vercel.app"
+      ],
+      "scriptsScanned": 1,
+      "scriptBytesScanned": 349265,
+      "secretPatternFoundInScripts": false,
+      "secretPatternFoundInResponse": false
+    },
+    "rateLimit": {
+      "attempts": [
+        {
+          "label": "concurrent 1",
+          "status": 429,
+          "retryAfter": "60",
+          "message": "Too many insight requests. Wait a minute and try again.",
+          "vercelRequestId": "iad1::iad1::8nlzj-1794331739837-53c3715815ac"
+        },
+        {
+          "label": "concurrent 2",
+          "status": 200,
+          "retryAfter": null,
+          "vercelRequestId": "iad1::iad1::p9ls7-1794331739839-51e81e545538"
+        }
+      ],
+      "limited": true,
+      "dashboard": {
+        "responses": [
+          {
+            "status": 200,
+            "retryAfter": null
+          },
+          {
+            "status": 200,
+            "retryAfter": null
+          },
+          {
+            "status": 200,
+            "retryAfter": null
+          },
+          {
+            "status": 429,
+            "retryAfter": "60"
+          }
+        ],
+        "alert": "Too many insight requests. Wait a minute and try again.",
+        "button": "Try again in 60s",
+        "buttonDisabledDuringCountdown": true
+      }
+    },
+    "serviceError": {
+      "note": "Not induced. These provider failures happened on their own during the check; each was followed by a successful retry.",
+      "observed": [
+        {
+          "where": "POST /api/insights",
+          "status": 503,
+          "milliseconds": 20145,
+          "message": "AI insights are taking too long or are unavailable. Try again in a moment.",
+          "cause": "Gemini did not answer within the 20-second timeout"
+        },
+        {
+          "where": "Dashboard",
+          "status": 503,
+          "message": "AI insights are unavailable right now. Try again later.",
+          "cause": "Gemini returned a non-OK status other than 429",
+          "screenshot": "prod-live-error-desktop.png"
+        }
+      ]
+    }
+  },
+  "environment": "Production Vercel deployment and Atlas dayform_demo database; live Gemini; synthetic records in two dedicated demo accounts"
+}

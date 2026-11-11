@@ -132,8 +132,8 @@ export default function WellnessInsight() {
 
       {!insight && (
         <p className="insight-footnote">
-          When you ask, a summary of your activity is sent to Google Gemini. Your notes and account
-          details are never shared.
+          When you ask, a summary of your activity is sent to Google Gemini, including your activity
+          names and goal titles. Your notes and account details are never shared.
         </p>
       )}
     </section>

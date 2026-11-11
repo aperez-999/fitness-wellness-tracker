@@ -10,9 +10,13 @@ Gemini insight about the signed-in user's last 28 days.
 - The route requires a login and reads only the token owner's workouts, nutrition
   entries, and goals. A `userId` in the request is ignored.
 - The server reduces those records to totals before anything reaches Gemini: sessions
-  and minutes per week, active days, the three most common activity names, nutrition
-  entry counts and daily averages, and goal progress. Notes, food names, record IDs,
-  email, and display name are never sent.
+  and minutes per week, active days, nutrition entry counts and daily averages, and
+  goal progress. Notes, food names, record IDs, email, and display name are never sent.
+- Three kinds of text the user typed are sent as written: the names of their three most
+  common activities (first 40 characters each), and the titles (first 60 characters) and
+  units of up to five active goals. On Google's free tier this text may be used to improve
+  Google's products and may be read by reviewers, so it should not contain personal or
+  medical details. The dashboard says that activity names and goal titles are sent.
 - Fewer than three records in the window returns a fixed message. Gemini is not called.
 - Gemini is told to use only facts and numbers from the summary and to give general
   wellness information, never diagnoses or treatment. The server drops any observation
@@ -21,7 +25,12 @@ Gemini insight about the signed-in user's last 28 days.
 - The key stays in `backend/.env` as `GEMINI_API_KEY`, the same key as meal estimates.
   Missing key: 503. Google rate limit: 429 with `Retry-After`, and insights pause for
   everyone for 60 seconds. Each user gets 3 requests a minute (10 in total), one at a time.
+- Those limits are counted in memory, separately in each running copy of the backend.
+  See [rate limiter limits](production/README.md#rate-limiter-limits).
 - Meal estimates are unchanged.
+
+Checked again on the deployed app on November 10, 2026: see the
+[production validation and privacy review](production/README.md).
 
 ## Acceptance criteria
 
