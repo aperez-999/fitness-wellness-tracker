@@ -33,8 +33,10 @@ charges. There is no automatic model fallback or retry. The server limits
 estimates to five per user and twenty total per minute, with one in-flight
 request per user. A provider quota error pauses new provider requests for sixty
 seconds and shows a retry countdown; manual entry and saving remain available. Google's own quotas may
-be lower. This in-memory limiter suits the single-process demo; shared deployments
-would need a shared limiter. If a request fails, manual nutrition entry still works.
+be lower. The limiter counts in memory, separately in each running copy of the backend.
+On Vercel that means the limits are approximate; see
+[rate limiter limits](evidence/wellness-insights/production/README.md#rate-limiter-limits).
+If a request fails, manual nutrition entry still works.
 
 Google's unpaid-service terms allow submitted content and responses to improve
 its products and undergo human review. Do not submit personal, sensitive or
