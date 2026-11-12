@@ -249,3 +249,35 @@ for (const [label, viewport] of viewports) {
     }
   });
 }
+
+test("A reply that can't be read shows the page's error message, not a blank page", async () => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, timezoneId: timeZone, locale: "en-US" });
+  try {
+    const page = await context.newPage();
+    page.setDefaultTimeout(8_000);
+    const crashes = [];
+    page.on("pageerror", (error) => crashes.push(error.message));
+    await page.goto(base + "/login");
+    await page.evaluate((value) => localStorage.setItem("fwt_token", value), token);
+    for (const [route, read, message] of [
+      ["/dashboard", "/api/workouts/summary", "load your workouts"],
+      ["/dashboard", "/api/dashboard/summary", "load your meals and goals"],
+      ["/workouts", "/api/workouts", "load your workouts"],
+      ["/nutrition", "/api/nutrition", "load your entries"],
+      ["/goals", "/api/goals", "goals couldn't be loaded"],
+    ]) {
+      const matches = (url) => url.pathname.endsWith(read);
+      // A success reply whose body stops partway, as when a phone loses signal mid-download.
+      await page.route(matches, (request) => request.fulfill({ status: 200, contentType: "application/json", body: '{"cut off' }));
+      await page.goto(base + route);
+      const alert = page.getByRole("alert").filter({ hasText: message });
+      await alert.waitFor();
+      await page.unroute(matches);
+      await alert.getByRole("button", { name: "Try again" }).click();
+      await alert.waitFor({ state: "hidden" });
+    }
+    assert.deepEqual(crashes, []);
+  } finally {
+    await context.close();
+  }
+});
