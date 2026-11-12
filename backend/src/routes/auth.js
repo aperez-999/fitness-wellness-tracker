@@ -38,6 +38,15 @@ router.post("/signup", async (req, res, next) => {
       });
     }
 
+    // A number such as -1234567.5 passes the password rules, but bcrypt can only hash text.
+    if (typeof password !== "string" || typeof confirmPassword !== "string") {
+      return res.status(400).json({ message: "Password and password confirmation must be text" });
+    }
+
+    if (displayName != null && typeof displayName !== "string") {
+      return res.status(400).json({ message: "Display name must be text" });
+    }
+
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
     }

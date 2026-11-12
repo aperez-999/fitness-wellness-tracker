@@ -96,6 +96,37 @@ test("login rejects non-string email or password with 400, not 500", async () =>
   }
 });
 
+test("signup rejects a non-string password or display name with 400, not 500", async () => {
+  const newEmail = "typed-fields@example.test";
+  const textOnly = "Password and password confirmation must be text";
+  const nameText = "Display name must be text";
+  const log = quietErrors();
+  try {
+    for (const [fields, message] of [
+      [{ password: -1234567.5, confirmPassword: -1234567.5 }, textOnly],
+      [{ password: { $ne: null }, confirmPassword: password }, textOnly],
+      [{ password, confirmPassword: [password] }, textOnly],
+      [{ password, confirmPassword: password, displayName: 42 }, nameText],
+      [{ password, confirmPassword: password, displayName: { first: "Ana" } }, nameText],
+      [{ password, confirmPassword: password, displayName: false }, nameText],
+    ]) {
+      const result = await send("/auth/signup", { body: { email: newEmail, ...fields } });
+      assert.equal(result.status, 400, JSON.stringify(fields));
+      assert.deepEqual(result.data, { message });
+    }
+    assert.equal(log.mock.callCount(), 0);
+
+    // A 201 rather than a 409 shows none of the rejected requests created the account.
+    const created = await send("/auth/signup", {
+      body: { email: newEmail, password, confirmPassword: password, displayName: "  Ana  " },
+    });
+    assert.equal(created.status, 201);
+    assert.equal(created.data.user.displayName, "Ana");
+  } finally {
+    log.mock.restore();
+  }
+});
+
 test("valid logins and wrong credentials behave as before", async () => {
   const login = await send("/auth/login", { body: { email, password } });
   assert.equal(login.status, 200);
