@@ -1,6 +1,6 @@
 # Sprint 4 — Dashboard Nutrition & Goals Integration
 
-Story ### · Checked October 31, 2026
+Story #824 · Checked October 31, 2026
 
 The dashboard now shows this week's meals and calories and the user's active
 goals next to the workout widgets. Both cards come from the signed-in user's

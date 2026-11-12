@@ -159,6 +159,10 @@ control without landing on a hidden or covered one, with a 2 px outline or anoth
 visible change on each. Signed-in pages must start with a "Skip to content" link
 that moves focus to the page content. Screenshots are written to
 `tests/artifacts/release-qa-{desktop,phone,small-phone,narrow}-<page>.png`.
+Two more checks cover failed reads. A reply cut off partway on the dashboard,
+workouts, nutrition, and goals pages must show that page's error message, never
+a blank page. A failed session check (no network, 500, 503, or a cut-off reply)
+keeps the session for the next reload; only a 401 signs the user out.
 
 ## Persistent local development database
 
