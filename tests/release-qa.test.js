@@ -281,3 +281,35 @@ test("A reply that can't be read shows the page's error message, not a blank pag
     await context.close();
   }
 });
+
+test("Only a rejected token ends the session; an outage keeps it for the next reload", async () => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 }, timezoneId: timeZone, locale: "en-US" });
+  try {
+    const page = await context.newPage();
+    page.setDefaultTimeout(8_000);
+    const savedToken = () => page.evaluate(() => localStorage.getItem("fwt_token"));
+    const sessionCheck = (url) => url.pathname.endsWith("/api/auth/me");
+    await page.goto(base + "/login");
+    await page.evaluate((value) => localStorage.setItem("fwt_token", value), token);
+    for (const [label, reply] of [
+      ["network failure", (request) => request.abort("internetdisconnected")],
+      ["server error", (request) => request.fulfill({ status: 500, contentType: "application/json", body: '{"message":"Something went wrong"}' })],
+      ["server unavailable", (request) => request.fulfill({ status: 503, contentType: "application/json", body: '{"message":"Service unavailable"}' })],
+      ["cut-off reply", (request) => request.fulfill({ status: 200, contentType: "application/json", body: '{"cut off' })],
+    ]) {
+      await page.route(sessionCheck, reply);
+      await page.goto(base + "/dashboard");
+      await page.waitForURL("**/login");
+      assert.equal(await savedToken(), token, label);
+      await page.unroute(sessionCheck);
+      await page.reload();
+      await page.waitForURL("**/dashboard");
+    }
+    await page.route(sessionCheck, (request) => request.fulfill({ status: 401, contentType: "application/json", body: '{"message":"Unauthorized"}' }));
+    await page.goto(base + "/dashboard");
+    await page.waitForURL("**/login");
+    assert.equal(await savedToken(), null);
+  } finally {
+    await context.close();
+  }
+});
