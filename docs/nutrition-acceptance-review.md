@@ -69,9 +69,10 @@ npm test --prefix tests
 npm run build --prefix frontend
 ```
 
-Screenshots and API/database evidence are generated in `tests/artifacts/`.
-Reviewed copies and the test results are in
-[current submission evidence](evidence/nutrition-gemini/README.md).
+Tracked screenshots and API/database evidence are in
+[docs/evidence/nutrition-gemini/](evidence/nutrition-gemini/README.md) and
+[docs/evidence/nutrition/](evidence/nutrition/README.md). Playwright may also
+write copies to `tests/artifacts/` (gitignored).
 The JSON evidence contains generated test account IDs and nutrition records;
 it does not contain passwords, JWTs, or database credentials.
 

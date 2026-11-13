@@ -1,204 +1,187 @@
 # Dayform — AI-Powered Fitness & Wellness Tracker
 
-Web app for logging workouts and understanding fitness progress in one place. The project began in **FIU Capstone 1** with planning, architecture, and a working React / Express / MongoDB starter (including authentication). It continues in **Capstone 2** with implementation, testing, and deployment of core features.
+Dayform is a web app for logging workouts, meals, and goals in one account. It is our FIU Computer Science capstone project. The problem it addresses is simple: a student who exercises often keeps that information in separate apps, so it is hard to see whether the week is moving in the direction they wanted.
 
-## Production
+A signed-in user can record a workout, a meal, or a goal and see them together on a dashboard. Two optional features call Google Gemini from the server: estimating nutrients from a meal description, and a short note about the last 28 days of saved activity. That note is general wellness information, not medical advice.
 
-Dayform is deployed on two **Vercel Hobby** projects from this repository, with a **MongoDB Atlas M0** cluster. The database name is `dayform_demo`.
+## Features
 
-| Surface | URL |
+These are the features in the current code:
+
+- Create an account, sign in, and sign out. Passwords are hashed. The server returns a signed token that the browser stores and sends on later requests. Optional **Continue with Google** when OAuth client IDs are configured.
+- Edit a profile: display name, pronouns, a short about-me note, and favorite activities.
+- Log workouts with a name, date, duration, and optional notes. Edit or delete them, search the history, and open a four-week view of counts and minutes.
+- Log meals with calories, protein, carbohydrates, and fat. Edit or delete entries. Optionally ask Gemini to fill those four values from the meal text. The values stay editable, and nothing is saved until the user saves.
+- Create goals, update them by hand, or let a workout goal count workouts, minutes, or hours from its start date.
+- Dashboard with this week's workouts, meals, and calories, the nearest active goals, an activity chart, and an on-request AI insight.
+- Each account can read and change only its own records.
+
+Not in this version: password reset, deleting an account, wearable sync, social features, and notifications.
+
+## Technology
+
+| Layer | What we use |
 |---|---|
-| Frontend | <https://dayform-fitness.vercel.app> |
-| Backend API | <https://fitness-wellness-tracker.vercel.app/api> |
-| Health check | <https://fitness-wellness-tracker.vercel.app/api/health> |
+| Frontend | React, React Router, Vite, Tailwind CSS |
+| Backend | Node.js, Express |
+| Database | MongoDB through Mongoose. The deployed database is documented as MongoDB Atlas. |
+| Auth | bcrypt password hashes, JSON Web Tokens, optional Google Identity Services (ID token verification on the API) |
+| AI | Google Gemini REST API, called only from the backend |
+| Tests | Node's built-in test runner, Playwright, and axe-core |
+| Hosting | Two Vercel projects from this repository |
 
-The frontend project uses the `frontend` directory, the Vite preset, and `dist` as the output. The backend project uses the `backend` directory and Vercel’s Express preset, with no custom build command or output directory. `frontend/vercel.json` sends unknown frontend paths to `index.html`, so routes such as `/dashboard` still load on refresh. API routes stay on the backend host under `/api`.
+## Getting started
 
-### Environment variables
+You need Node.js 22 or newer and a MongoDB database. The integration tests also need a one-time Playwright browser install, described under Testing.
 
-Set these in the Vercel project settings. Copy the names only. Do not commit real values, and do not put a database password or `JWT_SECRET` in this file.
-
-**Frontend** (`frontend` project). Vite reads `VITE_API_URL` at build time, so changing it requires a new frontend deployment.
-
-```bash
-VITE_API_URL=https://fitness-wellness-tracker.vercel.app/api
-VITE_GOOGLE_CLIENT_ID=
-```
-
-**Backend** (`backend` project). `CLIENT_URL` must be the exact frontend origin: `https`, no path, and no trailing slash.
+From the repository root:
 
 ```bash
-MONGODB_URI=mongodb+srv://YOUR_USER:YOUR_PASSWORD@YOUR_CLUSTER.mongodb.net/dayform_demo
-JWT_SECRET=replace-with-a-long-random-string
-JWT_EXPIRES_IN=7d
-CLIENT_URL=https://dayform-fitness.vercel.app
-GEMINI_API_KEY=
-GEMINI_MODEL=gemini-3.5-flash-lite
-GOOGLE_CLIENT_ID=
+npm install --prefix backend
+npm install --prefix frontend
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env
 ```
 
-`MONGODB_URI`, `JWT_SECRET`, and `CLIENT_URL` are required in production. `JWT_EXPIRES_IN` defaults to `7d` when omitted. `GEMINI_API_KEY` is optional. Without it, meal estimates and wellness insights stay unavailable, and nutrition values can still be entered by hand. `GEMINI_MODEL` is optional and defaults to `gemini-3.5-flash-lite`. `PORT` is used only for local development.
+Edit the `.env` files on your machine. Do not commit them. `.gitignore` already ignores `.env`.
+
+Backend variables:
+
+| Name | Required | Purpose |
+|---|---|---|
+| `MONGODB_URI` | Yes | MongoDB connection string |
+| `JWT_SECRET` | Yes | Secret used to sign tokens. Use a long random string. |
+| `CLIENT_URL` | Yes | Frontend origin allowed by CORS, with no path and no trailing slash |
+| `JWT_EXPIRES_IN` | No | Token lifetime. Defaults to `7d`. |
+| `PORT` | No | Local API port. Defaults to `5000`. |
+| `GEMINI_API_KEY` | No | Enables meal estimates and wellness insights |
+| `GEMINI_MODEL` | No | Defaults to `gemini-3.5-flash-lite` |
+| `GOOGLE_CLIENT_ID` | No | Same OAuth client ID as the frontend; enables Google sign-in |
+
+`backend/.env.example` includes a local MongoDB URL. For a class demo without your own MongoDB install, this starts a local database and keeps it running:
+
+```bash
+npm install --prefix tests
+npm run db:local --prefix tests
+```
+
+On macOS, AirPlay often occupies port 5000. If the API reports `EADDRINUSE`, set `PORT=5001` and point `VITE_API_URL` at that port.
+
+Frontend variables:
+
+| Name | Purpose |
+|---|---|
+| `VITE_API_URL` | API base URL, including `/api` and no trailing slash. Example: `http://localhost:5000/api` |
+| `VITE_GOOGLE_CLIENT_ID` | OAuth client ID for **Continue with Google**; leave empty to hide the button |
+
+Vite reads `VITE_*` variables when the frontend starts or builds. Changing them means starting or building the frontend again.
 
 #### Google sign-in (optional)
 
-The login and signup pages show a **Continue with Google** button when a Google OAuth client ID is set. Without one the button is hidden and email and password still work.
+The login and signup pages show **Continue with Google** when `VITE_GOOGLE_CLIENT_ID` is set. Without it the button is hidden and email and password still work.
 
 1. In the [Google Cloud console](https://console.cloud.google.com/apis/credentials), create an **OAuth client ID** of type **Web application**. Configure the consent screen first if asked.
 2. Under **Authorized JavaScript origins**, add `https://dayform-fitness.vercel.app`, and `http://localhost:5173` and `http://localhost` for local development. No redirect URI is needed.
-3. Set the client ID as `VITE_GOOGLE_CLIENT_ID` in the frontend and `GOOGLE_CLIENT_ID` in the backend, then redeploy both. The values must be identical. A client ID is public; there is no client secret to store.
+3. Set the client ID as `VITE_GOOGLE_CLIENT_ID` in the frontend and `GOOGLE_CLIENT_ID` in the backend. The values must be identical. A client ID is public; there is no client secret to store.
 
 The backend checks each Google ID token's signature, audience, issuer, and expiry, and requires a verified email. A first Google sign-in creates an account with no password. If a password account already uses that email, Google sign-in is refused and the user logs in with the password: signup does not verify email addresses, so linking the two automatically would let whoever registered the address first keep access.
 
-On the Atlas cluster, allow network access from anywhere. Vercel Hobby does not provide a fixed outbound address. Keep the Atlas user limited to `dayform_demo`.
+Run the API and the site in two terminals:
 
-### Deploy and redeploy
+```bash
+npm run dev --prefix backend
+npm run dev --prefix frontend
+```
 
-1. Push the branch that each Vercel project tracks. Both projects deploy from this GitHub repository.
-2. Confirm the frontend root directory is `frontend` and the backend root directory is `backend`.
-3. Deploy the backend first. Open `/api/health` and confirm `"status": "ok"`.
-4. Set the frontend `VITE_API_URL` to `https://fitness-wellness-tracker.vercel.app/api`, then deploy the frontend.
-5. Set the backend `CLIENT_URL` to `https://dayform-fitness.vercel.app` and redeploy the backend if that value changed.
+The site is at `http://localhost:5173`. The health check is `http://localhost:5000/api/health`, or port 5001 if you changed it.
 
-Later code changes redeploy when pushed to the tracked branch. A new environment variable on the frontend does not reach the browser until that project is redeployed. Use **Redeploy** in the Vercel dashboard to repeat a deployment without a new commit. Deploy from Git. Do not upload a folder that contains `backend/.env` or `frontend/.env`.
+If signup says it cannot reach the server, check that the API and MongoDB are both running. With the test dependencies installed, `npm run db:local --prefix tests` keeps a persistent local MongoDB database open alongside the backend and frontend. See [tests/README.md](tests/README.md#persistent-local-development-database).
 
-### Production smoke test
+`GEMINI_API_KEY` stays in `backend/.env` only. Do not put it in a `VITE_` variable. Without the key, meal estimates and insights explain that they are unavailable, and manual logging still works.
 
-- Open <https://dayform-fitness.vercel.app> and confirm the Dayform home page loads.
-- Refresh `/login` and `/signup` directly. Each refresh should stay on that page.
-- Open <https://fitness-wellness-tracker.vercel.app/api/health> and confirm `{"status":"ok"}`.
-- Create a demo account, or sign in with an existing demo account, and confirm the dashboard loads.
-- If `VITE_GOOGLE_CLIENT_ID` is set, sign out, select **Continue with Google** on the login page, and confirm the dashboard loads.
-- Log a workout and confirm it remains after a refresh.
-- Open Nutrition, save a manual entry, and confirm it remains after a refresh.
-- If `GEMINI_API_KEY` is set, estimate one meal. If it is empty, confirm the page explains that estimates are unavailable and manual entry still saves.
-- If `GEMINI_API_KEY` is set, select **Get my insight** on the dashboard. An account with fewer than three records should see a "not enough data" message instead of an insight.
-- Create or view a goal, then open Profile and confirm the signed-in account’s details.
-- Sign out and confirm private workout, nutrition, and goal data is no longer shown.
-- In the browser developer tools, confirm API calls go to `https://fitness-wellness-tracker.vercel.app/api` and that failed responses are not caused by a CORS origin mismatch.
+Gemini receives only part of what the user typed. A meal estimate sends the meal description. A wellness insight sends a summary computed on the server: weekly totals, the three most common activity names, nutrition averages, and up to five goal titles with their progress. Notes, food names, email, and the display name are not included. The insight screen says the text was written by Google Gemini and is not medical advice.
 
-## Core problem
+For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md). For wellness insight production checks, see [wellness insights evidence](docs/evidence/wellness-insights/README.md) and the [production validation and privacy review](docs/evidence/wellness-insights/production/README.md).
 
-A college student wants to log workouts and understand weekly fitness progress without switching between multiple applications.
+## Testing
 
-## Current implemented features
+There is no separate lint or type-check script. The main commands are:
 
-- Authentication (signup, login, logout, session via JWT), with optional Google sign-in
-- Workout logging
-- Workout persistence (MongoDB)
-- Recent workout display / end-to-end walking skeleton
-- Workout history with search, date filters, editing, and removal
-- Progress dashboard with the week's workouts, minutes, and active days, plus a week comparison and 4-week timeline (Deep Insight)
-- Nutrition logging with calories and macros, private recent history, and MongoDB persistence
-- Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
-- AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days (the summary includes activity names and goal titles)
-- Dashboard summary of the week's meals and calories and the three soonest active goals
-- Profile with display name, pronouns, about me, and favorite activities
+```bash
+npm test --prefix backend
+npm test --prefix frontend
+npm test --prefix tests
+npm run build --prefix frontend
+```
 
-## Planned features
+Before the integration suite, install its dependencies and the browser once:
 
-- Notifications
+```bash
+npm install --prefix tests
+npm run browsers --prefix tests
+```
 
-## Tech stack
+`npm test --prefix tests` runs `node --test --test-concurrency=1 *.test.js`. That suite starts the Express app, a temporary MongoDB, and Chromium through Playwright. It does not read `backend/.env` or call the real Gemini API. Backend and frontend tests are unit tests and do not need a database password.
 
-- **Frontend:** React, Vite, Tailwind CSS, React Router
-- **Backend:** Node.js, Express
-- **Database:** MongoDB Atlas (or local MongoDB) with Mongoose
-- **Auth:** JWT
+Screenshots from the browser suite are written to `tests/artifacts/`, which Git ignores. More detail is in [tests/README.md](tests/README.md), including the release QA layout and accessibility checks added in Sprint 5.
+
+For a small **local API latency sample** (not production benchmarking), run:
+
+```bash
+node scripts/perf-qos-sample.mjs --requests 25 --csv docs/capstone-2/performance-evaluation-sample.csv
+```
+
+The script starts Express on `127.0.0.1` with an ephemeral MongoDB Memory Server, seeds sample data, and times five read-only routes. Results and methodology are in [docs/capstone-2/performance-evaluation.md](docs/capstone-2/performance-evaluation.md).
+
+## Capstone development
+
+Capstone 1 and Capstone 2 share this repository. We did not split them into separate codebases.
+
+Capstone 1 (summer 2026) was planning and a starter. The team wrote requirements, architecture notes, diagrams, wireframes, and scrum minutes under `docs/capstone-1/`. The starter application had account signup and login, Mongoose models, and pages that did not yet log workouts, meals, or goals. The Capstone 1 user guides in that folder describe that starter, not the current app.
+
+Capstone 2 (fall 2026) is the implementation on the same `frontend/` and `backend/` tree. We added workout logging and history, nutrition logging and meal estimates, goals, profile editing, the dashboard, AI wellness insights, deployment, Google sign-in, final QA, and the test suites. Sprint notes for that work are in `docs/capstone-2/`. See [CHANGELOG.md](CHANGELOG.md) for a short history; older detail is in Git.
 
 ## Project structure
 
 ```
 fitness-wellness-tracker/
-├── backend/                 # Express API
-├── frontend/                # React + Vite UI
-├── shared/                  # Nutrition helpers used by the frontend and backend
-├── tests/                   # Browser and API integration tests
+├── frontend/          React application
+├── backend/           Express API
+├── shared/            Meal text checks and reference estimates used by both sides
+├── tests/             API and browser integration tests
 ├── docs/
-│   ├── capstone-1/          # Archived Capstone 1 planning & artifacts
-│   └── capstone-2/          # Sprint docs (active Capstone 2 work)
+│   ├── capstone-1/    Capstone 1 planning, diagrams, minutes, and starter guides
+│   ├── capstone-2/    Capstone 2 sprint notes and rubric evidence map
+│   ├── evidence/      Tracked screenshots and JSON for showcase verification
+│   └── testing-evidence/  Dated test run logs (when committed)
 ├── Capstone1-FinalPoster.pdf
 ├── Capstone2-FinalPoster.pdf
 ├── CHANGELOG.md
-├── README.md
-├── LICENSE
-└── .gitignore
+└── LICENSE
 ```
 
-See [docs/README.md](./docs/README.md) for how Capstone 1 vs Capstone 2 documentation is organized.
+[docs/README.md](docs/README.md) lists what is inside each docs folder.
 
-## Local development
+## Deployment
 
-You need Node.js 20+ and a MongoDB connection (Atlas or local).
+Checked on November 11, 2026, without signing in: the site and the health check responded, and a protected API route rejected the request.
 
-### Backend
+| Surface | URL |
+|---|---|
+| Site | https://dayform-fitness.vercel.app |
+| API | https://fitness-wellness-tracker.vercel.app/api |
+| Health check | https://fitness-wellness-tracker.vercel.app/api/health |
 
-```bash
-cd backend
-cp .env.example .env   # if you do not already have .env
-npm install
-npm run dev
-```
+The frontend Vercel project builds `frontend/`. `frontend/vercel.json` serves `index.html` for client-side routes such as `/dashboard`. The backend project runs `backend/` with Vercel's Express preset. Set the environment variables in the Vercel project settings, not in Git. `CLIENT_URL` must be `https://dayform-fitness.vercel.app`. `VITE_API_URL` must be `https://fitness-wellness-tracker.vercel.app/api`. For production Google sign-in, set matching `VITE_GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_ID` values.
 
-Scripts (from `backend/package.json`):
+On the Atlas cluster, allow network access from anywhere if the host requires it. Vercel Hobby does not provide a fixed outbound address. Keep the Atlas user limited to `dayform_demo`.
 
-- `npm run dev` — start API with file watch (`node --watch src/index.js`)
-- `npm start` — start API once (`node src/index.js`)
+Earlier deployment notes describe two Vercel Hobby projects and an Atlas M0 database named `dayform_demo`. This cleanup checked the public URLs only. We did not open the Vercel or Atlas account pages, and we did not confirm whether a push still redeploys.
 
-Configure `backend/.env` from `.env.example` (`MONGODB_URI`, `JWT_SECRET`, `CLIENT_URL`, optional `PORT`).
+Do not upload a folder that contains `.env`.
 
-On some Macs, AirPlay uses port **5000**. If the API fails with `EADDRINUSE`, set `PORT=5001` in `backend/.env`.
+## Team
 
-If signup says it cannot reach the server, check that the API and MongoDB are
-both running. With the test dependencies installed, `npm --prefix tests run db:local`
-from the repository root starts a persistent local MongoDB database; keep it open
-alongside the backend and frontend terminals. See [local database setup](tests/README.md#persistent-local-development-database).
+Alejandro Perez-Rivero, Ahanaf Akif, and Allen Cruz. FIU Computer Science, Team #95.
 
-Health check: `http://localhost:5000/api/health` (or `:5001` if you changed the port).
-
-### Frontend
-
-```bash
-cd frontend
-cp .env.example .env   # if you do not already have .env
-npm install
-npm run dev
-```
-
-Scripts (from `frontend/package.json`):
-
-- `npm run dev` — Vite development server
-- `npm run build` — production build
-- `npm run preview` — preview the production build
-
-Set `VITE_API_URL` in `frontend/.env` to match the backend (for example `http://localhost:5001/api` if the API uses port 5001).
-
-App: `http://localhost:5173`
-
-Full Capstone 1 setup notes: [docs/capstone-1/user-guides/local-setup-guide.md](./docs/capstone-1/user-guides/local-setup-guide.md)
-
-## Capstone 1 vs Capstone 2 docs
-
-| Area | Location | Purpose |
-|------|----------|---------|
-| Capstone 1 archive | `docs/capstone-1/` | Requirements, architecture, diagrams, planning, meeting minutes, original guides |
-| Capstone 2 sprints | `docs/capstone-2/sprint-N/` | Sprint problem validation, specs, and ongoing development docs |
-| Application | `frontend/`, `backend/` | Continuous codebase across both courses |
-
-Sprint status is tracked on the Capstone website board (not in a repo status file).
-
-## Nutrition verification
-
-See [nutrition acceptance review](docs/nutrition-acceptance-review.md) for the API
-contract, test commands, evidence, and the teammate verification checklist.
-
-## Changelog
-
-See [CHANGELOG.md](./CHANGELOG.md).
-
-## License
-
-See [LICENSE](./LICENSE).
-
-For optional AI meal estimates, see [Gemini setup](docs/gemini-nutrition.md). Wellness insights use the
-same key; see [wellness insight evidence](docs/evidence/wellness-insights/README.md) and the
-[production validation and privacy review](docs/evidence/wellness-insights/production/README.md).
+The project is released under the MIT license. See [LICENSE](LICENSE).

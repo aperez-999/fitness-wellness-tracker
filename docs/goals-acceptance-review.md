@@ -81,9 +81,9 @@ npm test --prefix tests
 npm run build --prefix frontend
 ```
 
-Screenshots and API/database evidence are generated in `tests/artifacts/goals-*`.
-Reviewed copies and the test results are in
-[goals evidence](evidence/goals/README.md). The JSON evidence contains generated
+Curated screenshots and API/database evidence are in
+[docs/evidence/goals/](evidence/goals/README.md). Fresh Playwright output also
+lands in `tests/artifacts/` (gitignored). The JSON evidence contains generated
 test account IDs and goal records; it does not contain passwords, JWTs, or
 database credentials.
 

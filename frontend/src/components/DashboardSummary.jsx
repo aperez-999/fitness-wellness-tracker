@@ -137,7 +137,7 @@ export default function DashboardSummary({ data, loading, error, refresh }) {
           </button>
         </div>
       )}
-      {data && (
+      {data?.goals?.active && data.nutrition && (
         <div className="summary-row">
           <GoalsCard goals={data.goals} today={data.today} />
           <MealsCard nutrition={data.nutrition} />

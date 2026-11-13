@@ -850,7 +850,7 @@ test("Deep Insight loads on demand, compares matching weekdays, and offers an ac
     /2 workouts more/,
   );
   const insightButton = page.getByRole("button", {
-    name: "Deep Insight",
+    name: "Activity chart",
     exact: true,
   });
   await insightButton.hover();

@@ -1,0 +1,71 @@
+
+> fitness-wellness-tracker-api@0.1.0 test
+> node --test tests/*.test.js
+
+Connected to MongoDB
+✔ connectDB reuses one in-flight connection and retries after a failure (17.889042ms)
+✔ connectDB refuses to open a connection without MONGODB_URI (0.174125ms)
+✔ unexpected errors return a generic 500 and are logged on the server (0.765333ms)
+✔ 5xx statuses keep their code but never their message or stack (0.188334ms)
+✔ missing or invalid statuses are treated as 500 (0.108708ms)
+✔ client errors keep their status and message and are not logged (0.487791ms)
+✔ counts workouts from the start date through today (2.788333ms)
+✔ minute goals add up recorded minutes and skip missing durations (0.166583ms)
+✔ hour goals add up the same minutes in hours (0.135417ms)
+✔ stops counting at the target date once it has passed (0.181292ms)
+✔ counts nothing when there are no workouts or the start date hasn't come yet (0.223833ms)
+✔ completed goals still show their real count instead of the target (0.157875ms)
+✔ accepts a valid goal and cleans up its values (8.773167ms)
+✔ requires a name, type, target value, and target date (0.249416ms)
+✔ rejects bad names and types (0.48725ms)
+✔ target must be a number above zero and not absurdly large (0.531542ms)
+✔ progress is optional, can be zero, and may pass the target (0.31ms)
+✔ unit is optional and limited to 30 characters (0.688917ms)
+✔ target date must be a real day, today or later, in the user's timezone (0.424667ms)
+✔ updates may keep a past date and change status (0.201083ms)
+✔ completing a goal raises progress to the target (0.278583ms)
+✔ goals are manual unless a workout goal counts workouts or minutes (0.362458ms)
+✔ tracked goals need a start date and use a fixed unit instead of saved progress (0.406541ms)
+✔ updates keep the saved tracking unless a new one is sent (0.205583ms)
+✔ Gemini sends only meal text to the fixed Google endpoint, returns bounded numbers (1.133917ms)
+✔ invalid input or missing configuration never calls Google (0.450083ms)
+✔ quota, unavailable, timeout and malformed responses fail safely without provider details (0.572417ms)
+✔ estimate receipts bind the user, food and provider values and cannot become auth tokens (3.797166ms)
+✔ per-user and global limits reset after a minute (0.218834ms)
+✔ obvious non-meal text stays local while international food names remain valid (1.022542ms)
+✔ duplicate in-flight requests are blocked and failures release the user (0.332084ms)
+✔ provider quota failures pause all users without more outbound calls, then recover (0.127ms)
+✔ counts meals and calories from Monday through today (2.208708ms)
+✔ Sunday still belongs to the week that started on Monday (0.1475ms)
+✔ the user's time zone decides which week it is (8.584875ms)
+✔ decimal calories add up without rounding noise (0.124917ms)
+✔ a week with no meals has zero meals and zero calories (0.074917ms)
+✔ nutrition accepts required values, zero and decimals, and ignores client ownership (2.512167ms)
+✔ nutrition accepts decimal input formats supported by number fields (0.332458ms)
+✔ nutrition rejects missing, non-finite, negative and non-numeric nutrients (0.795584ms)
+✔ nutrition rejects missing bodies, impossible dates, timestamps and invalid optional fields (0.317875ms)
+✔ estimate provenance is validated and edits are derived from saved values (0.322208ms)
+✔ accepts trimmed profile fields and cleared values (1.325041ms)
+✔ rejects invalid profile fields together (0.19125ms)
+✔ summary covers the last 28 days and leaves out notes and record IDs (2.25075ms)
+✔ empty sections stay empty instead of being filled with guesses (0.383209ms)
+✔ Gemini receives only the summary at the fixed endpoint with the key in a header (1.653625ms)
+✔ observations with numbers that are not in the summary are dropped (1.01275ms)
+✔ missing configuration never calls Google (0.112666ms)
+✔ rate limits, outages, timeouts and malformed replies fail without provider details (0.475083ms)
+✔ one request per user at a time, with a per-user limit (0.57725ms)
+✔ a provider rate limit pauses every user, then recovers (0.354666ms)
+✔ meal estimates still work alongside insights (1.665958ms)
+✔ validates real calendar days and leap years (1.511125ms)
+✔ uses the user's timezone for completed workouts (11.19375ms)
+✔ rejects invalid names, notes, and durations with field errors (1.164667ms)
+✔ requires duration, preserves zero and decimals, and trims text (0.322709ms)
+✔ week bounds include Sunday, reset Monday, and cross year and DST boundaries (0.092917ms)
+ℹ tests 58
+ℹ suites 0
+ℹ pass 58
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 161.162959

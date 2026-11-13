@@ -33,8 +33,21 @@ export default function useDashboardSummary() {
       active.promise = (async () => {
         try {
           const data = await getDashboardSummary({ signal: active.controller.signal });
-          if (isCurrent() && !active.invalidated) {
-            setState({ ...initialState, userId, data, loading: false });
+          if (
+            isCurrent() &&
+            !active.invalidated &&
+            !active.controller.signal.aborted
+          ) {
+            if (!Array.isArray(data?.goals?.active) || !data?.nutrition) {
+              setState((current) => ({
+                ...current,
+                userId,
+                loading: false,
+                error: "Couldn’t load your meals and goals.",
+              }));
+            } else {
+              setState({ ...initialState, userId, data, loading: false });
+            }
           }
         } catch (error) {
           if (!isCurrent() || active.invalidated) return;

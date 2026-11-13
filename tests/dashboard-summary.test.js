@@ -271,9 +271,9 @@ test("Dashboard shows weekly meals and active goals on desktop and phone", async
   assert.equal(await page.locator(".goals-summary").getByRole("link", { name: "View all goals" }).getAttribute("href"), "/goals");
   assert.equal(await page.locator(".meals-summary").getByRole("link", { name: "View meals" }).getAttribute("href"), "/nutrition");
 
-  // The workout widgets, Deep Insight, and the AI insight are still on the page.
+  // The workout widgets, activity chart, and the AI insight are still on the page.
   await page.getByRole("heading", { name: "Your weekly rhythm" }).waitFor();
-  await page.getByRole("button", { name: "Deep Insight" }).waitFor();
+  await page.getByRole("button", { name: "Activity chart" }).waitFor();
   await page.getByRole("heading", { name: "What your recent habits say" }).waitFor();
 
   const audit = await new AxeBuilder({ page }).include(".summary-row").withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();

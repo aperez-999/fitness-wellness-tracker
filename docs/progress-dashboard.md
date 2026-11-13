@@ -47,7 +47,7 @@
   Failed requests keep the dialog available for retry. Deletion is permanent.
 - The weekly widget compares workout count against the same elapsed weekdays in
   the previous week. It does not compare a partial week against a completed week.
-- Deep Insight swaps the recent preview for analytics, fetched only when opened.
+- The activity chart (labeled **Activity chart** in the UI; older notes call this **Deep Insight**) swaps the recent preview for analytics, fetched only when opened.
   Both views expand and collapse smoothly; outgoing controls become inactive immediately.
   Inline session confirmations reveal from the clicked control and reverse on cancel.
   Reduced-motion preferences skip these transitions.

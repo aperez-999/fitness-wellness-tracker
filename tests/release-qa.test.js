@@ -22,7 +22,7 @@ const viewports = [
   ["narrow", { width: 320, height: 640 }],
 ];
 const openDeepInsight = async (page) => {
-  await page.getByRole("button", { name: "Deep Insight" }).click();
+  await page.getByRole("button", { name: "Activity chart" }).click();
   await page.getByRole("button", { name: "4-week timeline", exact: true }).click();
   await page.locator(".activity-timeline").waitFor();
 };

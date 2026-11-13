@@ -283,6 +283,9 @@ test("inline meal icon fills editable nutrients and preserves estimate provenanc
   await page.getByText(/37.5 g dry oats/).waitFor();
   await page.getByRole("slider", { name: "Adjust protein", exact: true }).focus();
   await page.keyboard.press("End");
+  await page.waitForFunction(
+    () => document.querySelector("#nutrition-protein")?.value === "100",
+  );
   assert.equal(await page.locator("#nutrition-protein").inputValue(), "100");
   await page.locator("#nutrition-protein").fill("8.4");
   await page.locator("#nutrition-calories").fill("1500");
@@ -400,9 +403,9 @@ test("input guardrails stay local and Undo restores manual values and prior AI p
   await page.locator("#nutrition-protein").fill("20");
   assert.equal(await page.getByRole("button", { name: "Undo AI estimate" }).count(), 0);
   await page.getByRole("button", { name: "Estimate nutrition", exact: true }).click();
+  await page.getByText("AI estimate applied", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Undo AI estimate" }).click();
   assert.equal(await page.locator("#nutrition-protein").inputValue(), "20");
-  await page.getByText("AI estimate applied", { exact: true }).waitFor();
   await page.getByRole("button", { name: "Save entry", exact: true }).click();
   await page.getByText("Entry saved.", { exact: true }).waitFor();
   const stored = await NutritionLog.findOne({ foodName: "Yogurt parfait" }).lean();
@@ -468,7 +471,14 @@ test("meal type is saved, kept while editing another field, and can be cleared",
   await page.getByRole("button", { name: `Edit ${valid.foodName}`, exact: true }).click();
   assert.equal(await page.getByLabel("Meal type").inputValue(), "lunch");
   await page.locator("#nutrition-calories").fill("501");
+  const saveEdit = page.waitForResponse(
+    (response) =>
+      response.request().method() === "PUT" &&
+      response.url().includes("/api/nutrition/") &&
+      response.ok(),
+  );
   await page.getByRole("button", { name: "Save changes", exact: true }).click();
+  await saveEdit;
   await page.getByText("Entry updated.", { exact: true }).waitFor();
   const kept = await NutritionLog.findOne().lean();
   assert.equal(kept.mealType, "lunch");
@@ -500,7 +510,15 @@ test("editing survives refresh, and deletion waits for confirmation", async () =
   await page.locator("#nutrition-foodName").fill("Berry oatmeal");
   await page.getByRole("button", { name: "Save changes", exact: true }).click();
   await page.getByText("Entry updated.", { exact: true }).waitFor();
+  const listAfterReload = page.waitForResponse(
+    (response) =>
+      response.request().method() === "GET" &&
+      response.url().includes("/api/nutrition") &&
+      response.ok(),
+  );
   await page.reload();
+  await listAfterReload;
+  await page.getByRole("heading", { name: "Nutrition", exact: true }).waitFor();
   await page.getByRole("heading", { name: "Berry oatmeal", exact: true }).waitFor();
   assert.match(await page.locator(".nutrition-entry").innerText(), /500/);
   assert.equal((await NutritionLog.findOne()).calories, 500);
@@ -514,7 +532,14 @@ test("editing survives refresh, and deletion waits for confirmation", async () =
   await page.getByRole("button", { name: "Delete entry", exact: true }).click();
   await page.getByText("Entry deleted.", { exact: true }).waitFor();
   await page.getByText("Your nutrition journal starts here.").waitFor();
+  const emptyAfterReload = page.waitForResponse(
+    (response) =>
+      response.request().method() === "GET" &&
+      response.url().includes("/api/nutrition") &&
+      response.ok(),
+  );
   await page.reload();
+  await emptyAfterReload;
   await page.getByText("Your nutrition journal starts here.").waitFor();
   assert.equal(await NutritionLog.countDocuments(), 0);
 });

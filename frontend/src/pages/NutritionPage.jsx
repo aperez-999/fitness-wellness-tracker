@@ -148,6 +148,9 @@ function NutritionJournal() {
   }
 
   function undoEstimate() {
+    estimateRequest.current?.abort();
+    estimateRequest.current = null;
+    setEstimating(false);
     if (!previousEstimate) return;
     setDraft((current) => ({ ...current, ...previousEstimate.values }));
     setEstimate(previousEstimate.estimate);

@@ -126,18 +126,18 @@ function RecentWorkouts({ workouts, selectedDate, onClearDate }) {
         <div>
           <h2 id="recent-title" tabIndex={-1}>
             {showStats
-              ? "Deep Insight"
+              ? "Activity chart"
               : selectedDate
                 ? formatWorkoutDate(selectedDate)
                 : "Recent workouts"}
           </h2>
           <p>
             {showStats
-              ? "Your movement, with a little perspective."
+              ? "Counts and minutes compared with last week."
               : selectedDate
                 ? "Sessions from your selected day."
                 : workouts.length
-                  ? `Your latest ${recent.length === 1 ? "session" : `${recent.length} sessions`}. A little time for you.`
+                  ? `Your latest ${recent.length === 1 ? "session" : `${recent.length} sessions`}.`
                   : "A record of your completed workouts."}
           </p>
         </div>
@@ -150,7 +150,7 @@ function RecentWorkouts({ workouts, selectedDate, onClearDate }) {
             onClick={() => setShowStats((show) => !show)}
           >
             <Icon name="search" size={17} />
-            {showStats ? "Back to sessions" : "Deep Insight"}
+            {showStats ? "Back to sessions" : "Activity chart"}
           </button>
           {selectedDate ? (
             <button className="text-link" onClick={onClearDate}>

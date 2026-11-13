@@ -2,7 +2,7 @@
 
 **Team:** Alejandro Perez, Ahanaf Akif, Josue Gamon Fortes, Allen Cruz  
 **Course:** CIS3950 Capstone I  
-**Version:** Capstone 1 starter
+**Version:** Capstone 1 starter. The current app is documented in the root [README](../../../README.md).
 
 ## What this app does
 

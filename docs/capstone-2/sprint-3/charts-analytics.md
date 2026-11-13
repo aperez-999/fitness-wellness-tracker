@@ -1,5 +1,7 @@
 # Sprint 3 — Charts & Analytics
 
+**UI note (November 2026):** The analytics toggle on the dashboard is now labeled **Activity chart**. This document keeps **Deep Insight** where it describes verification from October 2026.
+
 ## Ticket overview
 
 Authenticated users should understand their workout activity over time from their own saved workouts. The ticket covers workout charts only. Nutrition analytics, goals, profile, and AI recommendations stay out of scope.

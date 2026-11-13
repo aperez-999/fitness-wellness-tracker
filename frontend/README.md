@@ -1,6 +1,6 @@
 # Frontend
 
-React + Vite + Tailwind CSS UI for the Fitness & Wellness Tracker.
+React application for Dayform. Vite serves it in development and builds the production site. Tailwind CSS handles styling. React Router handles the pages.
 
 ## Setup
 
@@ -10,37 +10,40 @@ npm install
 npm run dev
 ```
 
-App runs at `http://localhost:5173`.
+The dev server is at `http://localhost:5173`.
 
-## Environment
+`VITE_API_URL` is the API base URL, including `/api` and no trailing slash. The example file uses `http://localhost:5000/api`. If the API is on another port, change this before starting Vite.
 
-| Variable | Description |
-|----------|-------------|
-| `VITE_API_URL` | Backend API base URL (default `http://localhost:5000/api`) |
+## Scripts
 
-## Pages (starter template)
+- `npm run dev` — development server
+- `npm run build` — production build
+- `npm run preview` — serve the production build locally
+- `npm test` — unit tests in `tests/`
 
-| Route | Purpose |
-|-------|---------|
-| `/` | Landing page + API health check |
-| `/login` | Login |
-| `/signup` | Sign up |
-| `/dashboard` | Dashboard shell (summary cards) |
-| `/workouts` | Workout logging (list + create) |
-| `/nutrition` | Nutrition entry form and the signed-in user’s 30 most recent entries |
-| `/goals` | Placeholder — Capstone 2 |
-| `/profile` | Signed-in user info |
+## Routes
 
-Auth uses `AuthContext`, `ProtectedRoute`, and `lib/api.js`. Layouts follow [../docs/capstone-1/planning/wireframes.md](../docs/capstone-1/planning/wireframes.md).
+| Route | Who can open it | What it does |
+|---|---|---|
+| `/` | Anyone | Landing page with links to sign up and log in |
+| `/login`, `/signup` | Anyone | Account forms |
+| `/dashboard` | Signed-in users | Weekly workouts, meals, goals, and an optional AI insight |
+| `/workouts` | Signed-in users | Log, search, edit, and delete workouts |
+| `/nutrition` | Signed-in users | Log meals, including an optional Gemini estimate |
+| `/goals` | Signed-in users | Create and update goals |
+| `/profile` | Signed-in users | Display name, pronouns, about me, and favorite activities |
 
-## Structure
+Anything else redirects to `/`. Signed-in pages use `ProtectedRoute` and `AppLayout`. `AuthContext` keeps the current user. `lib/api.js` attaches the token to API requests.
+
+## Source layout
 
 ```
 src/
-├── components/   # Layout, cards, ProtectedRoute, FormField
-├── context/      # AuthContext (login session)
-├── pages/        # Route pages
-├── lib/api.js    # API helpers
-├── App.jsx       # Routes
-└── main.jsx      # Entry
+├── components/   Shared interface, including layout, workouts, nutrition, and insights
+├── context/      AuthContext
+├── hooks/        Data loading for workouts and the dashboard
+├── lib/          API client and workout calculations
+├── pages/        One folder of route pages
+├── App.jsx       Route table
+└── main.jsx      Entry
 ```

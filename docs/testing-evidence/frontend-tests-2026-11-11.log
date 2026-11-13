@@ -1,0 +1,27 @@
+
+> fitness-wellness-tracker-ui@0.1.0 test
+> node --test tests/*.test.js
+
+✔ shows saved progress against the target with the unit (0.458667ms)
+✔ hour goals show two decimals, like the Goals page (0.067458ms)
+✔ due dates use the Goals page wording (0.071708ms)
+✔ a goal at or past its target is reached and its bar stops at 100% (0.065792ms)
+✔ a goal with no progress yet starts at zero (0.504542ms)
+✔ common meal names match references without guessing unrecognized additions (0.391125ms)
+✔ estimates scale all four nutrients and reject invalid portions (0.368292ms)
+✔ compares elapsed weekdays, not a partial week against a full one (0.499ms)
+✔ retains missing-duration counts and zero-duration records (0.100167ms)
+✔ calendar shifts and empty timelines remain consistent across year and DST boundaries (0.595083ms)
+✔ presents the backend summary as seven calendar days with totals (0.989583ms)
+✔ keeps recorded zero distinct from missing durations (0.262666ms)
+✔ formats date-only workouts without shifting them into the previous day (0.254417ms)
+✔ renders a complete empty week and distinguishes unloaded data (0.619334ms)
+✔ keeps seven consecutive days across DST and year boundaries (0.593625ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 46.484541

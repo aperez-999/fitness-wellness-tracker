@@ -1,6 +1,6 @@
 # Backend
 
-Express REST API for the Fitness & Wellness Tracker.
+Express API for Dayform. Route handlers validate input, limit each query to the signed-in user, and store records with Mongoose.
 
 ## Setup
 
@@ -10,41 +10,53 @@ npm install
 npm run dev
 ```
 
-## Environment
+`npm run dev` restarts the API when files change. `npm start` runs it once. `npm test` runs the unit tests in `tests/`.
 
-| Variable | Description |
-|----------|-------------|
-| `PORT` | API port (default `5000`) |
+Copy variable names from `.env.example`. Do not commit `.env`.
+
+| Name | Purpose |
+|---|---|
+| `PORT` | Local port. Defaults to `5000`. |
 | `MONGODB_URI` | MongoDB connection string |
-| `JWT_SECRET` | Secret for signing JWTs (change in `.env`) |
-| `JWT_EXPIRES_IN` | Token lifetime (default `7d`) |
-| `CLIENT_URL` | Frontend URL for CORS |
+| `JWT_SECRET` | Secret used to sign tokens |
+| `JWT_EXPIRES_IN` | Token lifetime. Defaults to `7d`. |
+| `CLIENT_URL` | Frontend origin for CORS |
+| `GEMINI_API_KEY` | Optional. Meal estimates and wellness insights stay off when this is empty. |
+| `GEMINI_MODEL` | Optional. Defaults to `gemini-3.5-flash-lite`. |
 
-## Structure
+## Layout
 
 ```
 src/
-├── config/db.js       # MongoDB connection
-├── middleware/        # Auth and error handling
-├── models/            # Mongoose schemas (User, Workout, NutritionLog, Goal)
-├── routes/            # API route modules
-└── index.js           # App entry point
+├── config/db.js     MongoDB connection, reused across requests on one instance
+├── middleware/      Token check and error handler
+├── models/          User, Workout, NutritionLog, Goal
+├── routes/          HTTP routes mounted under /api
+├── services/        Gemini meal estimates and wellness insights
+├── utils/           Validation and goal-progress calculation
+├── app.js           Express app, including the Vercel entry
+└── index.js         Local server
 ```
 
-## Endpoints
+## Routes
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/health` | Health check |
-| POST | `/api/auth/signup` | Register |
-| POST | `/api/auth/login` | Login |
-| POST | `/api/auth/logout` | Logout (auth required) |
-| GET | `/api/auth/me` | Current user (auth required) |
-| GET | `/api/nutrition` | Latest 30 nutrition entries for current user (auth required) |
-| POST | `/api/nutrition` | Save date, calories, protein, carbohydrates, fat (auth required) |
+Every route below is under `/api`. Except health, signup, and login, the caller must send `Authorization: Bearer <token>`.
 
-See [../docs/capstone-1/architecture/api.md](../docs/capstone-1/architecture/api.md) for full contracts.
+| Method | Path | Purpose |
+|---|---|---|
+| GET | `/health` | Process is up |
+| POST | `/auth/signup`, `/auth/login` | Create an account or sign in |
+| POST | `/auth/logout` | Acknowledges sign-out. The browser deletes the token. |
+| GET, PATCH | `/auth/me` | Read or update the signed-in profile |
+| GET, POST | `/workouts` | List or create workouts |
+| PUT, DELETE | `/workouts/:id` | Edit or delete one of the caller's workouts |
+| GET | `/workouts/summary`, `/workouts/analytics` | Weekly totals and the four-week view |
+| GET, POST | `/nutrition` | List the latest entries or create one |
+| PUT, DELETE | `/nutrition/:id` | Edit or delete one of the caller's entries |
+| POST | `/nutrition/estimate` | Estimate nutrients from meal text |
+| GET, POST | `/goals` | List or create goals |
+| PUT, DELETE | `/goals/:id` | Edit or delete one of the caller's goals |
+| GET | `/dashboard/summary` | This week's meals and calories, plus the nearest active goals |
+| POST | `/insights` | Wellness insight for the last 28 days |
 
-## Models
-
-Schemas match [../docs/capstone-1/architecture/database-schema.md](../docs/capstone-1/architecture/database-schema.md) and [../docs/capstone-1/diagrams/database-erd.md](../docs/capstone-1/diagrams/database-erd.md).
+The Capstone 1 API notes in `docs/capstone-1/architecture/api.md` describe the planned starter. The table above is the API this server implements.

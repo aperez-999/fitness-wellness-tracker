@@ -4,8 +4,8 @@ Story #824 · Checked October 31, 2026
 
 The dashboard now shows this week's meals and calories and the user's active
 goals next to the workout widgets. Both cards come from the signed-in user's
-saved records in MongoDB, through one new endpoint. The workout charts, Deep
-Insight, and the AI insight work as before.
+saved records in MongoDB, through one new endpoint. The workout charts, activity
+chart, and the AI insight work as before.
 
 | Criterion | Result |
 | --- | --- |
@@ -17,7 +17,7 @@ Insight, and the AI insight work as before.
 | Empty states | Pass — "No meals logged this week." with Log a meal, and "No active goals right now." with Set a goal, including accounts with only older meals or only completed goals. |
 | Users cannot see another user's data | Pass — every query uses the user ID from the login token; a `userId` in the request is ignored, and other accounts' meals and goals never appear. |
 | Updates after saving changes | Pass — the cards reload when the user comes back to the dashboard or the tab, on Refresh, on a browser refresh, and when a workout is saved or removed. |
-| Existing dashboard features keep working | Pass — all 26 existing dashboard tests, including Deep Insight, and the 7 insight tests still pass. |
+| Existing dashboard features keep working | Pass — all 26 existing dashboard tests, including the activity chart, and the 7 insight tests still pass. |
 | Responsive on desktop and mobile | Pass — side by side on desktop, stacked below 1,100 px. No horizontal scrolling at 820, 390, 360, or 320 px or on a landscape phone; links at least 44 px tall; no axe violations. |
 | Automated tests | Pass — see Checks. |
 

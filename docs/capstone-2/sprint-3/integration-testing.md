@@ -1,5 +1,7 @@
 # Sprint 3 — Core Workflow Integration Testing
 
+**UI note (November 2026):** The dashboard analytics toggle is labeled **Activity chart**. This report and some test titles still say **Deep Insight**, which was the label when these runs were written.
+
 ## 1. Overview
 
 This ticket checks that Dayform's main workflows still work together: sign up and log in, log a workout, log nutrition, save a goal, update a profile, and see workout totals on the dashboard. The application code was not changed. Existing tests were reused, and one new API test was added for a single path that crosses those features.
@@ -8,7 +10,7 @@ This ticket checks that Dayform's main workflows still work together: sign up an
 
 These tests were already in the repo:
 
-- `tests/dashboard.test.js` is a browser and API suite. It covers signup, login, logout, workout create/edit/delete, MongoDB persistence, dashboard counts and minutes, Deep Insight analytics, empty history, and invalid workout input. It uses a disposable database and a fixed clock.
+- `tests/dashboard.test.js` is a browser and API suite. It covers signup, login, logout, workout create/edit/delete, MongoDB persistence, dashboard counts and minutes, activity chart analytics (Deep Insight in older test names), empty history, and invalid workout input. It uses a disposable database and a fixed clock.
 - `tests/nutrition.test.js` covers creating a meal, saving nutrients in MongoDB, listing them again, rejecting bad values, and keeping one account from reading another's entries. Browser tests cover the nutrition page, reload, and sign-in.
 - `tests/goals.test.js` covers creating a goal, updating progress, completing a goal (which raises progress to the target), privacy between accounts, and the goals page.
 - `tests/profile.test.js` covers display name, pronouns, about me, and favorite activities, including a bad update, a MongoDB read after save, refresh, and sign-in again.
@@ -42,7 +44,7 @@ Commands were run on October 11, 2026 from the repo.
 | GOAL-02 | Goals          | Mark a goal complete                                         | `currentValue` becomes the target                                      | `goals.test.js` API and browser tests                                                                                                                                       | PASS                              |
 | PROF-01 | Profile        | Update display name and read `/auth/me` again                | MongoDB and the next request show the new name                         | `profile.test.js` and `core-workflow.test.js`                                                                                                                               | PASS                              |
 | PROF-02 | Profile        | Non-string display name; second user profile                 | 400; the other account's name is unchanged                             | Both profile and core-workflow tests                                                                                                                                        | PASS                              |
-| DASH-01 | Dashboard      | Summary and analytics after a saved workout                  | Count and minutes match the stored duration                            | `core-workflow.test.js` and dashboard summary/Deep Insight tests                                                                                                            | PASS                              |
+| DASH-01 | Dashboard      | Summary and analytics after a saved workout                  | Count and minutes match the stored duration                            | `core-workflow.test.js` and dashboard summary / activity chart tests (Deep Insight in older names)                                                                          | PASS                              |
 | DASH-02 | Dashboard      | Account with no workouts                                     | Empty daily list and the first-workout message                         | Dashboard empty-account tests                                                                                                                                               | PASS                              |
 | DASH-03 | Dashboard      | Workout page accessibility after a save                      | No axe violations                                                      | Full suite failed on `.session-saved-reveal`. The same test passed when run alone. The plum and paper colors pass contrast; the scan landed while the highlight was fading. | FAIL in full suite; PASS on rerun |
 | ERR-01  | Validation     | Bad signup, workout, nutrition, goal, and profile bodies     | 400 responses, no crash                                                | Unit tests plus the API integration tests                                                                                                                                   | PASS                              |

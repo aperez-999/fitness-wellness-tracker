@@ -29,8 +29,9 @@ are complete.
 - Inline editing corrects a saved session without creating another record.
 - History shows ten records at a time; the recent preview stays at three even with
   20+ workouts. Search operates across the full loaded history.
-- Previous-week comparisons match elapsed weekdays. Deep Insight adds a bounded
-  four-week timeline, metric controls, keyboard selection and a data table.
+- Previous-week comparisons match elapsed weekdays. The activity chart adds a bounded
+  four-week timeline, metric controls, keyboard selection and a data table. Older
+  evidence filenames may still say `deep-insight`.
 
 ## Optional next decisions
 

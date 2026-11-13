@@ -1,5 +1,7 @@
 # Installation guide
 
+This guide is for the Capstone 1 starter. For the current Dayform app, follow the root [README](../../../README.md).
+
 How to run the starter project locally.
 
 ## You need

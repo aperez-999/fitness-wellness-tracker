@@ -1,9 +1,9 @@
-# Progress dashboard checks
+# Tests
 
-The integration suite starts the real Express workout and authentication routes,
-a disposable MongoDB instance, Vite, and a headless browser. It uses generated test
-accounts and a fixed clock. It does not load the application's backend `.env` or
-connect to its configured database.
+The integration suite starts the Express app, a temporary MongoDB instance, Vite,
+and a headless browser. It uses generated test accounts. It does not load the
+application's backend `.env` or connect to its configured database. Gemini calls
+are intercepted, so the suite does not need an API key.
 
 ## Setup
 
@@ -74,7 +74,7 @@ for results and screenshots.
 ## Nutrition checks
 
 Run only nutrition integration tests with `node --test tests/nutrition.test.js`
-from the repository root. `npm test --prefix tests` runs both suites.
+from the repository root. `npm test --prefix tests` runs the full integration suite, not this file alone.
 Nutrition tests use the actual API router, a disposable MongoDB database, and
 Playwright. They cover required fields, malformed requests, authentication,
 owner spoofing, bounded recent history, UI saves, failed-request recovery, reload
