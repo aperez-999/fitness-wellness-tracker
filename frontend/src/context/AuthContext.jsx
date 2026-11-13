@@ -36,9 +36,10 @@ export function AuthProvider({ children }) {
     try {
       const { user: currentUser } = await getMe();
       if (getToken() === token) setUser(currentUser);
-    } catch {
+    } catch (error) {
       if (getToken() === token) {
-        setToken(null);
+        // Only a rejected token ends the session; an outage keeps it for the next reload.
+        if (error.status === 401) setToken(null);
         setUser(null);
         setLoading(false);
       }

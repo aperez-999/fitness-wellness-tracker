@@ -146,6 +146,24 @@ Evidence is written to
 `tests/artifacts/dashboard-summary-{desktop,mobile,empty-mobile}.png` and
 `tests/artifacts/dashboard-summary-api-evidence.json`.
 
+## Release QA checks
+
+Run only the release checks with `node --test tests/release-qa.test.js` from the
+repository root. They use the actual API routes, a disposable MongoDB database,
+and Playwright with reduced motion. One account with a few workouts, meals, goals,
+and a profile opens every page (home, log in, sign up, dashboard and its Deep
+Insight 4-week timeline, workouts, nutrition, goals, and profile) at 1280, 390,
+360, and 320 px wide. On each page nothing may scroll sideways, axe must find no
+WCAG 2.1 A or AA problems, and pressing Tab from the top must reach every visible
+control without landing on a hidden or covered one, with a 2 px outline or another
+visible change on each. Signed-in pages must start with a "Skip to content" link
+that moves focus to the page content. Screenshots are written to
+`tests/artifacts/release-qa-{desktop,phone,small-phone,narrow}-<page>.png`.
+Two more checks cover failed reads. A reply cut off partway on the dashboard,
+workouts, nutrition, and goals pages must show that page's error message, never
+a blank page. A failed session check (no network, 500, 503, or a cut-off reply)
+keeps the session for the next reload; only a 401 signs the user out.
+
 ## Persistent local development database
 
 If MongoDB is not installed/running locally, the existing test tools can start

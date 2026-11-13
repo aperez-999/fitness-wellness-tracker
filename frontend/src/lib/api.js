@@ -14,8 +14,24 @@ export function setToken(token) {
   }
 }
 
+function networkError(cause) {
+  const error = new Error("Can't reach the server. Please try again in a moment.", { cause });
+  error.code = "NETWORK_ERROR";
+  return error;
+}
+
 async function parseResponse(response) {
-  const data = await response.json().catch(() => ({}));
+  // Removals reply 204 with no body.
+  if (response.status === 204) return {};
+  let data;
+  try {
+    data = await response.json();
+  } catch (cause) {
+    if (cause.name === "AbortError") throw cause;
+    // A reply cut off mid-download, or a Wi-Fi sign-in page answering in HTML, is not Dayform data.
+    if (response.ok) throw networkError(cause);
+    data = {};
+  }
   if (!response.ok) {
     const error = new Error(data.message || "Request failed");
     error.status = response.status;
@@ -44,9 +60,7 @@ export async function apiFetch(path, options = {}) {
     response = await fetch(`${API_URL}${path}`, { ...options, headers });
   } catch (cause) {
     if (cause.name === "AbortError") throw cause;
-    const error = new Error("Can't reach the server. Please try again in a moment.", { cause });
-    error.code = "NETWORK_ERROR";
-    throw error;
+    throw networkError(cause);
   }
   return parseResponse(response);
 }

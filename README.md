@@ -86,16 +86,16 @@ A college student wants to log workouts and understand weekly fitness progress w
 - Workout logging
 - Workout persistence (MongoDB)
 - Recent workout display / end-to-end walking skeleton
+- Workout history with search, date filters, editing, and removal
+- Progress dashboard with the week's workouts, minutes, and active days, plus a week comparison and 4-week timeline (Deep Insight)
 - Nutrition logging with calories and macros, private recent history, and MongoDB persistence
 - Wellness goals with progress set by hand or counted from logged workouts (count, minutes, or hours)
 - AI wellness insights on the dashboard, written by Gemini from a server-side summary of the user's last 28 days (the summary includes activity names and goal titles)
 - Dashboard summary of the week's meals and calories and the three soonest active goals
+- Profile with display name, pronouns, about me, and favorite activities
 
 ## Planned features
 
-- Progress dashboard
-- Charts and analytics
-- AI recommendations
 - Notifications
 
 ## Tech stack
@@ -111,10 +111,13 @@ A college student wants to log workouts and understand weekly fitness progress w
 fitness-wellness-tracker/
 ├── backend/                 # Express API
 ├── frontend/                # React + Vite UI
+├── shared/                  # Nutrition helpers used by the frontend and backend
+├── tests/                   # Browser and API integration tests
 ├── docs/
 │   ├── capstone-1/          # Archived Capstone 1 planning & artifacts
 │   └── capstone-2/          # Sprint docs (active Capstone 2 work)
-├── Capstone-Poster-Template-CS.pdf
+├── Capstone1-FinalPoster.pdf
+├── Capstone2-FinalPoster.pdf
 ├── CHANGELOG.md
 ├── README.md
 ├── LICENSE

@@ -593,9 +593,14 @@ test("removal confirmation, retry, cross-tab updates, and selected-day empty sta
   await sibling
     .getByRole("button", { name: "Remove Full body session", exact: true })
     .click();
+  // The confirmation already hides the heading, so wait for the server to finish removing.
+  const removed = sibling.waitForResponse(
+    (response) => response.request().method() === "DELETE",
+  );
   await sibling
     .getByRole("button", { name: "Remove session", exact: true })
     .click();
+  await removed;
   await sibling.waitForFunction(
     () =>
       ![...document.querySelectorAll("h4")].some(
@@ -1370,10 +1375,14 @@ test("initial failures and timed-out refreshes recover without showing invented 
   const page = await openPage("/dashboard", (page) =>
     page.route(summaryPattern, (route) => route.fulfill(response(500))),
   );
-  await page.getByRole("alert").waitFor();
+  // Refresh also reloads the meals and goals card, which can time out and show its own alert.
+  const workoutAlert = page
+    .getByRole("alert")
+    .filter({ hasText: "load your workouts" });
+  await workoutAlert.waitFor();
   assert.equal(await page.locator(".weekly-widget").count(), 0);
   await page.unroute(summaryPattern);
-  await page.getByRole("button", { name: "Try again" }).click();
+  await workoutAlert.getByRole("button", { name: "Try again" }).click();
   await expectCount(page, 4);
   const gate = deferred();
   const started = deferred();
@@ -1386,12 +1395,12 @@ test("initial failures and timed-out refreshes recover without showing invented 
   await page.getByRole("button", { name: "Refresh", exact: true }).click();
   await started.promise;
   await page.clock.fastForward(20_001);
-  await page.getByRole("alert").waitFor();
+  await workoutAlert.waitFor();
   await expectCount(page, 4);
   gate.resolve();
   await page.unroute(summaryPattern);
-  await page.getByRole("button", { name: "Try again" }).click();
-  await page.getByRole("alert").waitFor({ state: "hidden" });
+  await workoutAlert.getByRole("button", { name: "Try again" }).click();
+  await workoutAlert.waitFor({ state: "hidden" });
 });
 
 test("Dayform polish preserves date context, strengthens selection, and respects reduced motion", async () => {
