@@ -125,6 +125,8 @@ npm run browsers --prefix tests
 
 Screenshots from the browser suite are written to `tests/artifacts/`, which Git ignores. More detail is in [tests/README.md](tests/README.md), including the release QA layout and accessibility checks added in Sprint 5.
 
+Latest full-suite run on the synchronized `main` branch (November 13, 2026): **61** backend, **15** frontend, and **85** integration tests passed (**161** total), with a successful frontend production build. Dated logs are in [docs/testing-evidence/](docs/testing-evidence/README.md).
+
 For a small **local API latency sample** (not production benchmarking), run:
 
 ```bash
@@ -185,3 +187,13 @@ Do not upload a folder that contains `.env`.
 Alejandro Perez-Rivero, Ahanaf Akif, and Allen Cruz. FIU Computer Science, Team #95.
 
 The project is released under the MIT license. See [LICENSE](LICENSE).
+
+## Provenance, ethics, and AI disclosure
+
+Third-party packages, fonts, the Unsplash dashboard photograph, hosted services (Vercel, MongoDB Atlas, Google Gemini, Google Sign-In), and SVG or illustration provenance are listed in [docs/THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md).
+
+**Product AI:** Optional Gemini features are described under [Getting started](#getting-started) and [docs/gemini-nutrition.md](docs/gemini-nutrition.md). Meal estimates send the meal description; wellness insights send a server-built summary of recent workouts, nutrition averages, and goals (not notes, email, or display name).
+
+**Development tools:** Team members used ChatGPT and Cursor for troubleshooting, testing support, and documentation drafts. The team remained responsible for design, implementation, review, and test execution.
+
+Privacy, showcase clearance, and ACM-oriented notes (including limiting data sent to Gemini): [docs/ethics-and-showcase-clearance.md](docs/ethics-and-showcase-clearance.md).

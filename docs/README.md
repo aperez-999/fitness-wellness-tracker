@@ -22,6 +22,8 @@ Sprint-specific implementation, verification, and development documentation:
 - **sprint-4/** — dashboard meals and goals
 - **sprint-5/** — final QA, release freeze, and production smoke evidence ([final-qa-release-freeze.md](capstone-2/sprint-5/final-qa-release-freeze.md))
 - **[rubric-evidence.md](capstone-2/rubric-evidence.md)** — showcase rubric map to files in this repository
+- **[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)** — licenses, services, and asset attribution
+- **[ethics-and-showcase-clearance.md](ethics-and-showcase-clearance.md)** — privacy, AI disclosure, and clearance checklist support
 
 ## Showcase evidence
 

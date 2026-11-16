@@ -61,7 +61,7 @@ Latest `npm test` totals on the synchronized `main` branch (November 13, 2026): 
 | Authentication design | [capstone-1/architecture/authentication.md](../capstone-1/architecture/authentication.md), `backend/src/middleware/auth.js` | JWT and owner scoping in routes |
 | Secrets hygiene | `.gitignore` (`.env`), `backend/.env.example`, `frontend/.env.example` | No `.env` files tracked |
 
-**Pending:** Standalone code-of-ethics or fairness write-up beyond README and Gemini docs. Third-party asset attribution list (UI SVGs are in-repo; full citation sheet not separate).
+Third-party and ethics clearance: [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md), [ethics-and-showcase-clearance.md](../ethics-and-showcase-clearance.md). **Unresolved:** `LICENSE` copyright naming vs. all contributors (change only with written team consent); SVG/illustration origins (AI-assisted tools believed used; not independently verified — see notices).
 
 ---
 
