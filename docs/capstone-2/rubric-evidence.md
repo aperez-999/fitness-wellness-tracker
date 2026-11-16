@@ -31,7 +31,7 @@ Latest `npm test` totals on the synchronized `main` branch (November 13, 2026): 
 | Integration testing narrative | [sprint-3/integration-testing.md](sprint-3/integration-testing.md) | Workflow table; some rows reflect October 2026 runs |
 | Acceptance reviews | [goals-acceptance-review.md](../goals-acceptance-review.md), [nutrition-acceptance-review.md](../nutrition-acceptance-review.md), [workout-acceptance-review.md](../workout-acceptance-review.md) | Feature sign-off checklists |
 | UI and API evidence | [docs/evidence/](../evidence/) | Curated screenshots and JSON exports per feature |
-| Test run logs | [testing-evidence/](../testing-evidence/README.md) | Dated logs (Nov 2 and Nov 11, 2026); see each file for pass/fail counts |
+| Test run logs | [testing-evidence/](../testing-evidence/README.md) | Dated logs; **latest full suite: Nov 13, 2026** (61 / 15 / 85). Older Nov 2 and Nov 11 rows are historical. |
 | API latency sample (local) | [performance-evaluation.md](performance-evaluation.md), [performance-evaluation-sample.csv](performance-evaluation-sample.csv) | Five read-only routes (`/health`, `/dashboard/summary`, `/workouts`, `/nutrition`, `/goals`); **25 sequential requests each** (125 total). All **125** returned **HTTP 200** on 2026-11-11. Script: [scripts/perf-qos-sample.mjs](../../scripts/perf-qos-sample.mjs). **Not** production, concurrent load, or stress testing. |
 
 **Pending:** Code coverage percentages (no coverage tool in `package.json` scripts). Production API latency, load testing, and concurrency benchmarks were not measured.
@@ -61,7 +61,7 @@ Latest `npm test` totals on the synchronized `main` branch (November 13, 2026): 
 | Authentication design | [capstone-1/architecture/authentication.md](../capstone-1/architecture/authentication.md), `backend/src/middleware/auth.js` | JWT and owner scoping in routes |
 | Secrets hygiene | `.gitignore` (`.env`), `backend/.env.example`, `frontend/.env.example` | No `.env` files tracked |
 
-Third-party and ethics clearance: [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md), [ethics-and-showcase-clearance.md](../ethics-and-showcase-clearance.md). **Unresolved:** `LICENSE` copyright naming vs. all contributors (change only with written team consent); SVG/illustration origins (AI-assisted tools believed used; not independently verified — see notices).
+Third-party and ethics: [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md), [ethics-and-showcase-clearance.md](../ethics-and-showcase-clearance.md). **Follow-up:** `LICENSE` copyright line vs. all contributors (change only with written consent); SVG tool terms documented in notices.
 
 ---
 

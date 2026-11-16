@@ -1,8 +1,8 @@
 # Third-party notices and attribution
 
-FIU Capstone 2, Team #95 — Dayform. SPDX-style licenses below come from committed `package-lock.json` files unless noted as **service terms**.
+Dayform (FIU Capstone 2, Team #95). SPDX-style licenses below come from committed `package-lock.json` files unless noted as **service terms**.
 
-This file is not legal advice. It lists what we could **verify in the repository** as of the Week 13 ethics clearance pass. Items marked **unresolved** need team confirmation or external records.
+This file is not legal advice. It summarizes third-party software, services, and assets referenced in this repository. Where documentation in Git is incomplete, items are noted for team follow-up.
 
 ## Application copyright
 
@@ -58,9 +58,9 @@ Setup and privacy notes: [gemini-nutrition.md](gemini-nutrition.md), root [READM
 | **Manrope** variable font | [Manrope project](https://github.com/sharanda/manrope) | SIL Open Font License 1.1 — full text: [OFL-Manrope.txt](../frontend/public/fonts/OFL-Manrope.txt) | UI typography |
 | **evening-trail.webp** | [Unsplash — Jacob Padilla](https://unsplash.com/photos/a-winding-path-through-a-golden-field-l7vvlM-F52Y) | [Unsplash License](https://unsplash.com/license) | Dashboard header; details in [photos/README.md](../frontend/src/assets/photos/README.md) |
 | **NHS / USDA recipe numbers** | URLs cited per entry in [nutritionEstimates.mjs](../shared/nutritionEstimates.mjs) | Public recipe pages; **not** software licenses — follow each site’s content/use policy if you republish values | Optional reference matching when Gemini is unavailable |
-| **favicon.svg**, **activity/*.svg**, **nutrition/salad-bowl.svg**, **Icon.jsx** inline paths | In-repository; creation process per team recollection | **Not independently verified.** Believed created or adapted with **AI-assisted design tools**, possibly including **ChatGPT image generation** and **Figma**. Individual asset provenance (model terms, export settings, or third-party vectors) is **not documented in Git**. | Branding, welcome activity mascots, nutrition illustration, UI chrome icons |
+| **favicon.svg**, **activity/*.svg**, **nutrition/salad-bowl.svg**, **Icon.jsx** inline paths | In-repository | Team reports creation or adaptation with **AI-assisted design tools** (e.g. ChatGPT image generation, **Figma**). Per-file provenance and tool terms are **not recorded in Git**. | Branding, welcome activity mascots, nutrition illustration, UI chrome icons |
 
-These SVGs share a consistent palette (`#593849`, `#bdcfbb`, etc.) and contain **no embedded authorship metadata**. Do **not** assume they are wholly original, automatically covered by the project MIT license, or free of third-party or tool-provider restrictions until the team confirms creation logs, export sources, and applicable **terms of use** for each tool used. Human review and cleanup were still required before ship; ownership and redistribution rights remain **unresolved** for showcase attribution.
+These SVGs contain no embedded authorship metadata. The project MIT license applies to repository source code; it does **not** by itself establish rights for individual graphics. Confirm tool terms and redistribution requirements before reusing assets outside this repository.
 
 ## Evidence and posters
 
@@ -71,4 +71,4 @@ Screenshots under `docs/evidence/` and PDF posters at the repository root are te
 - Full transitive npm license audit.
 - Google OAuth branding guideline checklist.
 - Whether poster or slide decks (outside this repo) credit every asset.
-- Whether AI-generated or Figma-adapted SVGs meet course, university, or provider redistribution rules.
+- Tool-specific terms for AI-generated or Figma-exported SVGs when reused on posters or slides.

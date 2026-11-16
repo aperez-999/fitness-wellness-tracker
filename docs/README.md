@@ -28,7 +28,7 @@ Sprint-specific implementation, verification, and development documentation:
 ## Showcase evidence
 
 - **[evidence/](evidence/)** — tracked screenshots and JSON used for feature verification (auth, workouts, nutrition, goals, dashboard, insights).
-- **[testing-evidence/](testing-evidence/README.md)** — dated `npm test` logs for showcase reference
+- **[testing-evidence/](testing-evidence/README.md)** — dated `npm test` logs (latest full suite: November 13, 2026)
 - **`tests/artifacts/`** — Playwright output from integration runs; listed in `tests/.gitignore`, not committed.
 
 ## Application code

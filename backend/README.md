@@ -23,6 +23,7 @@ Copy variable names from `.env.example`. Do not commit `.env`.
 | `CLIENT_URL` | Frontend origin for CORS |
 | `GEMINI_API_KEY` | Optional. Meal estimates and wellness insights stay off when this is empty. |
 | `GEMINI_MODEL` | Optional. Defaults to `gemini-3.5-flash-lite`. |
+| `GOOGLE_CLIENT_ID` | Optional. Same Web client ID as the frontend; enables `POST /auth/google`. |
 
 ## Layout
 
@@ -45,7 +46,7 @@ Every route below is under `/api`. Except health, signup, and login, the caller 
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/health` | Process is up |
-| POST | `/auth/signup`, `/auth/login` | Create an account or sign in |
+| POST | `/auth/signup`, `/auth/login`, `/auth/google` | Create an account, sign in with password, or sign in with a Google ID token |
 | POST | `/auth/logout` | Acknowledges sign-out. The browser deletes the token. |
 | GET, PATCH | `/auth/me` | Read or update the signed-in profile |
 | GET, POST | `/workouts` | List or create workouts |

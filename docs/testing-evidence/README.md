@@ -11,4 +11,7 @@ generated secrets and do not call the real Gemini API.
 | 2026-11-11 | 58/58 | 15/15 | 73/73 | Pre–PR #16 closeout work |
 | 2026-11-13 | 61/61 | 15/15 | 85/85 | Sprint 5 closeout on synchronized `main` (includes release QA and Google sign-in suites) |
 
+Showcase summary graphic (three-column excerpts from the Nov 13 logs):
+[dayform-final-tests-2026-11-13.png](dayform-final-tests-2026-11-13.png).
+
 Reproduce with the commands in the root [README](../../README.md#testing).

@@ -1,6 +1,8 @@
 # Dayform — AI-Powered Fitness & Wellness Tracker
 
-Dayform is a web app for logging workouts, meals, and goals in one account. It is our FIU Computer Science capstone project. The problem it addresses is simple: a student who exercises often keeps that information in separate apps, so it is hard to see whether the week is moving in the direction they wanted.
+Dayform is a web app for logging workouts, meals, and goals in one account. The problem it addresses is simple: a student who exercises often keeps that information in separate apps, so it is hard to see whether the week is moving in the direction they wanted.
+
+Developed at FIU (Computer Science Capstone, Team #95). Course planning artifacts live under `docs/capstone-1/` and `docs/capstone-2/`.
 
 A signed-in user can record a workout, a meal, or a goal and see them together on a dashboard. Two optional features call Google Gemini from the server: estimating nutrients from a meal description, and a short note about the last 28 days of saved activity. That note is general wellness information, not medical advice.
 
@@ -155,7 +157,9 @@ fitness-wellness-tracker/
 │   ├── capstone-1/    Capstone 1 planning, diagrams, minutes, and starter guides
 │   ├── capstone-2/    Capstone 2 sprint notes and rubric evidence map
 │   ├── evidence/      Tracked screenshots and JSON for showcase verification
-│   └── testing-evidence/  Dated test run logs (when committed)
+│   ├── testing-evidence/  Dated test run logs
+│   ├── THIRD_PARTY_NOTICES.md  Licenses, services, and asset attribution
+│   └── ethics-and-showcase-clearance.md  Privacy and AI disclosure summary
 ├── Capstone1-FinalPoster.pdf
 ├── Capstone2-FinalPoster.pdf
 ├── CHANGELOG.md

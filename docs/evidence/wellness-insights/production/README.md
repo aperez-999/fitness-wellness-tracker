@@ -142,9 +142,11 @@ npm test --prefix tests
 npm run build --prefix frontend
 ```
 
-Results on this branch: 58 backend unit tests, 15 frontend unit tests, 73 browser and API
-integration tests, and the production build all passed. They mock Gemini and load no
-`.env` or real key.
+Results on this branch when this page was written: 58 backend unit tests, 15 frontend
+unit tests, and 73 browser and API integration tests, plus a successful production
+build. They mock Gemini and load no `.env` or real key. Later runs on synchronized
+`main` (November 13, 2026) recorded **61 / 15 / 85** passes — see
+[testing-evidence/README.md](../../../testing-evidence/README.md).
 
 ## Repeating the production check
 

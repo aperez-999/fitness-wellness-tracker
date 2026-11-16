@@ -1,6 +1,6 @@
 # Ethics, privacy, and showcase clearance (Capstone 2)
 
-Team #95 — Dayform. Concise notes for the Week 13 Provenance and Ethics Clearance assignment and the December 4, 2026 showcase. This is **not** a professional security audit or legal review.
+Team #95 — Dayform. Privacy, attribution, and showcase preparation notes (Capstone 2, Fall 2026). This is **not** a professional security audit or legal review.
 
 ## Privacy and user data (ACM 1.6 — Respect privacy)
 
